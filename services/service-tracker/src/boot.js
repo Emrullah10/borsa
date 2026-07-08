@@ -20,7 +20,17 @@ export async function boot() {
   sd.startHeartbeat();
 
   const timeoutMs = config.timeoutHours * 60 * 60 * 1000;
-  const { processOutcomeCandle } = buildContainer({ timeoutMs });
+
+  const { rows: configRows } = await datasources.postgres.query(
+    "SELECT key, value FROM bot_config WHERE key IN ('taker_fee','slippage_pct')"
+  );
+  const cfg = Object.fromEntries(configRows.map(r => [r.key, r.value]));
+  const fees = {
+    takerFee: parseFloat(cfg.taker_fee ?? 0.0006),
+    slippagePct: parseFloat(cfg.slippage_pct ?? 0.0003),
+  };
+
+  const { processOutcomeCandle } = buildContainer({ timeoutMs, fees });
 
   await processOutcomeCandle.refreshPending();
   setInterval(() => processOutcomeCandle.refreshPending(), config.refreshIntervalSec * 1000);
