@@ -20,5 +20,8 @@ INSERT INTO bot_config (key, value) VALUES
   ('ai_confidence_threshold', '0.70'),
   ('ai_enabled', 'true'),
   ('ai_cooldown_seconds', '30'),
-  ('rr_min', '1.5')
+  ('rr_min', '1.5'),
+  ('taker_fee', '0.0006'),
+  ('slippage_pct', '0.0003'),
+  ('sim_enabled', 'true')
 ON CONFLICT (key) DO NOTHING;

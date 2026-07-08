@@ -17,6 +17,7 @@
     "test:market-data": "vitest run services/service-market-data core/service-market-data",
     "test:signal-engine": "vitest run services/service-signal-engine core/service-signal-engine",
     "db:migrate": "psql $DATABASE_URL -f db-schemas/00-init.sql -f db-schemas/01-config-watchlist.sql -f db-schemas/02-signals.sql",
+    "db:migrate:up": "for f in db-schemas/migrations/*.sql; do psql $DATABASE_URL -f \"$f\"; done",
     "dev:market-data": "node --env-file=.env services/service-market-data/main.js",
     "dev:signal-engine": "node --env-file=.env services/service-signal-engine/main.js",
     "backtest": "node --env-file=.env services/service-backtest/main.js",
