@@ -28,12 +28,13 @@ export async function boot() {
   sd.startHeartbeat();
 
   const { rows: configRows } = await datasources.postgres.query(
-    "SELECT key, value FROM bot_config WHERE key IN ('confluence_threshold','rr_min')"
+    "SELECT key, value FROM bot_config WHERE key IN ('confluence_threshold','rr_min','taker_fee')"
   );
   const cfg = Object.fromEntries(configRows.map(r => [r.key, r.value]));
   const confluenceThreshold = parseFloat(cfg.confluence_threshold ?? 0.65);
+  const takerFee = parseFloat(cfg.taker_fee ?? 0.0006);
 
-  const container = await buildContainer({ confluenceThreshold });
+  const container = await buildContainer({ confluenceThreshold, takerFee });
 
   const wsServer = createWsServer();
   wsServer.attach(httpServer);

@@ -1,3 +1,5 @@
+import { parseDays, parseBreakdownQuery } from './parse-stats-query.js';
+
 export function registerRoutes(app, { signalRepo, processCandle }) {
   app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'service-signal-engine' }));
 
@@ -5,13 +7,26 @@ export function registerRoutes(app, { signalRepo, processCandle }) {
     res.json({ regime: processCandle.getCurrentRegime(), updatedAt: new Date().toISOString() });
   });
 
-  app.get('/stats', async (_req, res) => {
+  app.get('/stats', async (req, res) => {
+    const { days, error } = parseDays(req.query.days);
+    if (error) return res.status(400).json({ error });
     try {
       const [stats, topSymbols] = await Promise.all([
-        signalRepo.getSignalStats(),
-        signalRepo.getTopSymbolStats(),
+        signalRepo.getSignalStats(days),
+        signalRepo.getTopSymbolStats(days),
       ]);
       res.json({ stats, topSymbols });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.get('/stats/breakdown', async (req, res) => {
+    const { by, days, error } = parseBreakdownQuery(req.query);
+    if (error) return res.status(400).json({ error });
+    try {
+      const breakdown = await signalRepo.getStatsBreakdown({ by, days });
+      res.json({ by, days, breakdown });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }

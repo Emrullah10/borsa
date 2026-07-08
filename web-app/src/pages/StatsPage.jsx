@@ -1,7 +1,15 @@
-import { useState, useEffect } from 'react';
-import { Box, Typography, CircularProgress, Divider } from '@mui/material';
-import { fetchStats } from '@api/statsApi.js';
+import { useState, useEffect, useCallback } from 'react';
+import { Box, Typography, CircularProgress, Divider, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { fetchStats, fetchBreakdown } from '@api/statsApi.js';
 import { COLORS } from '@styles/theme.js';
+
+const DAY_OPTIONS = [7, 14, 30];
+const BREAKDOWN_OPTIONS = [
+  { value: 'regime', label: 'Rejim' },
+  { value: 'tf', label: 'TF' },
+  { value: 'direction', label: 'Yön' },
+  { value: 'hour', label: 'Saat' },
+];
 
 function StatBox({ label, value, color }) {
   return (
@@ -40,12 +48,15 @@ function wrColor(wr) {
 export default function StatsPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [days, setDays] = useState(7);
+  const [breakdownBy, setBreakdownBy] = useState('regime');
+  const [breakdown, setBreakdown] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
       setLoading(true);
-      const result = await fetchStats();
+      const result = await fetchStats(days);
       if (!cancelled) {
         setData(result);
         setLoading(false);
@@ -54,7 +65,17 @@ export default function StatsPage() {
     load();
     const id = setInterval(load, 60_000); // 1 dk'da bir yenile
     return () => { cancelled = true; clearInterval(id); };
-  }, []);
+  }, [days]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadBreakdown() {
+      const result = await fetchBreakdown(breakdownBy, days);
+      if (!cancelled) setBreakdown(result);
+    }
+    loadBreakdown();
+    return () => { cancelled = true; };
+  }, [breakdownBy, days]);
 
   if (loading) {
     return (
@@ -77,14 +98,30 @@ export default function StatsPage() {
   const wr = s.win_rate != null ? parseFloat(s.win_rate) : null;
   const avgR = s.avg_r != null ? parseFloat(s.avg_r) : null;
   const avgRFee = s.avg_r_after_fee != null ? parseFloat(s.avg_r_after_fee) : null;
+  const avgSimR = s.avg_sim_r != null ? parseFloat(s.avg_sim_r) : null;
+  const timeoutRate = s.timeout_rate != null ? parseFloat(s.timeout_rate) : null;
   const longWr = s.total_long > 0 ? ((s.long_tp / (s.long_tp + s.long_sl)) * 100).toFixed(1) : null;
   const shortWr = s.total_short > 0 ? ((s.short_tp / (s.short_tp + s.short_sl)) * 100).toFixed(1) : null;
 
   return (
     <Box sx={{ p: 2, height: '100%', overflowY: 'auto', color: '#e6edf3' }}>
-      <Typography sx={{ fontWeight: 700, mb: 2, fontSize: '1rem' }}>
-        İstatistikler — Son 7 Gün
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2, flexWrap: 'wrap', gap: 1 }}>
+        <Typography sx={{ fontWeight: 700, fontSize: '1rem' }}>
+          İstatistikler — Son {days} Gün
+        </Typography>
+        <ToggleButtonGroup
+          size="small"
+          value={days}
+          exclusive
+          onChange={(_e, val) => val != null && setDays(val)}
+        >
+          {DAY_OPTIONS.map((d) => (
+            <ToggleButton key={d} value={d} sx={{ color: '#8b949e', fontSize: '0.75rem', px: 1.5 }}>
+              {d}g
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+      </Box>
 
       {/* Ana metrikler */}
       <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', mb: 2 }}>
@@ -111,6 +148,22 @@ export default function StatsPage() {
           value={avgRFee != null ? (avgRFee > 0 ? `+${avgRFee.toFixed(3)}R` : `${avgRFee.toFixed(3)}R`) : '—'}
           color={avgRFee != null ? (avgRFee >= 0 ? COLORS.long : COLORS.short) : undefined}
         />
+        <StatBox
+          label="Avg Sim R (paper)"
+          value={avgSimR != null ? (avgSimR > 0 ? `+${avgSimR.toFixed(3)}R` : `${avgSimR.toFixed(3)}R`) : '—'}
+          color={avgSimR != null ? (avgSimR >= 0 ? COLORS.long : COLORS.short) : undefined}
+        />
+      </Box>
+
+      <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', mb: 2 }}>
+        <StatBox label="Ort. TP süresi" value={s.avg_min_to_tp != null ? `${s.avg_min_to_tp} dk` : '—'} />
+        <StatBox label="Ort. SL süresi" value={s.avg_min_to_sl != null ? `${s.avg_min_to_sl} dk` : '—'} />
+        <StatBox
+          label="Timeout %"
+          value={timeoutRate != null ? `%${timeoutRate}` : '—'}
+          color={timeoutRate != null && timeoutRate > 20 ? COLORS.short : undefined}
+        />
+        <StatBox label="Tie-break" value={s.tie_breaks ?? 0} />
       </Box>
 
       <Divider sx={{ borderColor: '#21262d', my: 2 }} />
@@ -184,6 +237,58 @@ export default function StatsPage() {
             })}
           </Box>
         </>
+      )}
+
+      {/* Kırılım */}
+      <Divider sx={{ borderColor: '#21262d', my: 2 }} />
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1, flexWrap: 'wrap', gap: 1 }}>
+        <Typography sx={{ color: '#8b949e', fontSize: '0.8rem' }}>Kırılım</Typography>
+        <ToggleButtonGroup
+          size="small"
+          value={breakdownBy}
+          exclusive
+          onChange={(_e, val) => val != null && setBreakdownBy(val)}
+        >
+          {BREAKDOWN_OPTIONS.map((opt) => (
+            <ToggleButton key={opt.value} value={opt.value} sx={{ color: '#8b949e', fontSize: '0.7rem', px: 1.25 }}>
+              {opt.label}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+      </Box>
+      {breakdown?.breakdown?.length > 0 ? (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
+          {breakdown.breakdown.map((row) => {
+            const rowWr = row.win_rate != null ? parseFloat(row.win_rate) : null;
+            return (
+              <Box
+                key={row.bucket}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  bgcolor: '#161b22',
+                  border: '1px solid #21262d',
+                  borderRadius: '8px',
+                  px: 1.5,
+                  py: 0.75,
+                }}
+              >
+                <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{String(row.bucket)}</Typography>
+                <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                  <Typography sx={{ color: '#8b949e', fontSize: '0.75rem' }}>
+                    {row.total} sinyal · {row.tp_hit}✓ {row.sl_hit}✗
+                  </Typography>
+                  <Typography sx={{ color: wrColor(rowWr), fontSize: '0.85rem', fontWeight: 700 }}>
+                    {rowWr != null ? `%${rowWr}` : '—'}
+                  </Typography>
+                </Box>
+              </Box>
+            );
+          })}
+        </Box>
+      ) : (
+        <Typography sx={{ color: '#8b949e', fontSize: '0.8rem' }}>Kırılım verisi yok</Typography>
       )}
     </Box>
   );

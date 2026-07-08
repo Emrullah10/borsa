@@ -153,6 +153,8 @@ export function makeProcessCandle({ signalRepo, publish, log, confluenceThreshol
       indicatorsSnapshot: indicators,
       liqPressureScore: liqPressure.score,
       liqDirection: liqPressure.direction,
+      regime,
+      higherTfTrend,
     });
     await signalRepo.createOutcome(signal.id);
 
