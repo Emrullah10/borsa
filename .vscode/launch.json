@@ -1,0 +1,122 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Backend: Market Data Service",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/backend/services/service-market-data/main.js",
+      "cwd": "${workspaceFolder}/backend",
+      "console": "internalConsole",
+      "envFile": "${workspaceFolder}/backend/.env"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Backend: Signal Engine Service",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/backend/services/service-signal-engine/main.js",
+      "cwd": "${workspaceFolder}/backend",
+      "console": "internalConsole",
+      "envFile": "${workspaceFolder}/backend/.env"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Backend: Notifier Service",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/backend/services/service-notifier/main.js",
+      "cwd": "${workspaceFolder}/backend",
+      "console": "internalConsole",
+      "envFile": "${workspaceFolder}/backend/.env"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Backend: Tracker Service",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/backend/services/service-tracker/main.js",
+      "cwd": "${workspaceFolder}/backend",
+      "console": "internalConsole",
+      "envFile": "${workspaceFolder}/backend/.env"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Backend: Backtest Service",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/backend/services/service-backtest/main.js",
+      "cwd": "${workspaceFolder}/backend",
+      "console": "internalConsole",
+      "envFile": "${workspaceFolder}/backend/.env"
+    },
+    {
+      "type": "python",
+      "request": "launch",
+      "name": "Backend: AI Service (FastAPI)",
+      "python": "${workspaceFolder}/backend/services/service-ai/.venv/bin/python",
+      "module": "uvicorn",
+      "args": [
+        "main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "3110",
+        "--reload"
+      ],
+      "cwd": "${workspaceFolder}/backend/services/service-ai",
+      "jinja": true,
+      "console": "internalConsole"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Frontend: Vite Dev Server",
+      "cwd": "${workspaceFolder}/frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "console": "internalConsole"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Frontend: Chrome Debugger",
+      "url": "http://localhost:5180",
+      "webRoot": "${workspaceFolder}/frontend"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "🚀 Backend: Tümü",
+      "stopAll": true,
+      "restartAll": true,
+      "configurations": [
+        "Backend: Market Data Service",
+        "Backend: Signal Engine Service",
+        "Backend: AI Service (FastAPI)",
+        "Backend: Notifier Service",
+        "Backend: Tracker Service"
+      ]
+    },
+    {
+      "name": "Backend: All Services (Market + Signal + AI)",
+      "stopAll": true,
+      "configurations": [
+        "Backend: Market Data Service",
+        "Backend: Signal Engine Service",
+        "Backend: AI Service (FastAPI)"
+      ]
+    },
+    {
+      "name": "Fullstack: All Services (Market + Signal + AI + Frontend)",
+      "stopAll": true,
+      "configurations": [
+        "Backend: Market Data Service",
+        "Backend: Signal Engine Service",
+        "Backend: AI Service (FastAPI)",
+        "Frontend: Vite Dev Server"
+      ]
+    }
+  ]
+}

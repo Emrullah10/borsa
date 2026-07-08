@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+coverage/
+.idea/
+.vscode/settings.json
+.worktrees/
+__pycache__/
+*.pyc
+.logs/
+.codegraph/*.db*
+.codegraph/*.sock
+.codegraph/*.pid
+.codegraph/daemon.log

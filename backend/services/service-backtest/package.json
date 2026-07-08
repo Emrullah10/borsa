@@ -1,0 +1,15 @@
+{
+  "name": "@borsa-bot/service-backtest",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@borsa-bot/config": "*",
+    "@borsa-bot/helper": "*",
+    "bitget-api": "^2.0.0"
+  }
+}
