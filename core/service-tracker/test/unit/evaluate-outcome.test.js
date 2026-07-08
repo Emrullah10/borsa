@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateOutcome } from './tracker.js';
+import { evaluateOutcome } from '../../src/domain/evaluate-outcome.js';
 
 // Helper: candle oluştur
 const candle = (high, low, close) => ({ open: close, high, low, close });
