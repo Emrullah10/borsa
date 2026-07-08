@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T15:13:52.621Z
-> Files: 520 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T15:17:50.639Z
+> Files: 524 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -14,6 +14,7 @@
 - `docker-compose.yml` — Docker Compose services (~169 tok)
 - `package-lock.json` — npm lock file (~30286 tok)
 - `package.json` — Node.js package manifest (~329 tok)
+- `scratch-test-fetch.mjs` — Declares c (~69 tok)
 - `vitest.config.js` — /*.test.js', 'services/**/*.test.js', 'packages/**/*.test.js'], (~67 tok)
 
 ## .claude/
@@ -72,6 +73,7 @@
 
 ## core/service-backtest/src/domain/
 
+- `aligned-buffer.js` — Backtest'te düşük-frekanslı bir mum serisini (örn. 4h/5m), yüksek-frekanslı (~172 tok)
 - `reporter.js` — Exports calcMetrics, formatTable (~617 tok)
 - `simulator.js` — Exports simulateTrade (~335 tok)
 
@@ -81,6 +83,7 @@
 
 ## core/service-backtest/test/unit/
 
+- `aligned-buffer.test.js` — Declares makeCandles (~537 tok)
 - `fetcher.test.js` — Declares candles (~572 tok)
 - `reporter.test.js` — Declares sampleTrades (~474 tok)
 - `simulator.test.js` — Declares candle (~542 tok)
@@ -125,14 +128,14 @@
 
 ## core/service-signal-engine/src/application/use-cases/
 
-- `make-process-candle.js` — Exports makeProcessCandle (~2209 tok)
+- `make-process-candle.js` — Exports makeProcessCandle (~2054 tok)
 
 ## core/service-signal-engine/src/domain/
 
 - `confluence.js` — Exports adaptiveThreshold, calcConfluence (~1522 tok)
 - `indicators.js` — Exports calcEMA, calcRSI, calcBollingerBands, calcATR + 6 more (~1587 tok)
 - `liquidation-pressure.js` — Exports calcLiquidationPressure (~572 tok)
-- `regime.js` — BTC trendine göre piyasa rejimini hesaplar (~395 tok)
+- `regime.js` — BTC trendine göre piyasa rejimini hesaplar (~601 tok)
 - `setup-builder.js` — Exports applySRCap, buildSetup (~880 tok)
 
 ## core/service-signal-engine/src/infrastructure/persistence/repositories/
@@ -144,7 +147,7 @@
 - `confluence.test.js` — ADX >= 25 ile güçlü trend fixture'ları (~1730 tok)
 - `indicators.test.js` — Declares closes20 (~1726 tok)
 - `liquidation-pressure.test.js` — Declares result (~764 tok)
-- `regime.test.js` — Declares makeCandles (~383 tok)
+- `regime.test.js` — Declares makeCandles (~630 tok)
 - `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~1626 tok)
 - `signal-repository.test.js` — Declares fakeRows (~726 tok)
 
@@ -799,6 +802,10 @@
 ## services/service-ai/.venv/lib/python3.13/site-packages/fastapi/security/
 
 - `__init__.py` (~252 tok)
+
+## services/service-backtest/
+
+- `main.js` — SYMBOLS: fetchRegimeSeries, fetchHigherTfSeries, runBacktest, main (~1372 tok)
 
 ## services/service-tracker/src/
 

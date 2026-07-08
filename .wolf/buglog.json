@@ -1692,6 +1692,54 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-08T15:13:52.631Z"
+    },
+    {
+      "id": "bug-105",
+      "timestamp": "2026-07-08T15:14:31.414Z",
+      "error_message": "Missing guard clause",
+      "file": "core/service-signal-engine/src/domain/regime.js",
+      "root_cause": "No early return/throw for edge case: !closes || closes.length < 30",
+      "fix": "Added guard clause: if (!closes || closes.length < 30)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T15:14:31.414Z"
+    },
+    {
+      "id": "bug-106",
+      "timestamp": "2026-07-08T15:15:11.214Z",
+      "error_message": "Significant refactor of ",
+      "file": "core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+      "root_cause": "15 lines replaced/restructured",
+      "fix": "Rewrote 18→6 lines (15 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T15:15:11.214Z"
+    },
+    {
+      "id": "bug-107",
+      "timestamp": "2026-07-08T15:16:17.352Z",
+      "error_message": "Significant refactor of ",
+      "file": "services/service-backtest/main.js",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 102→129 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T15:16:17.352Z"
     }
   ]
 }

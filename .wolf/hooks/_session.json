@@ -173,7 +173,7 @@
       "first_read": "2026-07-08T14:18:34.955Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/main.js": {
-      "count": 2,
+      "count": 3,
       "tokens": 0,
       "first_read": "2026-07-08T14:19:25.290Z"
     },
@@ -361,6 +361,26 @@
       "count": 1,
       "tokens": 0,
       "first_read": "2026-07-08T15:13:34.363Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js": {
+      "count": 1,
+      "tokens": 2209,
+      "first_read": "2026-07-08T15:14:21.633Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/domain/regime.js": {
+      "count": 1,
+      "tokens": 395,
+      "first_read": "2026-07-08T15:14:22.047Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/regime.test.js": {
+      "count": 1,
+      "tokens": 383,
+      "first_read": "2026-07-08T15:14:22.265Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/infrastructure/fetcher.js": {
+      "count": 1,
+      "tokens": 908,
+      "first_read": "2026-07-08T15:15:22.401Z"
     }
   },
   "files_written": [
@@ -933,6 +953,60 @@
       "action": "edit",
       "tokens": 139,
       "at": "2026-07-08T15:13:52.630Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/domain/regime.js",
+      "action": "edit",
+      "tokens": 245,
+      "at": "2026-07-08T15:14:31.413Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/regime.test.js",
+      "action": "edit",
+      "tokens": 39,
+      "at": "2026-07-08T15:14:37.746Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/regime.test.js",
+      "action": "edit",
+      "tokens": 305,
+      "at": "2026-07-08T15:14:51.687Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+      "action": "edit",
+      "tokens": 96,
+      "at": "2026-07-08T15:15:03.090Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+      "action": "edit",
+      "tokens": 72,
+      "at": "2026-07-08T15:15:11.213Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/unit/aligned-buffer.test.js",
+      "action": "create",
+      "tokens": 537,
+      "at": "2026-07-08T15:15:36.474Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/domain/aligned-buffer.js",
+      "action": "create",
+      "tokens": 172,
+      "at": "2026-07-08T15:15:43.882Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/main.js",
+      "action": "edit",
+      "tokens": 1344,
+      "at": "2026-07-08T15:16:17.350Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/scratch-test-fetch.mjs",
+      "action": "create",
+      "tokens": 74,
+      "at": "2026-07-08T15:17:50.648Z"
     }
   ],
   "edit_counts": {
@@ -943,7 +1017,7 @@
     "core/service-signal-engine/package.json": 1,
     "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js": 4,
     "core/service-signal-engine/test/unit/signal-repository.test.js": 2,
-    "core/service-signal-engine/src/application/use-cases/make-process-candle.js": 1,
+    "core/service-signal-engine/src/application/use-cases/make-process-candle.js": 3,
     "services/service-signal-engine/src/subscriber.js": 1,
     "services/service-signal-engine/src/container.js": 1,
     "services/service-signal-engine/src/routes.js": 1,
@@ -982,7 +1056,7 @@
     "core/service-backtest/test/unit/reporter.test.js": 1,
     "core/service-backtest/test/unit/simulator.test.js": 1,
     "core/service-backtest/test/unit/fetcher.test.js": 2,
-    "services/service-backtest/main.js": 1,
+    "services/service-backtest/main.js": 2,
     "core/service-backtest/package.json": 1,
     "services/service-backtest/package.json": 1,
     "vitest.config.js": 1,
@@ -1005,11 +1079,16 @@
     "db-schemas/migrations/2026-07-08-01-paper-regime-tiebreak.sql": 1,
     "db-schemas/02-signals.sql": 1,
     "db-schemas/01-config-watchlist.sql": 1,
-    "core/service-tracker/src/domain/evaluate-outcome.js": 1
+    "core/service-tracker/src/domain/evaluate-outcome.js": 1,
+    "core/service-signal-engine/src/domain/regime.js": 1,
+    "core/service-signal-engine/test/unit/regime.test.js": 2,
+    "core/service-backtest/test/unit/aligned-buffer.test.js": 1,
+    "core/service-backtest/src/domain/aligned-buffer.js": 1,
+    "scratch-test-fetch.mjs": 1
   },
-  "anatomy_hits": 15,
+  "anatomy_hits": 19,
   "anatomy_misses": 57,
-  "repeated_reads_warned": 11,
+  "repeated_reads_warned": 12,
   "cerebrum_warnings": 0,
   "stop_count": 3
 }

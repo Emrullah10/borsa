@@ -1603,3 +1603,21 @@
 | 18:13 | Edited services/service-tracker/src/container.js | modified buildContainer() | ~109 |
 | 18:13 | Edited services/service-tracker/src/boot.js | added nullish coalescing | ~139 |
 | 18:13 | Edited services/service-tracker/src/boot.js | added nullish coalescing | ~139 |
+| 18:14 | Edited core/service-signal-engine/src/domain/regime.js | added 3 condition(s) | ~245 |
+| 18:14 | Edited core/service-signal-engine/src/domain/regime.js | added 3 condition(s) | ~245 |
+| 18:14 | Edited core/service-signal-engine/test/unit/regime.test.js | 2→2 lines | ~39 |
+| 18:14 | Edited core/service-signal-engine/test/unit/regime.test.js | 2→2 lines | ~39 |
+| 18:14 | Edited core/service-signal-engine/test/unit/regime.test.js | expanded (+27 lines) | ~305 |
+| 18:14 | Edited core/service-signal-engine/test/unit/regime.test.js | expanded (+27 lines) | ~305 |
+| 18:15 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | 5→5 lines | ~96 |
+| 18:15 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | 5→5 lines | ~96 |
+| 18:15 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | modified getHigherTfTrend() | ~72 |
+| 18:15 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | modified getHigherTfTrend() | ~72 |
+| 18:15 | Created core/service-backtest/test/unit/aligned-buffer.test.js | — | ~537 |
+| 18:15 | Created core/service-backtest/test/unit/aligned-buffer.test.js | — | ~537 |
+| 18:15 | Created core/service-backtest/src/domain/aligned-buffer.js | — | ~172 |
+| 18:15 | Created core/service-backtest/src/domain/aligned-buffer.js | — | ~172 |
+| 18:16 | Edited services/service-backtest/main.js | modified fetchRegimeSeries() | ~1344 |
+| 18:16 | Edited services/service-backtest/main.js | modified fetchRegimeSeries() | ~1344 |
+| 18:17 | Created scratch-test-fetch.mjs | — | ~69 |
+| 18:17 | Created scratch-test-fetch.mjs | — | ~69 |
