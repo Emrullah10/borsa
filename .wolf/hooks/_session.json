@@ -306,6 +306,11 @@
       "count": 2,
       "tokens": 936,
       "first_read": "2026-07-08T14:25:57.956Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/docs/MONOREPO_STRUCTURE.md": {
+      "count": 1,
+      "tokens": 3404,
+      "first_read": "2026-07-08T14:27:22.535Z"
     }
   },
   "files_written": [
@@ -822,7 +827,7 @@
     "web-app/src/main.jsx": 1,
     "web-app/src/features/signals/components/SignalCard.test.jsx": 2
   },
-  "anatomy_hits": 8,
+  "anatomy_hits": 9,
   "anatomy_misses": 53,
   "repeated_reads_warned": 4,
   "cerebrum_warnings": 0,

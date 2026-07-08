@@ -23,6 +23,9 @@
 
 <!-- Significant technical decisions with rationale. Why X was chosen over Y. -->
 
+**[2026-07-08] Monorepo mimari taşıması (Tropiq şablonu):**
+Proje `backend/` + `frontend/` iki-blok yapısından, kök seviyede `core/ services/ packages/ db-schemas/ web-app/` yapısına taşındı (bkz. `~/MONOREPO-ARCHITECTURE-TEMPLATE.md`). Her Node servisi (signal-engine, market-data, tracker, notifier, backtest) framework-free `core/service-X` (domain/application/infrastructure) + composition-root `services/service-X` (main.js→boot.js→container.js) olarak ikiye bölündü; datasource singleton'ları (`import datasources from '@borsa-bot/datasource'`) dependency-injection factory'lere (`make*({ db })`) çevrildi. service-ai (Python) dokunulmadı — 3 dosyalık bir serviste core split seremoni olurdu. Frontend `web-app/src/{features,pages,layouts,shared,styles}` yapısına taşındı, `@api @features @layouts @pages @shared @store @styles` path alias'ları eklendi (vite.config.js resolve.alias + jsconfig.json). Router/React Query gibi yeni kütüphane eklenmedi — saf taşıma. Migration sırasında iki gerçek kırık cross-service import bulundu ve düzeltildi (bkz. buglog: bug-tracker-broken-import, bug-backtest-broken-import) — her ikisi de bir servisin başka bir servisin `src/` içine relative path ile girmesinden kaynaklanıyordu; artık hepsi paylaşılan `@borsa-bot/core-*` workspace paketleri üzerinden.
+
 **[2026-06-27] SignalCard flip animasyonu + dinamik içerik yüksekliği:**
 Front yüz `position: absolute` iken içerik 280px'i aşınca kartlar üst üste bindi. Çözüm: front yüz `position: relative` yapılır (yükseklik içeriğe göre büyür), back yüz `position: absolute` + `height: 100%` ile front'un yüksekliğini alır. Flip animasyonu bozulmaz. `minHeight` sabit değer KULLANMA — içeriğe bırak.
 
@@ -46,5 +49,5 @@ Front yüz `position: absolute` iken içerik 280px'i aşınca kartlar üst üste
 ## Do-Not-Repeat
 
 - [2026-06-01] Bitget SDK metodları: `getHistoricCandlesV2` değil → `getFuturesHistoricCandles`, `getHistoricFundRate` değil → `getFuturesHistoricFundingRates`, `getOpenInterest` değil → `getFuturesOpenInterest`. OI alanı `openInterest` değil → `size`.
-- [2026-06-01] Backend kök dizinde değil, `borsa/backend/` altında. Frontend gelince `borsa/frontend/` olacak.
+- [2026-07-08] STALE (superseded 2026-07-08 monorepo migration): "Backend kök dizinde değil, borsa/backend/ altında" artık YANLIŞ. Backend içeriği kök dizine taşındı (packages/, services/, db-schemas/, core/), frontend/ → web-app/ oldu. Kod ararken backend/ veya frontend/ ile başlayan yol arama.
 - [2026-06-27] SignalCard'da `position: absolute` front yüz + sabit `minHeight` kombinasyonu: içerik büyüyünce kartlar bozulur (üst üste biner). Front yüzü `relative` yap, back yüzü `absolute` + `height: 100%` bırak. Bir daha `minHeight` sabiti koyma.
