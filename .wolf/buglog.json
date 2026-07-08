@@ -1,0 +1,1291 @@
+{
+  "version": 1,
+  "bugs": [
+    {
+      "id": "bug-backtest-direction",
+      "timestamp": "2026-06-01T07:56:00.000Z",
+      "error_message": "Backtest PF=-1.53 (matematiksel imkansiz), WIN trade'lerin r=-1.5, Win%=71.7% sahte",
+      "file": "backend/services/service-signal-engine/src/setup-builder.js",
+      "root_cause": "buildSetup() cikti objesine direction alanini koymuyordu. main.js setup'i simulateTrade'e gecirirken direction kayboluyordu. simulateTrade'de setup.direction===undefined oldugu icin her zaman else (short) daline dusuyor, long target'lari short-WIN isaretiyle (entryPrice-targetPrice)/risk = negatif r olarak hesapliyordu. Birim testler manuel direction ekledigi icin yakalanmadi (entegrasyon bugu).",
+      "fix": "buildSetup return objesine 'direction' alani eklendi: { direction, entryPrice, ... }. setup-builder.test.js'e setup.direction assertion'lari eklendi. Backtest sonucu: PF=1.08, Win%=41.9%, WIN r=+1.5, LOSS r=-1.0 — tutarli.",
+      "tags": [
+        "backtest",
+        "simulator",
+        "direction",
+        "integration-bug",
+        "missing-field"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-01T07:56:00.000Z"
+    },
+    {
+      "id": "bug-001",
+      "timestamp": "2026-05-31T14:50:25.349Z",
+      "error_message": "Incorrect value in code",
+      "file": "../borsa-bot/.worktrees/phase1a/package.json",
+      "root_cause": "Had \"^2.0.0\"",
+      "fix": "Changed to \"~2.0.0\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "json"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-31T14:50:25.349Z"
+    },
+    {
+      "id": "bug-002",
+      "timestamp": "2026-05-31T15:01:05.880Z",
+      "error_message": "Null/undefined access in ",
+      "file": "../borsa-bot/.worktrees/phase1a/services/service-signal-engine/src/indicators.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-31T15:01:05.880Z"
+    },
+    {
+      "id": "bug-003",
+      "timestamp": "2026-06-01T07:21:53.274Z",
+      "error_message": "Missing guard clause",
+      "file": "backend/services/service-backtest/main.js",
+      "root_cause": "No early return/throw for edge case: !indicators.atr || indicators.atr === 0",
+      "fix": "Added guard clause: if (!indicators.atr || indicators.atr === 0)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-01T07:21:53.274Z"
+    },
+    {
+      "id": "bug-004",
+      "timestamp": "2026-06-01T07:53:02.898Z",
+      "error_message": "Wrong return value",
+      "file": "backend/services/service-signal-engine/src/setup-builder.js",
+      "root_cause": "Was returning: { entryPrice: currentPrice, stopPrice, targetPrice",
+      "fix": "Now returns: { direction, entryPrice: currentPrice, stopPrice, ",
+      "tags": [
+        "auto-detected",
+        "return-value",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-01T07:53:02.898Z"
+    },
+    {
+      "id": "bug-006",
+      "timestamp": "2026-06-01T08:23:07.052Z",
+      "error_message": "Incorrect value in code",
+      "file": "docs/superpowers/plans/2026-06-01-web-panel.md",
+      "root_cause": "Had 'üç paneli ve top bar'",
+      "fix": "Changed to 'uc paneli ve top bar render eder'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-01T08:23:07.052Z"
+    },
+    {
+      "id": "bug-007",
+      "timestamp": "2026-06-01T21:06:24.538Z",
+      "error_message": "Null/undefined access in ",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-01T21:06:24.538Z"
+    },
+    {
+      "id": "bug-008",
+      "timestamp": "2026-06-01T21:08:43.313Z",
+      "error_message": "Significant refactor of ",
+      "file": "frontend/src/store/useStore.js",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 6→16 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-01T21:08:43.313Z"
+    },
+    {
+      "id": "bug-009",
+      "timestamp": "2026-06-01T21:08:46.324Z",
+      "error_message": "Significant refactor of ",
+      "file": "frontend/src/store/useStore.test.js",
+      "root_cause": "6 lines replaced/restructured",
+      "fix": "Rewrote 13→37 lines (6 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-01T21:08:46.324Z"
+    },
+    {
+      "id": "bug-010",
+      "timestamp": "2026-06-01T21:10:15.437Z",
+      "error_message": "Significant refactor of ",
+      "file": "frontend/src/components/TopBar.test.jsx",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 11→25 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-01T21:10:15.437Z"
+    },
+    {
+      "id": "bug-011",
+      "timestamp": "2026-06-01T21:10:22.419Z",
+      "error_message": "Null/undefined access in ",
+      "file": "frontend/src/components/TopBar.jsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-01T21:10:22.419Z"
+    },
+    {
+      "id": "bug-012",
+      "timestamp": "2026-06-01T21:15:14.713Z",
+      "error_message": "Incorrect value in code",
+      "file": "frontend/src/components/DetailPanel.jsx",
+      "root_cause": "Had 'long'",
+      "fix": "Changed to 'AL'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-01T21:15:14.713Z"
+    },
+    {
+      "id": "bug-013",
+      "timestamp": "2026-06-02T13:15:08.024Z",
+      "error_message": "Incorrect value in code",
+      "file": "../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/scalp-bot-project.md",
+      "root_cause": "Had `python3 -m uvicorn`",
+      "fix": "Changed to `neutral`",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-02T13:15:08.024Z"
+    },
+    {
+      "id": "bug-ai-launch-uvicorn",
+      "timestamp": "2026-06-02T00:00:00.000Z",
+      "error_message": "/opt/homebrew/opt/python@3.13/bin/python3.13: No module named uvicorn (AI Service baslamiyor)",
+      "file": ".vscode/launch.json",
+      "root_cause": "AI Service (FastAPI) launch config 'module: uvicorn' diyordu ama 'python' alani yoktu. VSCode global homebrew python3.13'u secti, uvicorn orada degil sadece service-ai/.venv icinde kurulu (0.30.1).",
+      "fix": "launch.json AI Service config'ine 'python': '${workspaceFolder}/backend/services/service-ai/.venv/bin/python' eklendi. Terminalden calistirirken .venv/bin/uvicorn kullan.",
+      "tags": [
+        "ai-service",
+        "launch.json",
+        "venv",
+        "uvicorn",
+        "python"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-02T00:00:00.000Z"
+    },
+    {
+      "id": "bug-015",
+      "timestamp": "2026-06-02T13:32:04.636Z",
+      "error_message": "Incorrect value in code",
+      "file": "backend/db-schemas/00-init.sql",
+      "root_cause": "Had 'long'",
+      "fix": "Changed to 'neutral'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "sql"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-02T13:32:04.636Z"
+    },
+    {
+      "id": "bug-signal-neutral-enum",
+      "timestamp": "2026-06-02T13:30:51.000Z",
+      "error_message": "Subscriber message error: invalid input value for enum signal_direction: \"neutral\"",
+      "file": "backend/db-schemas/00-init.sql",
+      "root_cause": "liquidation-pressure.js direction='neutral' uretebiliyor (baski yok = gercek durum). signal-repository.saveSignal bunu liq_direction kolonuna yaziyor; kolon signal_direction enum tipinde ama enum sadece (long,short) iceriyordu. Ana 'direction' kolonu degil — o subscriber.js:104 isCandidate ile zaten neutral'i eliyor. Sorun liq_direction.",
+      "fix": "signal_direction enum'una 'neutral' eklendi: ALTER TYPE signal_direction ADD VALUE IF NOT EXISTS 'neutral' (canli DB) + 00-init.sql guncellendi. null yerine neutral tercih edildi cunku 'yon yok' ile 'hesaplanmadi' ayrimi korunsun. DB testinde liq_direction='neutral' kabul edildi.",
+      "tags": [
+        "signal-engine",
+        "postgres",
+        "enum",
+        "neutral",
+        "liquidation-pressure",
+        "liq_direction"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-02T13:30:51.000Z"
+    },
+    {
+      "id": "bug-017",
+      "timestamp": "2026-06-02T13:32:35.759Z",
+      "error_message": "Incorrect value in code",
+      "file": "../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/scalp-bot-project.md",
+      "root_cause": "Had `signal_direction`",
+      "fix": "Changed to `direction`",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-02T13:32:35.759Z"
+    },
+    {
+      "id": "bug-onsignal-scope",
+      "timestamp": "2026-06-02T13:33:07.000Z",
+      "error_message": "Subscriber message error: onSignal is not defined",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "onSignal startSubscriber'a parametre olarak geliyor ama handleMessage'a gecirilmiyordu. handleMessage icinde onSignal?.(...) cagrisi scope'ta tanimsiz -> ReferenceError, her sinyal uretiminde patliyordu.",
+      "fix": "on('message') icindeki handleMessage cagrisina ve handleMessage imzasina onSignal eklendi: handleMessage(channel,msg,{confluenceThreshold,rrMin,onSignal}).",
+      "tags": [
+        "signal-engine",
+        "subscriber",
+        "scope",
+        "onSignal",
+        "ws"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-02T13:33:07.000Z"
+    },
+    {
+      "id": "bug-019",
+      "timestamp": "2026-06-03T14:34:54.942Z",
+      "error_message": "Null/undefined access in ",
+      "file": "backend/services/service-market-data/src/bitget-ws.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check) | Also: // ticker carries funding rate, next funding time and open i; if (channel === 'ticker') {",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-03T14:36:34.485Z"
+    },
+    {
+      "id": "bug-bitget-ws-channels",
+      "timestamp": "2026-06-03T14:35:19.000Z",
+      "error_message": "Bitget WS subscribe rejected: code 30016 Param error — channel funding-rate / open-interest / account-ratio",
+      "file": "backend/services/service-market-data/src/bitget-ws.js",
+      "root_cause": "Bitget V2 public WS'te funding-rate/open-interest/account-ratio diye AYRI public kanal yok. Bu veriler 'ticker' kanalinda geliyor (fundingRate, nextFundingTime, holdingAmount=OI). Long/short ratio sadece REST'te. Kod 3 olmayan kanala subscribe ediyor, hepsi 30016 reddediliyordu. Ayrica handleUpdate'te 'ticker' case'i hic yoktu, funding/OI hicbir zaman publish edilmiyordu (signal-engine default 0 kullaniyordu).",
+      "fix": "subscribeAll'dan 3 gecersiz abonelik silindi, sadece candle+ticker kaldi. handleUpdate'e 'ticker' case eklendi: d.fundingRate->publishFunding, d.holdingAmount->publishOI. account-ratio REST'e birakildi (Faz 1D). Teyit: Bitget V2 doc Tickers-Channel.",
+      "tags": [
+        "market-data",
+        "bitget",
+        "websocket",
+        "ticker",
+        "funding",
+        "open-interest",
+        "30016"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-03T14:35:19.000Z"
+    },
+    {
+      "id": "bug-021",
+      "timestamp": "2026-06-04T06:52:59.424Z",
+      "error_message": "Missing await",
+      "file": "frontend/src/components/TopBar.test.jsx",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call | Also: it('hamburger butonunu tıklanınca toggleDrawer çağrılır', as; const user = userEvent.setup();",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-04T06:52:59.425Z"
+    },
+    {
+      "id": "bug-022",
+      "timestamp": "2026-06-04T06:54:44.099Z",
+      "error_message": "CSS fix: height, flexGrow",
+      "file": "frontend/src/App.jsx",
+      "root_cause": "height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' → '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', bgcolor: '#0d1117'; flexGrow: 1, display: 'grid', gridTemplateColumns: '260px 1fr', minHeight: 0 → 1, overflow: 'hidden'",
+      "fix": "Changed height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' → '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', bgcolor: '#0d1117'; flexGrow: 1, display: 'grid', gridTemplateColumns: '260px 1fr', minHeight: 0 → 1, overflow: 'hidden'",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T06:54:44.099Z"
+    },
+    {
+      "id": "bug-023",
+      "timestamp": "2026-06-04T08:18:07.326Z",
+      "error_message": "Significant refactor of ",
+      "file": "../../../.claude/plans/ok-fazla-sinyal-var-splendid-meadow.md",
+      "root_cause": "4 lines replaced/restructured",
+      "fix": "Rewrote 6→12 lines (4 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T08:18:07.326Z"
+    },
+    {
+      "id": "bug-024",
+      "timestamp": "2026-06-04T08:19:00.449Z",
+      "error_message": "Wrong reference: TWO_HOURS_MS should be FRESH_WINDOW_MS",
+      "file": "frontend/src/components/SignalGrid.jsx",
+      "root_cause": "Used \"TWO_HOURS_MS\" instead of \"FRESH_WINDOW_MS\"",
+      "fix": "Changed TWO_HOURS_MS → FRESH_WINDOW_MS",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T08:19:00.449Z"
+    },
+    {
+      "id": "bug-025",
+      "timestamp": "2026-06-04T08:19:06.563Z",
+      "error_message": "CSS fix: createdAt",
+      "file": "frontend/src/components/SignalGrid.test.jsx",
+      "root_cause": "createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), → new Date(Date.now() - 20 * 60 * 1000).toISOString(),",
+      "fix": "Changed createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), → new Date(Date.now() - 20 * 60 * 1000).toISOString(),",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T08:19:06.563Z"
+    },
+    {
+      "id": "bug-026",
+      "timestamp": "2026-06-04T08:21:33.433Z",
+      "error_message": "Incorrect value in code",
+      "file": ".vscode/launch.json",
+      "root_cause": "Had \"configurations\"",
+      "fix": "Changed to \"stopAll\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "json"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-04T08:21:37.905Z"
+    },
+    {
+      "id": "bug-027",
+      "timestamp": "2026-06-04T08:28:12.166Z",
+      "error_message": "Missing guard clause",
+      "file": "frontend/src/components/SignalGrid.jsx",
+      "root_cause": "No early return/throw for edge case: direction !== 'all' && s.direction !== direction",
+      "fix": "Added guard clause: if (direction !== 'all' && s.direction !== d)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-04T08:28:12.168Z"
+    },
+    {
+      "id": "bug-028",
+      "timestamp": "2026-06-04T08:28:57.129Z",
+      "error_message": "CSS fix: id",
+      "file": "frontend/src/components/SignalGrid.test.jsx",
+      "root_cause": "id: 'b', symbol: 'HIGHUSDT', confluenceScore: 0.9 → 'b', symbol: 'SHORTUSDT', direction: 'short'",
+      "fix": "Changed id: 'b', symbol: 'HIGHUSDT', confluenceScore: 0.9 → 'b', symbol: 'SHORTUSDT', direction: 'short'",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T08:28:57.129Z"
+    },
+    {
+      "id": "bug-029",
+      "timestamp": "2026-06-04T09:04:06.788Z",
+      "error_message": "Missing error handling in function",
+      "file": "backend/services/service-market-data/src/bitget-ws.js",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T09:04:06.788Z"
+    },
+    {
+      "id": "bug-030",
+      "timestamp": "2026-06-04T09:04:21.174Z",
+      "error_message": "Missing await",
+      "file": "backend/services/service-market-data/src/bitget-ws.js",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T09:04:21.174Z"
+    },
+    {
+      "id": "bug-031",
+      "timestamp": "2026-06-04T09:04:37.014Z",
+      "error_message": "Significant refactor of ",
+      "file": "backend/services/service-market-data/src/bitget-ws.js",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 3→4 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T09:04:37.014Z"
+    },
+    {
+      "id": "bug-032",
+      "timestamp": "2026-06-04T09:05:36.417Z",
+      "error_message": "Wrong reference: getFuturesContracts should be getFuturesContractConfig",
+      "file": "backend/services/service-market-data/src/bitget-ws.js",
+      "root_cause": "Used \"getFuturesContracts\" instead of \"getFuturesContractConfig\"",
+      "fix": "Changed getFuturesContracts → getFuturesContractConfig",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T09:05:36.417Z"
+    },
+    {
+      "id": "bug-033",
+      "timestamp": "2026-06-04T09:09:39.340Z",
+      "error_message": "Missing guard clause",
+      "file": "backend/services/service-market-data/src/bitget-ws.js",
+      "root_cause": "No early return/throw for edge case: subscribing",
+      "fix": "Added guard clause: if (subscribing)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T09:09:39.340Z"
+    },
+    {
+      "id": "bug-ws-resubscribe-loop",
+      "timestamp": "2026-06-04T09:10:00.000Z",
+      "error_message": "MARKET_DATA_SYMBOLS=ALL ile sonsuz 'Websocket connection closed / Reconnecting / reconnected' dongusu, hic veri akmiyor, panelde hala 2 coin",
+      "file": "backend/services/service-market-data/src/bitget-ws.js",
+      "root_cause": "595 coin x 3 tf + ticker = ~2380 abonelik tek anda subscribeTopic ile gonderilince Bitget WS rate/mesaj limitini asip baglantiyi kapatiyor; reconnect'te yine hepsi gonderiliyor -> sonsuz dongu",
+      "fix": "subscribeAll batch'lendi (50 topic/grup, gruplar arasi 300ms) ve 'subscribing' guard ile open+reconnected ayni anda gelse de mukerrer tur engellendi",
+      "tags": [
+        "websocket",
+        "bitget",
+        "rate-limit",
+        "reconnect-loop",
+        "subscription"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T09:10:00.000Z"
+    },
+    {
+      "id": "bug-035",
+      "timestamp": "2026-06-04T09:54:41.225Z",
+      "error_message": "Significant refactor of ",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "11 lines replaced/restructured",
+      "fix": "Rewrote 28→32 lines (11 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T09:54:41.225Z"
+    },
+    {
+      "id": "bug-036",
+      "timestamp": "2026-06-04T09:54:57.666Z",
+      "error_message": "Wrong reference: marketState should be ensureState",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "Used \"marketState\" instead of \"ensureState\"",
+      "fix": "Changed marketState → ensureState",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T09:54:57.666Z"
+    },
+    {
+      "id": "bug-signal-only-2-coins",
+      "timestamp": "2026-06-04T09:55:00.000Z",
+      "error_message": "MARKET_DATA_SYMBOLS=ALL olmasina ve market-data 595 coin yayinlamasina ragmen panelde/sinyallerde sadece BTCUSDT ve ETHUSDT goruluyor",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "signal-engine abone olacagi kanallari Postgres watchlist tablosundan uretiyordu; tabloda yalnizca BTCUSDT+ETHUSDT (active=true) vardi. Market-data tum coinleri md.* kanallarina yayinlasa da signal-engine sadece bu 2 coine subscribe ediyor, dolayisiyla sadece onlardan sinyal uretiyordu.",
+      "fix": "subscribe(...watchlist) yerine psubscribe('md.*') + on('pmessage'); candleBuffers ve marketState lazy olusturuluyor (ensureState helper). Boylece market-data ne yayinlarsa signal-engine otomatik yakalar, watchlist tablosuna bagimlilik kalkti.",
+      "tags": [
+        "signal-engine",
+        "watchlist",
+        "psubscribe",
+        "redis",
+        "tum-coinler"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T09:55:00.000Z"
+    },
+    {
+      "id": "bug-038",
+      "timestamp": "2026-06-04T09:57:54.545Z",
+      "error_message": "Wrong operator: !== should be ||",
+      "file": "backend/services/service-market-data/src/bitget-ws.js",
+      "root_cause": "Used \"!==\" instead of \"||\"",
+      "fix": "Changed operator !== → ||",
+      "tags": [
+        "auto-detected",
+        "operator-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T09:57:54.545Z"
+    },
+    {
+      "id": "bug-ws-request-too-many-30006",
+      "timestamp": "2026-06-04T09:58:00.000Z",
+      "error_message": "Bitget WS subscribe rejected: {\"event\":\"error\",\"code\":30006,\"msg\":\"request too many\",\"wsKey\":\"v2Public\"}",
+      "file": "backend/services/service-market-data/src/bitget-ws.js",
+      "root_cause": "MARKET_DATA_SYMBOLS=ALL ile 595 coin x (3 tf + ticker) = 2380 abonelik. Bitget public WS ~10 istek/sn kabul ediyor; batch 50/300ms (=~166 istek/sn) limiti asti -> code 30006 request too many.",
+      "fix": "1) Coin sayisi TOP:N ile sinirlandi (getFuturesAllTickers usdtVolume'a gore en likit N, varsayilan 50). 2) Abonelik hizi batch 8/1000ms = ~8 istek/sn yapildi. Test: 200 topic ~24sn'de 30006 olmadan tamamlandi, veri akti.",
+      "tags": [
+        "websocket",
+        "bitget",
+        "rate-limit",
+        "30006",
+        "subscription",
+        "top-volume"
+      ],
+      "related_bugs": [
+        "bug-ws-resubscribe-loop"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T09:58:00.000Z"
+    },
+    {
+      "id": "bug-040",
+      "timestamp": "2026-06-04T10:04:03.360Z",
+      "error_message": "Significant refactor of ",
+      "file": "backend/services/service-notifier/main.js",
+      "root_cause": "6 lines replaced/restructured",
+      "fix": "Rewrote 6→10 lines (6 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T10:04:03.360Z"
+    },
+    {
+      "id": "bug-041",
+      "timestamp": "2026-06-04T10:07:19.609Z",
+      "error_message": "Null/undefined access in ",
+      "file": "frontend/src/components/SignalCard.jsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check) | Also: const [livePrice, setLivePrice] = useState(null);; // Anlık fiyatı periyodik çek | Also: // Anlık fiyatın giriş fiyatına göre durumu (long'da artış =; const liveDiff = livePrice != null ? Number(pctDiff(signal.e | Also: {/* Anlık fiyat */}; <Box",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 4,
+      "last_seen": "2026-06-04T10:07:45.114Z"
+    },
+    {
+      "id": "bug-042",
+      "timestamp": "2026-06-04T10:08:17.242Z",
+      "error_message": "Missing await",
+      "file": "frontend/src/components/SignalCard.test.jsx",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call | Also: it('anlık fiyatı (Güncel) gösterir', async () => {; render(<SignalCard signal={MOCK_SIGNAL} isNew={false} />);",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-04T10:08:17.243Z"
+    },
+    {
+      "id": "bug-043",
+      "timestamp": "2026-06-04T10:14:23.327Z",
+      "error_message": "CSS fix: py, color",
+      "file": "frontend/src/components/SignalCard.jsx",
+      "root_cause": "py: 0.75, → 0.5,; color: liveColor, fontSize: '0.75rem' → '#58a6ff'",
+      "fix": "Changed py: 0.75, → 0.5,; color: liveColor, fontSize: '0.75rem' → '#58a6ff'",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T10:14:23.327Z"
+    },
+    {
+      "id": "bug-044",
+      "timestamp": "2026-06-04T10:17:08.711Z",
+      "error_message": "Null/undefined access in ",
+      "file": "frontend/src/components/SignalCard.jsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T10:17:08.711Z"
+    },
+    {
+      "id": "bug-045",
+      "timestamp": "2026-06-04T10:17:40.666Z",
+      "error_message": "Null/undefined access in ",
+      "file": "frontend/src/components/SignalGrid.jsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T10:17:40.666Z"
+    },
+    {
+      "id": "bug-046",
+      "timestamp": "2026-06-04T10:18:02.925Z",
+      "error_message": "Missing import: ../store/useStore.js",
+      "file": "frontend/src/components/SignalCard.test.jsx",
+      "root_cause": "Module(s) not imported: ../store/useStore.js",
+      "fix": "Added import(s) for ../store/useStore.js",
+      "tags": [
+        "auto-detected",
+        "missing-import",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T10:18:02.925Z"
+    },
+    {
+      "id": "bug-047",
+      "timestamp": "2026-06-04T10:21:48.405Z",
+      "error_message": "CSS fix: fontWeight, display",
+      "file": "frontend/src/components/SignalCard.jsx",
+      "root_cause": "fontWeight: 700, color: '#e6edf3', fontSize: '0.95rem' → 700, color: '#e6edf3', fontSize: '0.95rem', flexShrink: 0; display: 'flex', gap: 0.75, flexWrap: 'wrap' → 'flex', gap: 0.75, flexWrap: 'wrap', mt: 1",
+      "fix": "Changed fontWeight: 700, color: '#e6edf3', fontSize: '0.95rem' → 700, color: '#e6edf3', fontSize: '0.95rem', flexShrink: 0; display: 'flex', gap: 0.75, flexWrap: 'wrap' → 'flex', gap: 0.75, flexWrap: 'wrap', mt: 1",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T10:21:48.405Z"
+    },
+    {
+      "id": "bug-048",
+      "timestamp": "2026-06-04T10:57:23.633Z",
+      "error_message": "Missing guard clause",
+      "file": "backend/services/service-signal-engine/src/indicators.js",
+      "root_cause": "No early return/throw for edge case: closes.length < period * 2",
+      "fix": "Added guard clause: if (closes.length < period * 2)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T10:57:23.633Z"
+    },
+    {
+      "id": "bug-049",
+      "timestamp": "2026-06-04T10:58:00.376Z",
+      "error_message": "Significant refactor of ",
+      "file": "backend/services/service-signal-engine/src/confluence.js",
+      "root_cause": "10 lines replaced/restructured",
+      "fix": "Rewrote 57→99 lines (10 removed) | Also: const { ema9, ema21, ema50, rsi, macd, bb, vwap, c; if (rsi > 50 && rsi < 70) { momentumScore += 0.5; ",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-04T10:58:00.378Z"
+    },
+    {
+      "id": "bug-050",
+      "timestamp": "2026-06-04T10:59:26.143Z",
+      "error_message": "Null/undefined access in ",
+      "file": "frontend/src/components/SignalCard.jsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T10:59:26.143Z"
+    },
+    {
+      "id": "bug-051",
+      "timestamp": "2026-06-04T11:49:42.543Z",
+      "error_message": "Significant refactor of ",
+      "file": "backend/services/service-signal-engine/src/liquidation-pressure.js",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 35→52 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T11:49:42.543Z"
+    },
+    {
+      "id": "bug-052",
+      "timestamp": "2026-06-04T11:50:15.123Z",
+      "error_message": "Null/undefined access in ",
+      "file": "backend/services/service-signal-engine/src/confluence.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check) | Also: // Multi-TF gate: 1m sinyali için 5m trend teyidi; // higherTfTrend='long'/'short'/'neutral'/null",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-04T11:50:37.622Z"
+    },
+    {
+      "id": "bug-053",
+      "timestamp": "2026-06-04T11:51:23.253Z",
+      "error_message": "Missing guard clause",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "No early return/throw for edge case: !buf || buf.length < 30",
+      "fix": "Added guard clause: if (!buf || buf.length < 30)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T11:51:23.253Z"
+    },
+    {
+      "id": "bug-054",
+      "timestamp": "2026-06-04T11:51:42.646Z",
+      "error_message": "Null/undefined access in ",
+      "file": "backend/services/service-signal-engine/src/signal-repository.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T11:51:42.646Z"
+    },
+    {
+      "id": "bug-055",
+      "timestamp": "2026-06-04T13:36:40.196Z",
+      "error_message": "Significant refactor of ",
+      "file": "../../../.claude/plans/projemize-bu-t-m-ara-t-rmanla-mighty-wolf.md",
+      "root_cause": "5 lines replaced/restructured",
+      "fix": "Rewrote 8→9 lines (5 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T13:36:40.196Z"
+    },
+    {
+      "id": "bug-056",
+      "timestamp": "2026-06-04T13:37:42.968Z",
+      "error_message": "Null/undefined access in ",
+      "file": "backend/services/service-signal-engine/src/confluence.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T13:37:42.968Z"
+    },
+    {
+      "id": "bug-057",
+      "timestamp": "2026-06-04T13:37:48.225Z",
+      "error_message": "Wrong condition in logic",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "Condition was: if (candles.length < 30)",
+      "fix": "Changed to: if (candles.length < 50)",
+      "tags": [
+        "auto-detected",
+        "logic-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T13:37:48.225Z"
+    },
+    {
+      "id": "bug-058",
+      "timestamp": "2026-06-04T13:39:38.664Z",
+      "error_message": "Null/undefined access in ",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T13:39:38.664Z"
+    },
+    {
+      "id": "bug-059",
+      "timestamp": "2026-06-04T13:40:34.167Z",
+      "error_message": "Missing error handling in function",
+      "file": "backend/services/service-market-data/src/bitget-ws.js",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block | Also: // LSR REST poller'ı arka planda başlat; startLsrPoller(symbols, publisher).catch(err =>",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 3,
+      "last_seen": "2026-06-04T13:40:41.578Z"
+    },
+    {
+      "id": "bug-060",
+      "timestamp": "2026-06-04T13:41:46.405Z",
+      "error_message": "Null/undefined access in ",
+      "file": "frontend/src/components/TopBar.jsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check) | Also: {regime && (() => {; const cfg = REGIME_CONFIG[regime] ?? REGIME_CONFIG.neutral;",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-04T13:41:52.658Z"
+    },
+    {
+      "id": "bug-061",
+      "timestamp": "2026-06-04T13:56:20.089Z",
+      "error_message": "Function not marked async",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "Function uses await but wasn't declared async",
+      "fix": "Added async modifier",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T13:56:20.089Z"
+    },
+    {
+      "id": "bug-062",
+      "timestamp": "2026-06-04T13:56:26.733Z",
+      "error_message": "Missing guard clause",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "No early return/throw for edge case: signalLocks[symbol]",
+      "fix": "Added guard clause: if (signalLocks[symbol])",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T13:56:26.733Z"
+    },
+    {
+      "id": "bug-063",
+      "timestamp": "2026-06-04T14:36:47.059Z",
+      "error_message": "Null/undefined access in ",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-04T14:36:47.059Z"
+    },
+    {
+      "id": "bug-064",
+      "timestamp": "2026-06-26T21:16:32.412Z",
+      "error_message": "Missing guard clause",
+      "file": "../../../.claude/plans/projemize-bu-t-m-ara-t-rmanla-mighty-wolf.md",
+      "root_cause": "No early return/throw for edge case: targetPct < MIN_TARGET_PCT",
+      "fix": "Added guard clause: if (targetPct < MIN_TARGET_PCT)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-26T21:16:32.412Z"
+    },
+    {
+      "id": "bug-065",
+      "timestamp": "2026-06-26T22:46:39.397Z",
+      "error_message": "Missing error handling in function",
+      "file": "backend/services/service-market-data/src/bitget-ws.js",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-26T22:46:39.397Z"
+    },
+    {
+      "id": "bug-066",
+      "timestamp": "2026-06-26T22:47:15.642Z",
+      "error_message": "Wrong condition in logic",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "Condition was: if (tf === '15m')",
+      "fix": "Changed to: if (tf === '15m' || tf === '4h')",
+      "tags": [
+        "auto-detected",
+        "logic-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-26T22:47:15.642Z"
+    },
+    {
+      "id": "bug-067",
+      "timestamp": "2026-06-26T22:47:25.038Z",
+      "error_message": "Significant refactor of ",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 4→5 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-26T22:47:25.038Z"
+    },
+    {
+      "id": "bug-068",
+      "timestamp": "2026-06-26T22:47:48.967Z",
+      "error_message": "Significant refactor of ",
+      "file": "backend/services/service-signal-engine/test/unit/regime.test.js",
+      "root_cause": "17 lines replaced/restructured",
+      "fix": "Rewrote 36→55 lines (17 removed) | Also: describe('calcRegime (15m + 4h birleşik)', () => {; it('15m bull + 4h bull → bull', () => {",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-26T22:52:08.969Z"
+    },
+    {
+      "id": "bug-069",
+      "timestamp": "2026-06-26T22:51:44.249Z",
+      "error_message": "Significant refactor of ",
+      "file": "backend/services/service-signal-engine/src/regime.js",
+      "root_cause": "9 lines replaced/restructured",
+      "fix": "Rewrote 13→4 lines (9 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-26T22:51:44.249Z"
+    },
+    {
+      "id": "bug-070",
+      "timestamp": "2026-06-26T23:05:57.511Z",
+      "error_message": "Missing await",
+      "file": "backend/services/service-signal-engine/src/signal-repository.js",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-26T23:05:57.511Z"
+    },
+    {
+      "id": "bug-071",
+      "timestamp": "2026-06-26T23:06:27.241Z",
+      "error_message": "Missing error handling in unknown",
+      "file": "backend/services/service-signal-engine/main.js",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-26T23:06:27.241Z"
+    },
+    {
+      "id": "bug-072",
+      "timestamp": "2026-06-26T23:07:43.998Z",
+      "error_message": "CSS fix: bgcolor, Mui-selected",
+      "file": "frontend/src/components/AppDrawer.jsx",
+      "root_cause": "bgcolor: '#21262d', → '#21262d'; Mui-selected: hover': { → hover': { bgcolor: '#21262d'",
+      "fix": "Changed bgcolor: '#21262d', → '#21262d'; Mui-selected: hover': { → hover': { bgcolor: '#21262d'",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-26T23:07:43.998Z"
+    },
+    {
+      "id": "bug-073",
+      "timestamp": "2026-06-26T23:35:41.389Z",
+      "error_message": "Missing guard clause",
+      "file": "frontend/src/components/SignalCard.jsx",
+      "root_cause": "No early return/throw for edge case: livePrice == null",
+      "fix": "Added guard clause: if (livePrice == null)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-26T23:35:41.389Z"
+    },
+    {
+      "id": "bug-074",
+      "timestamp": "2026-06-26T23:38:45.782Z",
+      "error_message": "CSS fix: position",
+      "file": "frontend/src/components/SignalCard.jsx",
+      "root_cause": "position: 'absolute', → 'relative',",
+      "fix": "Changed position: 'absolute', → 'relative',",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-26T23:38:45.782Z"
+    },
+    {
+      "id": "bug-075",
+      "timestamp": "2026-06-27T00:16:34.597Z",
+      "error_message": "Wrong return value",
+      "file": "frontend/src/components/SignalGrid.jsx",
+      "root_cause": "Was returning: sortSignals(filtered, sortBy);",
+      "fix": "Now returns: sortSignals(filtered, sortBy, missedIds);",
+      "tags": [
+        "auto-detected",
+        "return-value",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-27T00:16:34.597Z"
+    },
+    {
+      "id": "bug-076",
+      "timestamp": "2026-06-27T00:37:21.949Z",
+      "error_message": "Significant refactor of ",
+      "file": "backend/services/service-signal-engine/src/signal-repository.js",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 7→11 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-27T00:37:21.949Z"
+    },
+    {
+      "id": "bug-077",
+      "timestamp": "2026-06-27T00:39:46.380Z",
+      "error_message": "Null/undefined access in ",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-27T00:39:46.380Z"
+    },
+    {
+      "id": "bug-078",
+      "timestamp": "2026-06-27T00:40:34.842Z",
+      "error_message": "Significant refactor of ",
+      "file": "backend/services/service-signal-engine/src/setup-builder.js",
+      "root_cause": "6 lines replaced/restructured",
+      "fix": "Rewrote 11→8 lines (6 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-27T00:40:34.842Z"
+    },
+    {
+      "id": "bug-079",
+      "timestamp": "2026-06-27T00:41:01.219Z",
+      "error_message": "Wrong reference: rrMin should be onSignal",
+      "file": "backend/services/service-signal-engine/src/subscriber.js",
+      "root_cause": "Used \"rrMin\" instead of \"onSignal\"",
+      "fix": "Changed rrMin → onSignal",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-27T00:41:05.369Z"
+    }
+  ]
+}

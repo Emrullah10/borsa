@@ -1,0 +1,100 @@
+<h2>Sinyal Kartı — Ön ve Arka Yüz</h2>
+<p class="subtitle">Onayladığın tasarımın gerçek görünümü. Soldaki kartı görürsün; "Çevir" deyince sağdaki açılır. Sana uygun mu?</p>
+
+<style>
+  .card-demo {
+    width: 320px; border-radius: 16px; overflow: hidden;
+    background: #161b22; border: 1px solid #21262d;
+    font-family: -apple-system, system-ui, sans-serif;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  }
+  .card-top { padding: 18px 20px 8px; }
+  .card-row { display:flex; justify-content:space-between; align-items:center; }
+  .sym { font-size: 20px; font-weight: 800; color:#e6edf3; letter-spacing:.5px; }
+  .dir-long { font-size:13px; font-weight:800; color:#0d1117; background:#3fb950; padding:4px 12px; border-radius:20px; }
+  .dir-short { font-size:13px; font-weight:800; color:#0d1117; background:#f85149; padding:4px 12px; border-radius:20px; }
+  .conf { margin-top:10px; display:flex; align-items:center; gap:8px; }
+  .dots { letter-spacing:3px; font-size:14px; }
+  .dot-on { color:#d29922; } .dot-off{ color:#30363d; }
+  .conf-txt { font-size:12px; color:#8b949e; }
+  .levels { padding: 14px 20px 4px; }
+  .lvl { display:flex; justify-content:space-between; align-items:baseline; padding:7px 0; border-bottom:1px solid #21262d; }
+  .lvl:last-child{ border-bottom:none; }
+  .lvl-label { font-size:11px; color:#8b949e; text-transform:uppercase; letter-spacing:.8px; }
+  .lvl-val { font-size:17px; font-weight:700; color:#e6edf3; font-variant-numeric:tabular-nums; }
+  .lvl-pct { font-size:11px; margin-left:8px; }
+  .green{ color:#3fb950; } .red{ color:#f85149; }
+  .flip-btn { margin:10px 20px 18px; text-align:center; padding:10px; border-radius:10px;
+    background:#21262d; color:#58a6ff; font-size:13px; font-weight:600; cursor:default; }
+  /* back */
+  .back { padding:18px 20px; }
+  .ai-title { font-size:13px; font-weight:700; color:#e6edf3; margin-bottom:10px; }
+  .ai-text { font-size:14px; line-height:1.6; color:#c9d1d9; background:#0d1117; padding:14px; border-radius:10px; border-left:3px solid #58a6ff; }
+  .badges { display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; }
+  .badge { font-size:12px; font-weight:600; padding:6px 12px; border-radius:8px; background:#21262d; color:#c9d1d9; }
+</style>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">ÖN YÜZ — tek bakışta karar</div>
+    <div class="mockup-body" style="display:flex;justify-content:center;padding:24px;background:#0d1117;">
+      <div class="card-demo">
+        <div class="card-top">
+          <div class="card-row">
+            <span class="sym">BTCUSDT</span>
+            <span class="dir-long">🟢 LONG</span>
+          </div>
+          <div class="conf">
+            <span class="dots"><span class="dot-on">●●●●</span><span class="dot-off">○</span></span>
+            <span class="conf-txt">%72 güven</span>
+          </div>
+        </div>
+        <div class="levels">
+          <div class="lvl"><span class="lvl-label">Giriş</span><span class="lvl-val">105.200</span></div>
+          <div class="lvl"><span class="lvl-label">Stop</span><span><span class="lvl-val">104.800</span><span class="lvl-pct red">-0.4%</span></span></div>
+          <div class="lvl"><span class="lvl-label">Hedef</span><span><span class="lvl-val">106.100</span><span class="lvl-pct green">+0.9%</span></span></div>
+          <div class="lvl"><span class="lvl-label">R / R</span><span class="lvl-val">2.1</span></div>
+        </div>
+        <div class="flip-btn">Çevir ↻ — Detay & AI yorumu</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">ARKA YÜZ — çevirince</div>
+    <div class="mockup-body" style="display:flex;justify-content:center;padding:24px;background:#0d1117;">
+      <div class="card-demo">
+        <div class="back">
+          <div class="ai-title">🤖 AI Yorumu</div>
+          <div class="ai-text">
+            RSI 32 ile aşırı satım bölgesinde, fiyat EMA21'in üzerinde tutunuyor ve
+            MACD yukarı dönüyor. Alıcılar kontrolü ele alıyor gibi — temkinli bir
+            alım fırsatı. Stop'a sıkı uy, hedef yakın.
+          </div>
+          <div class="badges">
+            <span class="badge">RSI 32</span>
+            <span class="badge">MACD +</span>
+            <span class="badge">EMA21 ↑</span>
+            <span class="badge">ATR 0.6%</span>
+          </div>
+        </div>
+        <div class="flip-btn">← Geri dön</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="options" style="margin-top:24px;">
+  <div class="option" data-choice="perfect" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content"><h3>Tam böyle olsun</h3><p>Bu tasarım istediğim şey, devam et</p></div>
+  </div>
+  <div class="option" data-choice="tweak" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content"><h3>Yakın ama değişiklik var</h3><p>Genel olarak iyi, terminalde söyleyeceğim ufak şeyler</p></div>
+  </div>
+  <div class="option" data-choice="different" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content"><h3>Farklı düşünüyorum</h3><p>Başka bir düzen göster</p></div>
+  </div>
+</div>

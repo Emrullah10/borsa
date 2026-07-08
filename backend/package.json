@@ -1,0 +1,31 @@
+{
+  "name": "borsa-bot",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  },
+  "workspaces": [
+    "packages/modules/*",
+    "services/*"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:market-data": "vitest run services/service-market-data",
+    "test:signal-engine": "vitest run services/service-signal-engine",
+    "db:migrate": "psql $DATABASE_URL -f db-schemas/00-init.sql -f db-schemas/01-config-watchlist.sql -f db-schemas/02-signals.sql",
+    "dev:market-data": "node --env-file=.env services/service-market-data/main.js",
+    "dev:signal-engine": "node --env-file=.env services/service-signal-engine/main.js",
+    "backtest": "node --env-file=.env services/service-backtest/main.js",
+    "dev:notifier": "node --env-file=.env services/service-notifier/main.js",
+    "dev:tracker": "node --env-file=.env services/service-tracker/main.js"
+  },
+  "devDependencies": {
+    "vitest": "~2.0.0"
+  },
+  "dependencies": {
+    "nodemailer": "^8.0.10"
+  }
+}

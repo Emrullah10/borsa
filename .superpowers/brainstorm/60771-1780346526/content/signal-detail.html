@@ -1,0 +1,137 @@
+<h2>Sağ panelde ne görmek istersin?</h2>
+<p class="subtitle">Bir sinyale tıkladığında sağ tarafta açılacak detay paneli — hangisi daha yararlı?</p>
+
+<style>
+  .mock-screen {
+    background: #0d1117;
+    border-radius: 8px;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 11px;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+  }
+  .mock-long { color: #26a69a; font-weight: bold; }
+  .mock-short { color: #ef5350; font-weight: bold; }
+  .mock-score { background: #26a69a22; color: #26a69a; border-radius: 3px; padding: 1px 5px; font-size: 10px; }
+  .mock-ai-box { background: #161b22; border-radius: 4px; padding: 8px; margin: 6px 0; border-left: 3px solid #58a6ff; }
+  .mock-ai-text { color: #8b949e; font-size: 10px; line-height: 1.6; font-style: italic; }
+  .mock-stat-row { display: flex; gap: 5px; margin: 6px 0; }
+  .mock-stat { flex: 1; background: #161b22; border-radius: 4px; padding: 5px 7px; text-align: center; }
+  .mock-stat-val { font-size: 12px; font-weight: bold; }
+  .mock-stat-lbl { font-size: 9px; color: #8b949e; }
+  .mock-chart { background: #161b22; border-radius: 4px; height: 70px; display: flex; align-items: center; justify-content: center; color: #30363d; font-size: 10px; margin: 6px 0; }
+  .mock-indicator-row { display: flex; gap: 5px; margin: 4px 0; }
+  .mock-ind { flex: 1; background: #161b22; border-radius: 3px; padding: 4px 6px; }
+  .mock-ind-lbl { font-size: 9px; color: #8b949e; }
+  .mock-ind-val { font-size: 11px; }
+  .mock-bull { color: #26a69a; }
+  .mock-bear { color: #ef5350; }
+  .mock-neutral { color: #f9a825; }
+  .mock-section-lbl { font-size: 9px; color: #8b949e; text-transform: uppercase; margin: 6px 0 3px; letter-spacing: 0.5px; }
+  .mock-warn { background: #f9a82511; border: 1px solid #f9a82533; border-radius: 4px; padding: 5px 8px; font-size: 10px; color: #f9a825; margin: 5px 0; }
+</style>
+
+<div class="cards">
+
+  <!-- OPTION A: Grafik ağırlıklı -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock-screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:12px"><strong class="mock-long">▲ LONG</strong> BTCUSDT</span>
+          <span class="mock-score">Confluence 0.87</span>
+        </div>
+        <div class="mock-chart">📈 Candlestick + EMA9/21/50 + Giriş/Stop/Hedef çizgileri</div>
+        <div class="mock-indicator-row">
+          <div class="mock-ind"><div class="mock-ind-lbl">RSI</div><div class="mock-ind-val mock-bull">34 ↑</div></div>
+          <div class="mock-ind"><div class="mock-ind-lbl">MACD</div><div class="mock-ind-val mock-bull">Pozitif</div></div>
+          <div class="mock-ind"><div class="mock-ind-lbl">Funding</div><div class="mock-ind-val mock-neutral">-0.01%</div></div>
+          <div class="mock-ind"><div class="mock-ind-lbl">OI</div><div class="mock-ind-val mock-bull">↑ Artıyor</div></div>
+        </div>
+        <div class="mock-ai-box">
+          <div class="mock-section-lbl">🤖 AI Yorum</div>
+          <div class="mock-ai-text">"RSI aşırı satımdan döndü. EMA9 EMA21 üstünde. Long güçlü."</div>
+        </div>
+        <div class="mock-stat-row">
+          <div class="mock-stat"><div class="mock-stat-val">78,420</div><div class="mock-stat-lbl">Giriş</div></div>
+          <div class="mock-stat"><div class="mock-stat-val mock-bear">78,180</div><div class="mock-stat-lbl">Stop</div></div>
+          <div class="mock-stat"><div class="mock-stat-val mock-bull">78,780</div><div class="mock-stat-lbl">Hedef</div></div>
+          <div class="mock-stat"><div class="mock-stat-val">1:1.5</div><div class="mock-stat-lbl">R:R</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Grafik + Özet</h3>
+      <p>Grafik büyük, indikatörler küçük kutularda, AI kısa yorum. Görsel odaklı — bir bakışta karar verebilirsin.</p>
+    </div>
+  </div>
+
+  <!-- OPTION B: AI analiz ağırlıklı -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock-screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:12px"><strong class="mock-long">▲ LONG</strong> BTCUSDT</span>
+          <span class="mock-score">Confluence 0.87</span>
+        </div>
+        <div class="mock-stat-row">
+          <div class="mock-stat"><div class="mock-stat-val">78,420</div><div class="mock-stat-lbl">Giriş</div></div>
+          <div class="mock-stat"><div class="mock-stat-val mock-bear">78,180</div><div class="mock-stat-lbl">Stop</div></div>
+          <div class="mock-stat"><div class="mock-stat-val mock-bull">78,780</div><div class="mock-stat-lbl">Hedef</div></div>
+          <div class="mock-stat"><div class="mock-stat-val">1:1.5</div><div class="mock-stat-lbl">R:R</div></div>
+        </div>
+        <div class="mock-ai-box">
+          <div class="mock-section-lbl">🤖 Neden bu sinyal?</div>
+          <div class="mock-ai-text">"RSI 28'den döndü — aşırı satım bölgesinden çıkış. EMA9 EMA21'i yukarı kesti, momentum pozitife döndü. Funding rate negatif → kaldıraçlı shortsların sıkışma riski var. OI artıyor ama fiyat da artıyor → gerçek alım var."</div>
+        </div>
+        <div class="mock-section-lbl">📊 İndikatör Sinyalleri</div>
+        <div style="margin-bottom:3px;font-size:10px"><span class="mock-bull">✓</span> RSI: Aşırı satım dönüşü</div>
+        <div style="margin-bottom:3px;font-size:10px"><span class="mock-bull">✓</span> EMA9 × EMA21: Yukarı kesim</div>
+        <div style="margin-bottom:3px;font-size:10px"><span class="mock-bull">✓</span> Funding: Negatif → squeeze riski düşük</div>
+        <div style="margin-bottom:3px;font-size:10px"><span class="mock-neutral">~</span> MACD: Henüz sıfır çizgisinde</div>
+        <div class="mock-warn">⚠️ Dikkat: BTC dominansı son 2 saatte düşüyor. Altcoin rotasyonu olabilir.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — AI Analiz Ağırlıklı</h3>
+      <p>Uzun AI yorumu, her indikatörün ne anlama geldiği liste halinde, varsa uyarı bandı. Grafik yok ama neden sorusunu yanıtlar.</p>
+    </div>
+  </div>
+
+  <!-- OPTION C: İkisi birden -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock-screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <span style="font-size:12px"><strong class="mock-long">▲ LONG</strong> BTCUSDT</span>
+          <span class="mock-score">Confluence 0.87</span>
+        </div>
+        <div class="mock-stat-row">
+          <div class="mock-stat"><div class="mock-stat-val">78,420</div><div class="mock-stat-lbl">Giriş</div></div>
+          <div class="mock-stat"><div class="mock-stat-val mock-bear">78,180</div><div class="mock-stat-lbl">Stop</div></div>
+          <div class="mock-stat"><div class="mock-stat-val mock-bull">78,780</div><div class="mock-stat-lbl">Hedef</div></div>
+          <div class="mock-stat"><div class="mock-stat-val">1:1.5</div><div class="mock-stat-lbl">R:R</div></div>
+        </div>
+        <div class="mock-chart" style="height:50px">📈 Küçük grafik (entry/stop/hedef çizgili)</div>
+        <div class="mock-ai-box">
+          <div class="mock-section-lbl">🤖 AI Yorum</div>
+          <div class="mock-ai-text">"RSI dönüşü + EMA kesim + negatif funding. Squeeze riski düşük, güçlü long."</div>
+        </div>
+        <div class="mock-indicator-row">
+          <div class="mock-ind"><div class="mock-ind-lbl">RSI</div><div class="mock-ind-val mock-bull">✓ Dönüş</div></div>
+          <div class="mock-ind"><div class="mock-ind-lbl">EMA</div><div class="mock-ind-val mock-bull">✓ Kesim</div></div>
+          <div class="mock-ind"><div class="mock-ind-lbl">Funding</div><div class="mock-ind-val mock-bull">✓ Neg</div></div>
+          <div class="mock-ind"><div class="mock-ind-lbl">MACD</div><div class="mock-ind-val mock-neutral">~ Nötr</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Grafik + AI Karma</h3>
+      <p>Küçük grafik (entry/stop/hedef çizgileriyle), kısa AI özeti, indikatörler ✓/✗/~ ikonlarıyla. Dengeli — hem görsel hem analiz.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px">Sağ detay paneli için hangisi? Tıkla veya terminalde söyle.</p>
