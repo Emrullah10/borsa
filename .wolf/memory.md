@@ -1621,3 +1621,5 @@
 | 18:16 | Edited services/service-backtest/main.js | modified fetchRegimeSeries() | ~1344 |
 | 18:17 | Created scratch-test-fetch.mjs | — | ~69 |
 | 18:17 | Created scratch-test-fetch.mjs | — | ~69 |
+| 18:23 | Edited .gitignore | 1→2 lines | ~14 |
+| 18:23 | Edited .gitignore | 1→2 lines | ~14 |

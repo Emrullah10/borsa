@@ -13,8 +13,8 @@
       "first_read": "2026-07-08T13:58:42.490Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/.gitignore": {
-      "count": 1,
-      "tokens": 28,
+      "count": 3,
+      "tokens": 55,
       "first_read": "2026-07-08T14:03:58.878Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/package.json": {
@@ -1007,11 +1007,17 @@
       "action": "create",
       "tokens": 74,
       "at": "2026-07-08T15:17:50.648Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/.gitignore",
+      "action": "edit",
+      "tokens": 15,
+      "at": "2026-07-08T15:23:55.938Z"
     }
   ],
   "edit_counts": {
     "../../../.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md": 2,
-    ".gitignore": 1,
+    ".gitignore": 2,
     "services/service-notifier/package.json": 2,
     "package.json": 4,
     "core/service-signal-engine/package.json": 1,
@@ -1088,7 +1094,7 @@
   },
   "anatomy_hits": 19,
   "anatomy_misses": 57,
-  "repeated_reads_warned": 12,
+  "repeated_reads_warned": 14,
   "cerebrum_warnings": 0,
   "stop_count": 3
 }
