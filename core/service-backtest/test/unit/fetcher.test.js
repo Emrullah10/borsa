@@ -20,7 +20,7 @@ vi.mock('bitget-api', () => ({
   }))
 }));
 
-import { fetchCandles, fetchFundingHistory, fetchOISnapshot } from '../src/fetcher.js';
+import { fetchCandles, fetchFundingHistory, fetchOISnapshot } from '../../src/infrastructure/fetcher.js';
 
 describe('fetchCandles', () => {
   it('mum dizisini { timestamp, open, high, low, close, volume } formatında döner', async () => {

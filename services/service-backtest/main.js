@@ -1,10 +1,10 @@
-import { fetchCandles, fetchFundingHistory, fetchOISnapshot, interpolateFunding } from './src/fetcher.js';
-import { simulateTrade } from './src/simulator.js';
-import { generateReport } from './src/reporter.js';
-import { calcAllIndicators } from '../service-signal-engine/src/indicators.js';
-import { calcLiquidationPressure } from '../service-signal-engine/src/liquidation-pressure.js';
-import { calcConfluence } from '../service-signal-engine/src/confluence.js';
-import { buildSetup } from '../service-signal-engine/src/setup-builder.js';
+import { fetchCandles, fetchFundingHistory, fetchOISnapshot, interpolateFunding } from '@borsa-bot/core-backtest/src/infrastructure/fetcher.js';
+import { simulateTrade } from '@borsa-bot/core-backtest/src/domain/simulator.js';
+import { generateReport } from './src/report-writer.js';
+import { calcAllIndicators } from '@borsa-bot/core-signal-engine/src/domain/indicators.js';
+import { calcLiquidationPressure } from '@borsa-bot/core-signal-engine/src/domain/liquidation-pressure.js';
+import { calcConfluence } from '@borsa-bot/core-signal-engine/src/domain/confluence.js';
+import { buildSetup } from '@borsa-bot/core-signal-engine/src/domain/setup-builder.js';
 
 const SYMBOLS   = ['BTCUSDT', 'ETHUSDT'];
 const DAYS      = 30;

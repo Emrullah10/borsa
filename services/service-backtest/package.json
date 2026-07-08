@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "@borsa-bot/config": "*",
-    "@borsa-bot/helper": "*",
-    "bitget-api": "^2.0.0"
+    "@borsa-bot/core-backtest": "*",
+    "@borsa-bot/core-signal-engine": "*",
+    "@borsa-bot/helper": "*"
   }
 }

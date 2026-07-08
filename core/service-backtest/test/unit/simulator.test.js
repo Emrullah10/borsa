@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { simulateTrade } from '../src/simulator.js';
+import { simulateTrade } from '../../src/domain/simulator.js';
 
 function candle(high, low, close = (high + low) / 2) {
   return { timestamp: Date.now(), open: close, high, low, close, volume: 100 };

@@ -2,6 +2,24 @@
   "version": 1,
   "bugs": [
     {
+      "id": "bug-backtest-broken-import",
+      "timestamp": "2026-07-08T14:21:00.000Z",
+      "error_message": "would have thrown ERR_MODULE_NOT_FOUND for '../service-signal-engine/src/{indicators,liquidation-pressure,confluence,setup-builder}.js' once those files moved to core/",
+      "file": "services/service-backtest/main.js",
+      "root_cause": "Same anti-pattern as bug-tracker-broken-import: service-backtest's main.js imported four signal-engine domain modules via relative cross-service paths ('../service-signal-engine/src/...'). This would have broken (or already had, depending on migration ordering) once service-signal-engine's domain files moved into core/service-signal-engine/src/domain/.",
+      "fix": "main.js now imports calcAllIndicators/calcLiquidationPressure/calcConfluence/buildSetup from the shared @borsa-bot/core-signal-engine workspace package. fetcher.js and simulator.js moved to core/service-backtest (infrastructure/domain), reporter.js split: calcMetrics/formatTable (pure) stayed in core/service-backtest/src/domain/reporter.js, the file-writing generateReport() moved to services/service-backtest/src/report-writer.js since it has a side effect (writes to backtest-results/) and isn't pure domain logic.",
+      "tags": [
+        "cross-service-import",
+        "module-not-found",
+        "monorepo-migration",
+        "service-backtest",
+        "service-signal-engine"
+      ],
+      "related_bugs": ["bug-tracker-broken-import"],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:21:00.000Z"
+    },
+    {
       "id": "bug-tracker-broken-import",
       "timestamp": "2026-07-08T14:17:00.000Z",
       "error_message": "ERR_MODULE_NOT_FOUND: Cannot find module '.../service-signal-engine/src/signal-repository.js' imported from services/service-tracker/main.js",
@@ -1384,6 +1402,54 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-08T14:18:02.930Z"
+    },
+    {
+      "id": "bug-086",
+      "timestamp": "2026-07-08T14:20:23.746Z",
+      "error_message": "Incorrect value in code",
+      "file": "core/service-backtest/test/unit/reporter.test.js",
+      "root_cause": "Had '../src/reporter.js'",
+      "fix": "Changed to '../../src/domain/reporter.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:20:23.746Z"
+    },
+    {
+      "id": "bug-087",
+      "timestamp": "2026-07-08T14:20:34.412Z",
+      "error_message": "Incorrect value in code",
+      "file": "core/service-backtest/test/unit/simulator.test.js",
+      "root_cause": "Had '../src/simulator.js'",
+      "fix": "Changed to '../../src/domain/simulator.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:20:34.412Z"
+    },
+    {
+      "id": "bug-088",
+      "timestamp": "2026-07-08T14:20:38.582Z",
+      "error_message": "Incorrect value in code",
+      "file": "core/service-backtest/test/unit/fetcher.test.js",
+      "root_cause": "Had '../src/fetcher.js'",
+      "fix": "Changed to '../../src/infrastructure/fetcher.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:20:38.582Z"
     }
   ]
 }

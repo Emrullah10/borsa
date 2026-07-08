@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:19:00.804Z
-> Files: 186 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:21:09.293Z
+> Files: 194 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -195,6 +195,20 @@
 - `tracker.js` — Açık bir outcome için mum OHLC'ye göre sonuç değerlendir. (~439 tok)
 - `tracker.test.js` — Helper: candle oluştur (~738 tok)
 
+## core/service-backtest/
+
+- `package.json` — Node.js package manifest (~59 tok)
+
+## core/service-backtest/src/domain/
+
+- `reporter.js` — Exports calcMetrics, formatTable (~617 tok)
+
+## core/service-backtest/test/unit/
+
+- `fetcher.test.js` — Declares candles (~572 tok)
+- `reporter.test.js` — Declares sampleTrades (~474 tok)
+- `simulator.test.js` — Declares candle (~542 tok)
+
 ## core/service-market-data/
 
 - `package.json` — Node.js package manifest (~45 tok)
@@ -341,6 +355,15 @@
 - `aiComment.test.js` — Declares comment (~313 tok)
 - `entryValidity.js` — Bir sinyalin giriş penceresinin hâlâ geçerli olup olmadığını hesaplar. (~369 tok)
 - `entryValidity.test.js` — Declares base (~782 tok)
+
+## services/service-backtest/
+
+- `main.js` — SYMBOLS: runBacktest, main (~979 tok)
+- `package.json` — Node.js package manifest (~99 tok)
+
+## services/service-backtest/src/
+
+- `report-writer.js` — Exports generateReport (~406 tok)
 
 ## services/service-market-data/
 

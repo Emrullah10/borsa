@@ -1503,3 +1503,19 @@
 | 17:18 | Created services/service-notifier/main.js | — | ~33 |
 | 17:19 | Edited services/service-notifier/package.json | 7→8 lines | ~64 |
 | 17:19 | Edited services/service-notifier/package.json | 7→8 lines | ~64 |
+| 17:19 | Created core/service-backtest/src/domain/reporter.js | — | ~617 |
+| 17:19 | Created core/service-backtest/src/domain/reporter.js | — | ~617 |
+| 17:20 | Created services/service-backtest/src/report-writer.js | — | ~406 |
+| 17:20 | Created services/service-backtest/src/report-writer.js | — | ~406 |
+| 17:20 | Edited core/service-backtest/test/unit/reporter.test.js | "../src/reporter.js" → "../../src/domain/reporter" | ~21 |
+| 17:20 | Edited core/service-backtest/test/unit/reporter.test.js | "../src/reporter.js" → "../../src/domain/reporter" | ~21 |
+| 17:20 | Edited core/service-backtest/test/unit/simulator.test.js | "../src/simulator.js" → "../../src/domain/simulato" | ~18 |
+| 17:20 | Edited core/service-backtest/test/unit/simulator.test.js | "../src/simulator.js" → "../../src/domain/simulato" | ~18 |
+| 17:20 | Edited core/service-backtest/test/unit/fetcher.test.js | "../src/fetcher.js" → "../../src/infrastructure/" | ~30 |
+| 17:20 | Edited core/service-backtest/test/unit/fetcher.test.js | "../src/fetcher.js" → "../../src/infrastructure/" | ~30 |
+| 17:20 | Created services/service-backtest/main.js | — | ~979 |
+| 17:20 | Created services/service-backtest/main.js | — | ~979 |
+| 17:21 | Created core/service-backtest/package.json | — | ~59 |
+| 17:21 | Created core/service-backtest/package.json | — | ~59 |
+| 17:21 | Created services/service-backtest/package.json | — | ~99 |
+| 17:21 | Created services/service-backtest/package.json | — | ~99 |

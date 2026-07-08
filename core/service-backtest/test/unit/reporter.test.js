@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { calcMetrics, formatTable } from '../src/reporter.js';
+import { calcMetrics, formatTable } from '../../src/domain/reporter.js';
 
 const sampleTrades = [
   { outcome: 'WIN',     r: 2.0,  durationMinutes: 30, symbol: 'BTCUSDT', direction: 'long' },
