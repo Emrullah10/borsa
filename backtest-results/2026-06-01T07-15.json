@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-06-01T07:15:54.941Z",
+  "period": {
+    "from": "2026-05-02",
+    "to": "2026-06-01",
+    "days": 30
+  },
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "summary": {
+    "winRate": 0,
+    "profitFactor": 0,
+    "maxDrawdown": 0,
+    "avgR": 0,
+    "totalSignals": 0,
+    "timeouts": 0
+  },
+  "bySymbol": {
+    "BTCUSDT": {
+      "winRate": 0,
+      "profitFactor": 0,
+      "maxDrawdown": 0,
+      "avgR": 0,
+      "totalSignals": 0,
+      "timeouts": 0,
+      "trades": []
+    },
+    "ETHUSDT": {
+      "winRate": 0,
+      "profitFactor": 0,
+      "maxDrawdown": 0,
+      "avgR": 0,
+      "totalSignals": 0,
+      "timeouts": 0,
+      "trades": []
+    }
+  }
+}
