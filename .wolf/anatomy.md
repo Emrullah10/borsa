@@ -1,11 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T15:29:28.257Z
-> Files: 532 tracked | Anatomy hits: 0 | Misses: 0
-
-## ../../../.claude/plans/
-
-- `imdi-benim-ayn-ekilde-eager-ember.md` — Plan: Scalp Bot — 5 İyileştirme (Paper-Trading, Backtest Rejimi, Ölçüm, Süre Metrikleri, Tie-Break) (~2287 tok)
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T15:31:24.338Z
+> Files: 518 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -14,7 +10,6 @@
 - `docker-compose.yml` — Docker Compose services (~169 tok)
 - `package-lock.json` — npm lock file (~30286 tok)
 - `package.json` — Node.js package manifest (~329 tok)
-- `scratch-test-fetch.mjs` — Declares c (~69 tok)
 - `vitest.config.js` — /*.test.js', 'services/**/*.test.js', 'packages/**/*.test.js'], (~67 tok)
 
 ## .claude/
@@ -28,8 +23,8 @@
 ## .codegraph/
 
 - `.gitignore` — Git ignore rules (~47 tok)
-- `codegraph.db-shm` (~8739 tok)
-- `daemon.log` (~4055 tok)
+- `codegraph.db-shm` (~8737 tok)
+- `daemon.log` (~4632 tok)
 - `daemon.pid` (~42 tok)
 
 ## .logs/
@@ -147,7 +142,6 @@
 - `confluence.test.js` — ADX >= 25 ile güçlü trend fixture'ları (~1730 tok)
 - `indicators.test.js` — Declares closes20 (~1726 tok)
 - `liquidation-pressure.test.js` — Declares result (~764 tok)
-- `make-process-candle.test.js` — Declares makeCandle (~582 tok)
 - `regime.test.js` — Declares makeCandles (~630 tok)
 - `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~1626 tok)
 - `signal-repository.test.js` — Declares fakeRows (~1776 tok)
@@ -172,12 +166,12 @@
 ## db-schemas/
 
 - `00-init.sql` (~138 tok)
-- `01-config-watchlist.sql` — SQL: tables: watchlist, bot_config (~224 tok)
-- `02-signals.sql` — SQL: tables: signals, signal_outcomes (~422 tok)
+- `01-config-watchlist.sql` — SQL: tables: watchlist, bot_config (~240 tok)
+- `02-signals.sql` — SQL: tables: signals, signal_outcomes (~452 tok)
 
 ## db-schemas/migrations/
 
-- `2026-07-08-01-paper-regime-tiebreak.sql` — Additive, idempotent migration: paper-trading, backtest regime parity, tie-break logging. (~173 tok)
+- `2026-07-08-01-paper-regime-tiebreak.sql` — Additive, idempotent migration: paper-trading, backtest regime parity, tie-break logging. (~185 tok)
 
 ## docs/
 
@@ -799,35 +793,3 @@
 - `docs.py` — get_swagger_ui_html, get_redoc_html, get_swagger_ui_oauth2_redirect_html (~2959 tok)
 - `models.py` — Pydantic: BaseModelWithConfig (158 fields) (~4400 tok)
 - `utils.py` — URL configuration (~6368 tok)
-
-## services/service-ai/.venv/lib/python3.13/site-packages/fastapi/security/
-
-- `__init__.py` (~252 tok)
-
-## services/service-backtest/
-
-- `main.js` — SYMBOLS: fetchRegimeSeries, fetchHigherTfSeries, runBacktest, main (~1372 tok)
-
-## services/service-signal-engine/src/
-
-- `boot.js` — Exports boot (~548 tok)
-- `container.js` — Exports buildContainer (~209 tok)
-- `parse-stats-query.js` — Exports parseDays, parseBreakdownQuery (~215 tok)
-- `routes.js` — API routes: GET (5 endpoints) (~573 tok)
-
-## services/service-signal-engine/test/unit/
-
-- `parse-stats-query.test.js` — Declares result (~408 tok)
-
-## services/service-tracker/src/
-
-- `boot.js` — Exports boot (~549 tok)
-- `container.js` — Exports buildContainer (~209 tok)
-
-## web-app/src/api/
-
-- `statsApi.js` — Exports fetchStats, fetchBreakdown (~147 tok)
-
-## web-app/src/pages/
-
-- `StatsPage.jsx` — DAY_OPTIONS (~3398 tok)
