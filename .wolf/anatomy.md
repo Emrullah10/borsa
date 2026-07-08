@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:04:46.543Z
-> Files: 149 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:12:37.966Z
+> Files: 160 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -21,7 +21,7 @@
 - `CLAUDE.md` — OpenWolf (~57 tok)
 - `docker-compose.yml` — Docker Compose services (~169 tok)
 - `launch.sh` — Scalp Bot — tüm backend servislerini başlatır (~1066 tok)
-- `package.json` — Node.js package manifest (~282 tok)
+- `package.json` — Node.js package manifest (~301 tok)
 
 ## .claude/
 
@@ -195,6 +195,22 @@
 - `tracker.js` — Açık bir outcome için mum OHLC'ye göre sonuç değerlendir. (~439 tok)
 - `tracker.test.js` — Helper: candle oluştur (~738 tok)
 
+## core/service-signal-engine/
+
+- `package.json` — Node.js package manifest (~63 tok)
+
+## core/service-signal-engine/src/application/use-cases/
+
+- `make-process-candle.js` — Exports makeProcessCandle (~2209 tok)
+
+## core/service-signal-engine/src/infrastructure/persistence/repositories/
+
+- `signal-repository.js` — Exports makeSignalRepository (~1591 tok)
+
+## core/service-signal-engine/test/unit/
+
+- `signal-repository.test.js` — Declares fakeRows (~261 tok)
+
 ## docs/
 
 - `gateaway-ARCHITECTURE.md` — account-web-gateway — Sıfırdan Anlama Rehberi: Bir API Gateway'in Anatomisi (~6048 tok)
@@ -286,3 +302,16 @@
 ## services/service-notifier/
 
 - `package.json` — Node.js package manifest (~106 tok)
+
+## services/service-signal-engine/
+
+- `main.js` (~33 tok)
+- `package.json` — Node.js package manifest (~124 tok)
+
+## services/service-signal-engine/src/
+
+- `boot.js` — Exports boot (~526 tok)
+- `container.js` — Exports buildContainer (~203 tok)
+- `routes.js` — API routes: GET (4 endpoints) (~409 tok)
+- `subscriber.js` — Exports startSubscriber (~344 tok)
+- `ws-server.test.js` — Declares sent (~315 tok)

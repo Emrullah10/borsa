@@ -1421,3 +1421,27 @@
 | 17:04 | Created services/service-notifier/package.json | — | ~106 |
 | 17:04 | Edited package.json | 7→4 lines | ~15 |
 | 17:04 | Edited package.json | 7→4 lines | ~15 |
+| 17:09 | Created core/service-signal-engine/package.json | — | ~63 |
+| 17:09 | Created core/service-signal-engine/package.json | — | ~63 |
+| 17:10 | Created core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | — | ~1591 |
+| 17:10 | Created core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | — | ~1591 |
+| 17:10 | Created core/service-signal-engine/test/unit/signal-repository.test.js | — | ~261 |
+| 17:10 | Created core/service-signal-engine/test/unit/signal-repository.test.js | — | ~261 |
+| 17:11 | Created core/service-signal-engine/src/application/use-cases/make-process-candle.js | — | ~2209 |
+| 17:11 | Created core/service-signal-engine/src/application/use-cases/make-process-candle.js | — | ~2209 |
+| 17:11 | Created services/service-signal-engine/src/subscriber.js | — | ~344 |
+| 17:11 | Created services/service-signal-engine/src/subscriber.js | — | ~344 |
+| 17:11 | Created services/service-signal-engine/src/container.js | — | ~203 |
+| 17:11 | Created services/service-signal-engine/src/container.js | — | ~203 |
+| 17:11 | Created services/service-signal-engine/src/routes.js | — | ~409 |
+| 17:11 | Created services/service-signal-engine/src/routes.js | — | ~409 |
+| 17:11 | Created services/service-signal-engine/src/boot.js | — | ~526 |
+| 17:11 | Created services/service-signal-engine/src/boot.js | — | ~526 |
+| 17:12 | Created services/service-signal-engine/main.js | — | ~33 |
+| 17:12 | Created services/service-signal-engine/main.js | — | ~33 |
+| 17:12 | Edited services/service-signal-engine/src/ws-server.test.js | "../../src/ws-server.js" → "./ws-server.js" | ~14 |
+| 17:12 | Edited services/service-signal-engine/src/ws-server.test.js | "../../src/ws-server.js" → "./ws-server.js" | ~14 |
+| 17:12 | Created services/service-signal-engine/package.json | — | ~124 |
+| 17:12 | Created services/service-signal-engine/package.json | — | ~124 |
+| 17:12 | Edited package.json | 8→9 lines | ~89 |
+| 17:12 | Edited package.json | 8→9 lines | ~89 |

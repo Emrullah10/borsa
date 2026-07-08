@@ -23,14 +23,59 @@
       "first_read": "2026-07-08T14:04:35.071Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/package.json": {
-      "count": 1,
-      "tokens": 0,
+      "count": 2,
+      "tokens": 282,
       "first_read": "2026-07-08T14:04:42.137Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/.vscode/launch.json": {
       "count": 1,
       "tokens": 1055,
       "first_read": "2026-07-08T14:04:55.783Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/main.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:06:03.795Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/subscriber.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:06:04.138Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/signal-repository.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:06:04.342Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/test/unit/signal-repository.test.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:09:45.890Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/package.json": {
+      "count": 1,
+      "tokens": 282,
+      "first_read": "2026-07-08T14:09:46.398Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/indicators.test.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:10:12.788Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/ws-server.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:11:38.036Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/packages/modules/helper/index.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:11:38.370Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/ws-server.test.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:12:13.654Z"
     }
   },
   "files_written": [
@@ -63,17 +108,100 @@
       "action": "edit",
       "tokens": 15,
       "at": "2026-07-08T14:04:46.555Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/package.json",
+      "action": "create",
+      "tokens": 63,
+      "at": "2026-07-08T14:09:51.032Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "action": "create",
+      "tokens": 1591,
+      "at": "2026-07-08T14:10:37.407Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/signal-repository.test.js",
+      "action": "create",
+      "tokens": 261,
+      "at": "2026-07-08T14:10:47.399Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+      "action": "create",
+      "tokens": 2209,
+      "at": "2026-07-08T14:11:22.856Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/subscriber.js",
+      "action": "create",
+      "tokens": 344,
+      "at": "2026-07-08T14:11:32.758Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/container.js",
+      "action": "create",
+      "tokens": 203,
+      "at": "2026-07-08T14:11:42.897Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/routes.js",
+      "action": "create",
+      "tokens": 409,
+      "at": "2026-07-08T14:11:50.994Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/boot.js",
+      "action": "create",
+      "tokens": 526,
+      "at": "2026-07-08T14:11:59.106Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/main.js",
+      "action": "create",
+      "tokens": 33,
+      "at": "2026-07-08T14:12:02.695Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/ws-server.test.js",
+      "action": "edit",
+      "tokens": 14,
+      "at": "2026-07-08T14:12:16.298Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/package.json",
+      "action": "create",
+      "tokens": 124,
+      "at": "2026-07-08T14:12:21.499Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/package.json",
+      "action": "edit",
+      "tokens": 89,
+      "at": "2026-07-08T14:12:37.974Z"
     }
   ],
   "edit_counts": {
     "../../../.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md": 1,
     ".gitignore": 1,
     "services/service-notifier/package.json": 1,
-    "package.json": 2
+    "package.json": 3,
+    "core/service-signal-engine/package.json": 1,
+    "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js": 1,
+    "core/service-signal-engine/test/unit/signal-repository.test.js": 1,
+    "core/service-signal-engine/src/application/use-cases/make-process-candle.js": 1,
+    "services/service-signal-engine/src/subscriber.js": 1,
+    "services/service-signal-engine/src/container.js": 1,
+    "services/service-signal-engine/src/routes.js": 1,
+    "services/service-signal-engine/src/boot.js": 1,
+    "services/service-signal-engine/main.js": 1,
+    "services/service-signal-engine/src/ws-server.test.js": 1,
+    "services/service-signal-engine/package.json": 1
   },
-  "anatomy_hits": 4,
-  "anatomy_misses": 2,
-  "repeated_reads_warned": 0,
+  "anatomy_hits": 5,
+  "anatomy_misses": 10,
+  "repeated_reads_warned": 1,
   "cerebrum_warnings": 0,
   "stop_count": 0
 }
