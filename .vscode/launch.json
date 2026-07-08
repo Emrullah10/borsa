@@ -6,56 +6,56 @@
       "request": "launch",
       "name": "Backend: Market Data Service",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/backend/services/service-market-data/main.js",
-      "cwd": "${workspaceFolder}/backend",
+      "program": "${workspaceFolder}/services/service-market-data/main.js",
+      "cwd": "${workspaceFolder}",
       "console": "internalConsole",
-      "envFile": "${workspaceFolder}/backend/.env"
+      "envFile": "${workspaceFolder}/.env"
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Backend: Signal Engine Service",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/backend/services/service-signal-engine/main.js",
-      "cwd": "${workspaceFolder}/backend",
+      "program": "${workspaceFolder}/services/service-signal-engine/main.js",
+      "cwd": "${workspaceFolder}",
       "console": "internalConsole",
-      "envFile": "${workspaceFolder}/backend/.env"
+      "envFile": "${workspaceFolder}/.env"
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Backend: Notifier Service",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/backend/services/service-notifier/main.js",
-      "cwd": "${workspaceFolder}/backend",
+      "program": "${workspaceFolder}/services/service-notifier/main.js",
+      "cwd": "${workspaceFolder}",
       "console": "internalConsole",
-      "envFile": "${workspaceFolder}/backend/.env"
+      "envFile": "${workspaceFolder}/.env"
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Backend: Tracker Service",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/backend/services/service-tracker/main.js",
-      "cwd": "${workspaceFolder}/backend",
+      "program": "${workspaceFolder}/services/service-tracker/main.js",
+      "cwd": "${workspaceFolder}",
       "console": "internalConsole",
-      "envFile": "${workspaceFolder}/backend/.env"
+      "envFile": "${workspaceFolder}/.env"
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Backend: Backtest Service",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/backend/services/service-backtest/main.js",
-      "cwd": "${workspaceFolder}/backend",
+      "program": "${workspaceFolder}/services/service-backtest/main.js",
+      "cwd": "${workspaceFolder}",
       "console": "internalConsole",
-      "envFile": "${workspaceFolder}/backend/.env"
+      "envFile": "${workspaceFolder}/.env"
     },
     {
       "type": "python",
       "request": "launch",
       "name": "Backend: AI Service (FastAPI)",
-      "python": "${workspaceFolder}/backend/services/service-ai/.venv/bin/python",
+      "python": "${workspaceFolder}/services/service-ai/.venv/bin/python",
       "module": "uvicorn",
       "args": [
         "main:app",
@@ -65,7 +65,7 @@
         "3110",
         "--reload"
       ],
-      "cwd": "${workspaceFolder}/backend/services/service-ai",
+      "cwd": "${workspaceFolder}/services/service-ai",
       "jinja": true,
       "console": "internalConsole"
     },
@@ -73,7 +73,7 @@
       "type": "node",
       "request": "launch",
       "name": "Frontend: Vite Dev Server",
-      "cwd": "${workspaceFolder}/frontend",
+      "cwd": "${workspaceFolder}/web-app",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "console": "internalConsole"
@@ -83,7 +83,7 @@
       "request": "launch",
       "name": "Frontend: Chrome Debugger",
       "url": "http://localhost:5180",
-      "webRoot": "${workspaceFolder}/frontend"
+      "webRoot": "${workspaceFolder}/web-app"
     }
   ],
   "compounds": [

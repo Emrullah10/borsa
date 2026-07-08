@@ -1,0 +1,17 @@
+{
+  "name": "@borsa-bot/service-notifier",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@borsa-bot/config": "*",
+    "@borsa-bot/datasource": "*",
+    "@borsa-bot/helper": "*",
+    "@borsa-bot/service-discovery": "*",
+    "nodemailer": "^8.0.10"
+  }
+}

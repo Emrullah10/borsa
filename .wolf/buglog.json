@@ -1286,6 +1286,22 @@
       "related_bugs": [],
       "occurrences": 2,
       "last_seen": "2026-06-27T00:41:05.369Z"
+    },
+    {
+      "id": "bug-080",
+      "timestamp": "2026-07-08T14:04:46.556Z",
+      "error_message": "Significant refactor of ",
+      "file": "package.json",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 7→4 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "json"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:04:46.556Z"
     }
   ]
 }

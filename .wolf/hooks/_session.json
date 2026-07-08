@@ -16,6 +16,21 @@
       "count": 1,
       "tokens": 28,
       "first_read": "2026-07-08T14:03:58.878Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/package.json": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:04:35.071Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/package.json": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:04:42.137Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/.vscode/launch.json": {
+      "count": 1,
+      "tokens": 1055,
+      "first_read": "2026-07-08T14:04:55.783Z"
     }
   },
   "files_written": [
@@ -30,14 +45,34 @@
       "action": "edit",
       "tokens": 58,
       "at": "2026-07-08T14:04:03.024Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/package.json",
+      "action": "create",
+      "tokens": 106,
+      "at": "2026-07-08T14:04:39.460Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/package.json",
+      "action": "edit",
+      "tokens": 15,
+      "at": "2026-07-08T14:04:46.554Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/package.json",
+      "action": "edit",
+      "tokens": 15,
+      "at": "2026-07-08T14:04:46.555Z"
     }
   ],
   "edit_counts": {
     "../../../.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md": 1,
-    ".gitignore": 1
+    ".gitignore": 1,
+    "services/service-notifier/package.json": 1,
+    "package.json": 2
   },
-  "anatomy_hits": 3,
-  "anatomy_misses": 0,
+  "anatomy_hits": 4,
+  "anatomy_misses": 2,
   "repeated_reads_warned": 0,
   "cerebrum_warnings": 0,
   "stop_count": 0

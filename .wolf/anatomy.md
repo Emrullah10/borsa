@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:04:03.015Z
-> Files: 147 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:04:46.543Z
+> Files: 149 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -21,6 +21,7 @@
 - `CLAUDE.md` — OpenWolf (~57 tok)
 - `docker-compose.yml` — Docker Compose services (~169 tok)
 - `launch.sh` — Scalp Bot — tüm backend servislerini başlatır (~1066 tok)
+- `package.json` — Node.js package manifest (~282 tok)
 
 ## .claude/
 
@@ -281,3 +282,7 @@
 - `aiComment.test.js` — Declares comment (~313 tok)
 - `entryValidity.js` — Bir sinyalin giriş penceresinin hâlâ geçerli olup olmadığını hesaplar. (~369 tok)
 - `entryValidity.test.js` — Declares base (~782 tok)
+
+## services/service-notifier/
+
+- `package.json` — Node.js package manifest (~106 tok)
