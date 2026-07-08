@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { createWsServer } from '../../src/ws-server.js';
+import { createWsServer } from './ws-server.js';
 
 describe('createWsServer', () => {
   it('broadcast: sadece OPEN client\'lara mesaj gönderir', () => {

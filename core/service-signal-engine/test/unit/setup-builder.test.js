@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildSetup, applySRCap } from '../../src/setup-builder.js';
+import { buildSetup, applySRCap } from '../../src/domain/setup-builder.js';
 
 // --- applySRCap testleri (değişmedi) ---
 

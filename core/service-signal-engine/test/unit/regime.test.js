@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calcRegime, calcTfTrend } from '../../src/regime.js';
+import { calcRegime, calcTfTrend } from '../../src/domain/regime.js';
 
 function makeCandles(closes) {
   return closes.map(c => ({ open: c, high: c + 1, low: c - 1, close: c, volume: 1000 }));

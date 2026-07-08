@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calcConfluence, adaptiveThreshold } from '../../src/confluence.js';
+import { calcConfluence, adaptiveThreshold } from '../../src/domain/confluence.js';
 
 // ADX >= 25 ile güçlü trend fixture'ları
 const strongLong = {

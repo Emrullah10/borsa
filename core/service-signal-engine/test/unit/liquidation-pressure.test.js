@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calcLiquidationPressure } from '../../src/liquidation-pressure.js';
+import { calcLiquidationPressure } from '../../src/domain/liquidation-pressure.js';
 
 describe('calcLiquidationPressure', () => {
   it('neutral conditions return score near 0.5', () => {

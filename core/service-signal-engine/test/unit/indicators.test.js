@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { calcEMA, calcRSI, calcBollingerBands, calcATR, calcMACD, calcVWAP, calcAllIndicators,
-         calcADX, calcSupportResistance, calcVolumeSMA } from '../../src/indicators.js';
+         calcADX, calcSupportResistance, calcVolumeSMA } from '../../src/domain/indicators.js';
 
 const closes20 = [100, 102, 101, 103, 105, 104, 106, 108, 107, 109,
                   110, 112, 111, 113, 115, 114, 116, 118, 117, 119];

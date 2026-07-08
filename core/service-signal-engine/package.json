@@ -1,0 +1,12 @@
+{
+  "name": "@borsa-bot/core-signal-engine",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "technicalindicators": "^3.1.0"
+  }
+}
