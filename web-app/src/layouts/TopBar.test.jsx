@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TopBar from './TopBar.jsx';
-import { useStore } from '../store/useStore.js';
+import { useStore } from '@store/useStore.js';
 
 vi.mock('../api/marketApi.js', () => ({ fetchPrice: vi.fn().mockResolvedValue(null) }));
 vi.mock('../api/serviceApi.js', () => ({ checkServices: vi.fn().mockResolvedValue({ signalEngine: false, marketData: false }) }));

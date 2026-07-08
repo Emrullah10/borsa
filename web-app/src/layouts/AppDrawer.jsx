@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import HomeIcon from '@mui/icons-material/Home';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useStore } from '../store/useStore.js';
+import { useStore } from '@store/useStore.js';
 
 export default function AppDrawer() {
   const drawerOpen = useStore((s) => s.drawerOpen);

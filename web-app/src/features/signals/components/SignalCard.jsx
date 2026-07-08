@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, Typography, Button, Chip, IconButton, CircularProgress } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import AiComment from './AiComment.jsx';
-import { COLORS } from '../theme.js';
-import { analyzeSignal } from '../api/aiApi.js';
-import { fetchPrice } from '../api/marketApi.js';
-import { generateAiComment } from '../utils/aiComment.js';
+import AiComment from '@features/ai/components/AiComment.jsx';
+import { COLORS } from '@styles/theme.js';
+import { analyzeSignal } from '@api/aiApi.js';
+import { fetchPrice } from '@api/marketApi.js';
+import { generateAiComment } from '@features/ai/utils/aiComment.js';
 import { getEntryValidity } from '../utils/entryValidity.js';
-import { useStore } from '../store/useStore.js';
+import { useStore } from '@store/useStore.js';
 
 const FLIP_DURATION = 500; // ms
 

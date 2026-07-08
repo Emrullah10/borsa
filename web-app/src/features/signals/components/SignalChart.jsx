@@ -1,6 +1,6 @@
 import ReactECharts from 'echarts-for-react';
 import { Box } from '@mui/material';
-import { COLORS } from '../theme.js';
+import { COLORS } from '@styles/theme.js';
 
 export function buildSignalChartOption(candles, signal) {
   const times = candles.map((c) =>

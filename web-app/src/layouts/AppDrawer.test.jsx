@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import AppDrawer from './AppDrawer.jsx';
-import * as useStoreModule from '../store/useStore.js';
+import * as useStoreModule from '@store/useStore.js';
 
 vi.mock('../store/useStore.js', () => ({
   useStore: vi.fn(),

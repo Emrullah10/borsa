@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { Box, Typography, Chip, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useStore } from '../store/useStore.js';
-import { fetchPrice } from '../api/marketApi.js';
-import { checkServices } from '../api/serviceApi.js';
-import { fetchRegime } from '../api/regimeApi.js';
-import { COLORS } from '../theme.js';
+import { useStore } from '@store/useStore.js';
+import { fetchPrice } from '@api/marketApi.js';
+import { checkServices } from '@api/serviceApi.js';
+import { fetchRegime } from '@api/regimeApi.js';
+import { COLORS } from '@styles/theme.js';
 
 const SYMBOLS = ['BTCUSDT', 'ETHUSDT'];
 
