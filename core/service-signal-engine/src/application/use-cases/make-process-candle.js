@@ -1,7 +1,7 @@
 import { calcAllIndicators } from '../../domain/indicators.js';
 import { calcLiquidationPressure } from '../../domain/liquidation-pressure.js';
 import { calcConfluence } from '../../domain/confluence.js';
-import { calcRegime } from '../../domain/regime.js';
+import { calcRegime, calcHigherTfTrend } from '../../domain/regime.js';
 import { buildSetup } from '../../domain/setup-builder.js';
 
 const CANDLE_BUFFER_SIZE = 60;
@@ -41,23 +41,11 @@ export function makeProcessCandle({ signalRepo, publish, log, confluenceThreshol
     return marketState[symbol];
   }
 
-  // 5m buffer'ından EMA trend yönünü döner; veri yoksa null
+  // 5m buffer'ından EMA9/EMA21 trend yönünü döner; veri yoksa null
   function getHigherTfTrend(symbol, tf = '5m') {
     const buf = candleBuffers[`${symbol}.${tf}`];
-    if (!buf || buf.length < 30) return null;
-    const closes = buf.map(c => c.close);
-    // Basit EMA karşılaştırması — calcEMA import'u ağır; manuel hesap yeterli
-    const emaVal = (arr, period) => {
-      if (arr.length < period) return null;
-      const k = 2 / (period + 1);
-      let ema = arr.slice(0, period).reduce((s, v) => s + v, 0) / period;
-      for (let i = period; i < arr.length; i++) ema = arr[i] * k + ema * (1 - k);
-      return ema;
-    };
-    const e9 = emaVal(closes, 9);
-    const e21 = emaVal(closes, 21);
-    if (e9 === null || e21 === null) return null;
-    return e9 > e21 ? 'long' : e9 < e21 ? 'short' : 'neutral';
+    if (!buf) return null;
+    return calcHigherTfTrend(buf.map(c => c.close));
   }
 
   async function handleMessage(channel, msg, { onSignal } = {}) {

@@ -35,3 +35,20 @@ export function calcTfTrend(candles) {
 export function calcRegime(btc4hCandles) {
   return calcTfTrend(btc4hCandles);
 }
+
+// 1m sinyalleri için 5m trend teyidi: basit EMA9 vs EMA21 karşılaştırması.
+// calcTfTrend'den farklı bir kural seti — 'long' | 'short' | 'neutral' | null (<30 mum)
+export function calcHigherTfTrend(closes) {
+  if (!closes || closes.length < 30) return null;
+  const emaVal = (arr, period) => {
+    if (arr.length < period) return null;
+    const k = 2 / (period + 1);
+    let ema = arr.slice(0, period).reduce((s, v) => s + v, 0) / period;
+    for (let i = period; i < arr.length; i++) ema = arr[i] * k + ema * (1 - k);
+    return ema;
+  };
+  const e9 = emaVal(closes, 9);
+  const e21 = emaVal(closes, 21);
+  if (e9 === null || e21 === null) return null;
+  return e9 > e21 ? 'long' : e9 < e21 ? 'short' : 'neutral';
+}
