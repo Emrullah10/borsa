@@ -1573,3 +1573,33 @@
 | 18:08 | Edited db-schemas/01-config-watchlist.sql | 7→10 lines | ~83 |
 | 18:08 | Edited package.json | 1→2 lines | ~67 |
 | 18:08 | Edited package.json | 1→2 lines | ~67 |
+| 18:10 | Edited core/service-tracker/test/unit/evaluate-outcome.test.js | 2→2 lines | ~40 |
+| 18:10 | Edited core/service-tracker/test/unit/evaluate-outcome.test.js | 2→2 lines | ~40 |
+| 18:10 | Edited core/service-tracker/test/unit/evaluate-outcome.test.js | modified aras() | ~247 |
+| 18:10 | Edited core/service-tracker/test/unit/evaluate-outcome.test.js | modified aras() | ~247 |
+| 18:10 | Edited core/service-tracker/test/unit/evaluate-outcome.test.js | modified aras() | ~776 |
+| 18:10 | Edited core/service-tracker/test/unit/evaluate-outcome.test.js | modified aras() | ~776 |
+| 18:10 | Edited core/service-tracker/src/domain/evaluate-outcome.js | added 2 condition(s) | ~416 |
+| 18:10 | Edited core/service-tracker/src/domain/evaluate-outcome.js | added 2 condition(s) | ~416 |
+| 18:11 | Edited core/service-signal-engine/test/unit/signal-repository.test.js | expanded (+40 lines) | ~630 |
+| 18:11 | Edited core/service-signal-engine/test/unit/signal-repository.test.js | expanded (+40 lines) | ~630 |
+| 18:11 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | modified getPendingOutcomes() | ~364 |
+| 18:11 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | modified getPendingOutcomes() | ~364 |
+| 18:11 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | 9→10 lines | ~51 |
+| 18:11 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | 9→10 lines | ~51 |
+| 18:12 | Edited core/service-tracker/test/unit/make-process-outcome-candle.test.js | 28→31 lines | ~267 |
+| 18:12 | Edited core/service-tracker/test/unit/make-process-outcome-candle.test.js | 28→31 lines | ~267 |
+| 18:12 | Edited core/service-tracker/test/unit/make-process-outcome-candle.test.js | added optional chaining | ~915 |
+| 18:12 | Edited core/service-tracker/test/unit/make-process-outcome-candle.test.js | added optional chaining | ~915 |
+| 18:12 | Edited core/service-tracker/test/unit/make-process-outcome-candle.test.js | 4→4 lines | ~81 |
+| 18:12 | Edited core/service-tracker/test/unit/make-process-outcome-candle.test.js | 4→4 lines | ~81 |
+| 18:12 | Edited core/service-tracker/src/application/use-cases/make-process-outcome-candle.js | added nullish coalescing | ~76 |
+| 18:12 | Edited core/service-tracker/src/application/use-cases/make-process-outcome-candle.js | added nullish coalescing | ~76 |
+| 18:12 | Edited core/service-tracker/src/application/use-cases/make-process-outcome-candle.js | added 1 condition(s) | ~610 |
+| 18:12 | Edited core/service-tracker/src/application/use-cases/make-process-outcome-candle.js | added 1 condition(s) | ~610 |
+| 18:13 | Edited core/service-tracker/test/unit/make-process-outcome-candle.test.js | 18→20 lines | ~167 |
+| 18:13 | Edited core/service-tracker/test/unit/make-process-outcome-candle.test.js | 18→20 lines | ~167 |
+| 18:13 | Edited services/service-tracker/src/container.js | modified buildContainer() | ~109 |
+| 18:13 | Edited services/service-tracker/src/container.js | modified buildContainer() | ~109 |
+| 18:13 | Edited services/service-tracker/src/boot.js | added nullish coalescing | ~139 |
+| 18:13 | Edited services/service-tracker/src/boot.js | added nullish coalescing | ~139 |

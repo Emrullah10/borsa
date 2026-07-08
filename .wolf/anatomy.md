@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T15:08:36.623Z
-> Files: 518 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T15:13:52.621Z
+> Files: 520 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -137,7 +137,7 @@
 
 ## core/service-signal-engine/src/infrastructure/persistence/repositories/
 
-- `signal-repository.js` — Exports makeSignalRepository (~1591 tok)
+- `signal-repository.js` — Exports makeSignalRepository (~1716 tok)
 
 ## core/service-signal-engine/test/unit/
 
@@ -146,7 +146,7 @@
 - `liquidation-pressure.test.js` — Declares result (~764 tok)
 - `regime.test.js` — Declares makeCandles (~383 tok)
 - `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~1626 tok)
-- `signal-repository.test.js` — Declares fakeRows (~261 tok)
+- `signal-repository.test.js` — Declares fakeRows (~726 tok)
 
 ## core/service-tracker/
 
@@ -154,16 +154,16 @@
 
 ## core/service-tracker/src/application/use-cases/
 
-- `make-process-outcome-candle.js` — Exports makeProcessOutcomeCandle (~648 tok)
+- `make-process-outcome-candle.js` — Exports makeProcessOutcomeCandle (~971 tok)
 
 ## core/service-tracker/src/domain/
 
-- `evaluate-outcome.js` — Açık bir outcome için mum OHLC'ye göre sonuç değerlendir. (~439 tok)
+- `evaluate-outcome.js` — Açık bir outcome için mum OHLC'ye göre sonuç değerlendir. (~687 tok)
 
 ## core/service-tracker/test/unit/
 
-- `evaluate-outcome.test.js` — Helper: candle oluştur (~745 tok)
-- `make-process-outcome-candle.test.js` — Declares TIMEOUT_MS (~668 tok)
+- `evaluate-outcome.test.js` — Helper: candle oluştur (~1498 tok)
+- `make-process-outcome-candle.test.js` — Declares TIMEOUT_MS (~1558 tok)
 
 ## db-schemas/
 
@@ -799,3 +799,8 @@
 ## services/service-ai/.venv/lib/python3.13/site-packages/fastapi/security/
 
 - `__init__.py` (~252 tok)
+
+## services/service-tracker/src/
+
+- `boot.js` — Exports boot (~549 tok)
+- `container.js` — Exports buildContainer (~209 tok)

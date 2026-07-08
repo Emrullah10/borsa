@@ -128,13 +128,13 @@
       "first_read": "2026-07-08T14:15:27.404Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/evaluate-outcome.test.js": {
-      "count": 1,
-      "tokens": 0,
+      "count": 2,
+      "tokens": 745,
       "first_read": "2026-07-08T14:15:55.979Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js": {
-      "count": 1,
-      "tokens": 668,
+      "count": 3,
+      "tokens": 1536,
       "first_read": "2026-07-08T14:16:29.371Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/configs/app-config.js": {
@@ -318,7 +318,7 @@
       "first_read": "2026-07-08T15:01:35.743Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/application/use-cases/make-process-outcome-candle.js": {
-      "count": 1,
+      "count": 2,
       "tokens": 648,
       "first_read": "2026-07-08T15:02:50.423Z"
     },
@@ -331,6 +331,36 @@
       "count": 1,
       "tokens": 216,
       "first_read": "2026-07-08T15:08:16.476Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/domain/evaluate-outcome.js": {
+      "count": 1,
+      "tokens": 439,
+      "first_read": "2026-07-08T15:10:12.410Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js": {
+      "count": 1,
+      "tokens": 1591,
+      "first_read": "2026-07-08T15:11:07.058Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/signal-repository.test.js": {
+      "count": 1,
+      "tokens": 261,
+      "first_read": "2026-07-08T15:11:07.431Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/container.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T15:13:33.828Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/boot.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T15:13:34.102Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/boot.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T15:13:34.363Z"
     }
   },
   "files_written": [
@@ -807,6 +837,102 @@
       "action": "edit",
       "tokens": 67,
       "at": "2026-07-08T15:08:36.632Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/evaluate-outcome.test.js",
+      "action": "edit",
+      "tokens": 40,
+      "at": "2026-07-08T15:10:18.789Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/evaluate-outcome.test.js",
+      "action": "edit",
+      "tokens": 247,
+      "at": "2026-07-08T15:10:28.196Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/evaluate-outcome.test.js",
+      "action": "edit",
+      "tokens": 776,
+      "at": "2026-07-08T15:10:43.235Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/domain/evaluate-outcome.js",
+      "action": "edit",
+      "tokens": 416,
+      "at": "2026-07-08T15:10:56.366Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/signal-repository.test.js",
+      "action": "edit",
+      "tokens": 630,
+      "at": "2026-07-08T15:11:24.117Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "action": "edit",
+      "tokens": 364,
+      "at": "2026-07-08T15:11:34.883Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "action": "edit",
+      "tokens": 51,
+      "at": "2026-07-08T15:11:40.416Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "action": "edit",
+      "tokens": 51,
+      "at": "2026-07-08T15:11:40.418Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+      "action": "edit",
+      "tokens": 267,
+      "at": "2026-07-08T15:12:05.076Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+      "action": "edit",
+      "tokens": 915,
+      "at": "2026-07-08T15:12:22.191Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+      "action": "edit",
+      "tokens": 81,
+      "at": "2026-07-08T15:12:29.693Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/application/use-cases/make-process-outcome-candle.js",
+      "action": "edit",
+      "tokens": 76,
+      "at": "2026-07-08T15:12:35.575Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/application/use-cases/make-process-outcome-candle.js",
+      "action": "edit",
+      "tokens": 610,
+      "at": "2026-07-08T15:12:50.035Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+      "action": "edit",
+      "tokens": 167,
+      "at": "2026-07-08T15:13:22.133Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/container.js",
+      "action": "edit",
+      "tokens": 109,
+      "at": "2026-07-08T15:13:41.590Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/boot.js",
+      "action": "edit",
+      "tokens": 139,
+      "at": "2026-07-08T15:13:52.630Z"
     }
   ],
   "edit_counts": {
@@ -815,8 +941,8 @@
     "services/service-notifier/package.json": 2,
     "package.json": 4,
     "core/service-signal-engine/package.json": 1,
-    "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js": 1,
-    "core/service-signal-engine/test/unit/signal-repository.test.js": 1,
+    "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js": 4,
+    "core/service-signal-engine/test/unit/signal-repository.test.js": 2,
     "core/service-signal-engine/src/application/use-cases/make-process-candle.js": 1,
     "services/service-signal-engine/src/subscriber.js": 1,
     "services/service-signal-engine/src/container.js": 1,
@@ -837,11 +963,11 @@
     "services/service-market-data/main.js": 1,
     "services/service-market-data/package.json": 1,
     "core/service-tracker/package.json": 1,
-    "core/service-tracker/test/unit/evaluate-outcome.test.js": 1,
-    "core/service-tracker/src/application/use-cases/make-process-outcome-candle.js": 1,
-    "core/service-tracker/test/unit/make-process-outcome-candle.test.js": 2,
-    "services/service-tracker/src/container.js": 1,
-    "services/service-tracker/src/boot.js": 1,
+    "core/service-tracker/test/unit/evaluate-outcome.test.js": 4,
+    "core/service-tracker/src/application/use-cases/make-process-outcome-candle.js": 3,
+    "core/service-tracker/test/unit/make-process-outcome-candle.test.js": 6,
+    "services/service-tracker/src/container.js": 2,
+    "services/service-tracker/src/boot.js": 2,
     "services/service-tracker/main.js": 1,
     "services/service-tracker/package.json": 1,
     "core/service-notifier/test/unit/formatter.test.js": 1,
@@ -878,11 +1004,12 @@
     "web-app/src/features/signals/components/SignalCard.test.jsx": 2,
     "db-schemas/migrations/2026-07-08-01-paper-regime-tiebreak.sql": 1,
     "db-schemas/02-signals.sql": 1,
-    "db-schemas/01-config-watchlist.sql": 1
+    "db-schemas/01-config-watchlist.sql": 1,
+    "core/service-tracker/src/domain/evaluate-outcome.js": 1
   },
-  "anatomy_hits": 12,
-  "anatomy_misses": 54,
-  "repeated_reads_warned": 7,
+  "anatomy_hits": 15,
+  "anatomy_misses": 57,
+  "repeated_reads_warned": 11,
   "cerebrum_warnings": 0,
   "stop_count": 3
 }

@@ -24,7 +24,7 @@ export function evaluateOutcome(signal, candle, now = Date.now(), timeoutMs = 4 
 
   // SL öncelikli tie-break: aynı mumda ikisi de gerçekleştiyse SL kabul et
   if (slHit) {
-    return { status: 'sl_hit', exitPrice: stop, pnlR: -1 };
+    return { status: 'sl_hit', exitPrice: stop, pnlR: -1, ...(tpHit ? { tieBreak: true } : {}) };
   }
   if (tpHit) {
     const pnlR = risk > 0 ? Math.abs(target - entry) / risk : 0;
@@ -38,4 +38,25 @@ export function evaluateOutcome(signal, candle, now = Date.now(), timeoutMs = 4 
   }
 
   return null; // hâlâ açık
+}
+
+/**
+ * Paper-trading: gerçekçi sim giriş fiyatına göre R hesapla.
+ * simEntry = sinyalden sonraki ilk 1m mumun açılışı ± slippage (tracker'da hesaplanır).
+ * Stop/target mutlak fiyatlar sinyaldeki gibi kalır; risk sim girişe göre yeniden ölçülür.
+ * Round-trip taker fee, R cinsine çevrilip düşülür.
+ *
+ * @returns {{ simPnlR: number|null }}
+ */
+export function evaluateSimOutcome({ direction, simEntry, stopPrice, targetPrice, status, exitPrice, takerFee }) {
+  if (simEntry == null) return { simPnlR: null };
+
+  const isLong = direction === 'long';
+  const simRisk = Math.abs(simEntry - stopPrice);
+  if (simRisk <= 0) return { simPnlR: null };
+
+  const grossR = ((isLong ? 1 : -1) * (exitPrice - simEntry)) / simRisk;
+  const feeR = (2 * takerFee * simEntry) / simRisk;
+
+  return { simPnlR: +(grossR - feeR).toFixed(4) };
 }

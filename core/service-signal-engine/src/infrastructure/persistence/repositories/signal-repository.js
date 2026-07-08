@@ -38,6 +38,7 @@ export function makeSignalRepository({ db }) {
         o.id AS outcome_id,
         o.signal_id,
         o.status,
+        o.sim_entry_price,
         o.created_at AS outcome_created_at,
         s.symbol,
         s.direction,
@@ -54,13 +55,27 @@ export function makeSignalRepository({ db }) {
     return result.rows;
   }
 
-  async function resolveOutcome(outcomeId, { status, exitPrice, pnlR }) {
+  async function setSimEntry(outcomeId, simEntryPrice) {
     const sql = `
       UPDATE signal_outcomes
-      SET status = $1, exit_price = $2, pnl_r = $3, resolved_at = now()
-      WHERE id = $4
+      SET sim_entry_price = $1
+      WHERE id = $2
     `;
-    await db.query(sql, [status, exitPrice, pnlR ?? null, outcomeId]);
+    await db.query(sql, [simEntryPrice, outcomeId]);
+  }
+
+  async function resolveOutcome(outcomeId, { status, exitPrice, pnlR, simPnlR, tieBreak, notes }) {
+    const sql = `
+      UPDATE signal_outcomes
+      SET status = $1, exit_price = $2, pnl_r = $3, sim_pnl_r = $4, tie_break = $5,
+          notes = COALESCE($6, notes), resolved_at = now()
+      WHERE id = $7
+    `;
+    await db.query(sql, [
+      status, exitPrice, pnlR ?? null,
+      simPnlR ?? null, tieBreak ?? false, notes ?? null,
+      outcomeId,
+    ]);
   }
 
   async function getSignalStats() {
@@ -136,6 +151,7 @@ export function makeSignalRepository({ db }) {
     saveSignal,
     createOutcome,
     getPendingOutcomes,
+    setSimEntry,
     resolveOutcome,
     getSignalStats,
     getTopSymbolStats,
