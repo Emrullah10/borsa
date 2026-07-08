@@ -1,7 +1,11 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:28:01.042Z
-> Files: 516 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T15:08:36.623Z
+> Files: 518 tracked | Anatomy hits: 0 | Misses: 0
+
+## ../../../.claude/plans/
+
+- `imdi-benim-ayn-ekilde-eager-ember.md` — Plan: Scalp Bot — 5 İyileştirme (Paper-Trading, Backtest Rejimi, Ölçüm, Süre Metrikleri, Tie-Break) (~2287 tok)
 
 ## ./
 
@@ -9,7 +13,7 @@
 - `CLAUDE.md` — OpenWolf (~57 tok)
 - `docker-compose.yml` — Docker Compose services (~169 tok)
 - `package-lock.json` — npm lock file (~30286 tok)
-- `package.json` — Node.js package manifest (~301 tok)
+- `package.json` — Node.js package manifest (~329 tok)
 - `vitest.config.js` — /*.test.js', 'services/**/*.test.js', 'packages/**/*.test.js'], (~67 tok)
 
 ## .claude/
@@ -164,8 +168,12 @@
 ## db-schemas/
 
 - `00-init.sql` (~138 tok)
-- `01-config-watchlist.sql` — SQL: tables: watchlist, bot_config (~216 tok)
-- `02-signals.sql` — SQL: tables: signals, signal_outcomes (~398 tok)
+- `01-config-watchlist.sql` — SQL: tables: watchlist, bot_config (~224 tok)
+- `02-signals.sql` — SQL: tables: signals, signal_outcomes (~422 tok)
+
+## db-schemas/migrations/
+
+- `2026-07-08-01-paper-regime-tiebreak.sql` — Additive, idempotent migration: paper-trading, backtest regime parity, tie-break logging. (~173 tok)
 
 ## docs/
 

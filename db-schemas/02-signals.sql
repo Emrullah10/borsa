@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS signals (
   indicators_snapshot JSONB NOT NULL,
   liq_pressure_score  NUMERIC(5, 4),
   liq_direction       signal_direction,
+  regime              VARCHAR(10),
+  higher_tf_trend     VARCHAR(10),
   created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
@@ -23,6 +25,9 @@ CREATE TABLE IF NOT EXISTS signal_outcomes (
   status          signal_status NOT NULL DEFAULT 'pending',
   exit_price      NUMERIC(20, 8),
   pnl_r           NUMERIC(8, 4),
+  sim_entry_price NUMERIC(20, 8),
+  sim_pnl_r       NUMERIC(8, 4),
+  tie_break       BOOLEAN NOT NULL DEFAULT false,
   resolved_at     TIMESTAMPTZ,
   notes           TEXT,
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now()

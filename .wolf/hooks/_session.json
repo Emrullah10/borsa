@@ -23,8 +23,8 @@
       "first_read": "2026-07-08T14:04:35.071Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/package.json": {
-      "count": 2,
-      "tokens": 282,
+      "count": 3,
+      "tokens": 301,
       "first_read": "2026-07-08T14:04:42.137Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/.vscode/launch.json": {
@@ -173,7 +173,7 @@
       "first_read": "2026-07-08T14:18:34.955Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/main.js": {
-      "count": 1,
+      "count": 2,
       "tokens": 0,
       "first_read": "2026-07-08T14:19:25.290Z"
     },
@@ -311,6 +311,26 @@
       "count": 1,
       "tokens": 3404,
       "first_read": "2026-07-08T14:27:22.535Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/db-schemas/02-signals.sql": {
+      "count": 2,
+      "tokens": 398,
+      "first_read": "2026-07-08T15:01:35.743Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/application/use-cases/make-process-outcome-candle.js": {
+      "count": 1,
+      "tokens": 648,
+      "first_read": "2026-07-08T15:02:50.423Z"
+    },
+    "/Users/emrullah/.claude/plans/imdi-benim-ayn-ekilde-eager-ember-agent-ae7b0681a0c30e1fa.md": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T15:05:03.058Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/db-schemas/01-config-watchlist.sql": {
+      "count": 1,
+      "tokens": 216,
+      "first_read": "2026-07-08T15:08:16.476Z"
     }
   },
   "files_written": [
@@ -757,13 +777,43 @@
       "action": "edit",
       "tokens": 11,
       "at": "2026-07-08T14:26:27.918Z"
+    },
+    {
+      "file": "/Users/emrullah/.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md",
+      "action": "create",
+      "tokens": 2614,
+      "at": "2026-07-08T15:07:08.476Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/db-schemas/migrations/2026-07-08-01-paper-regime-tiebreak.sql",
+      "action": "create",
+      "tokens": 185,
+      "at": "2026-07-08T15:07:58.949Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/db-schemas/02-signals.sql",
+      "action": "edit",
+      "tokens": 208,
+      "at": "2026-07-08T15:08:09.861Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/db-schemas/01-config-watchlist.sql",
+      "action": "edit",
+      "tokens": 89,
+      "at": "2026-07-08T15:08:22.430Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/package.json",
+      "action": "edit",
+      "tokens": 67,
+      "at": "2026-07-08T15:08:36.632Z"
     }
   ],
   "edit_counts": {
-    "../../../.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md": 1,
+    "../../../.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md": 2,
     ".gitignore": 1,
     "services/service-notifier/package.json": 2,
-    "package.json": 3,
+    "package.json": 4,
     "core/service-signal-engine/package.json": 1,
     "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js": 1,
     "core/service-signal-engine/test/unit/signal-repository.test.js": 1,
@@ -825,11 +875,14 @@
     "web-app/src/features/stats/components/MetricRow.jsx": 1,
     "web-app/src/App.jsx": 1,
     "web-app/src/main.jsx": 1,
-    "web-app/src/features/signals/components/SignalCard.test.jsx": 2
+    "web-app/src/features/signals/components/SignalCard.test.jsx": 2,
+    "db-schemas/migrations/2026-07-08-01-paper-regime-tiebreak.sql": 1,
+    "db-schemas/02-signals.sql": 1,
+    "db-schemas/01-config-watchlist.sql": 1
   },
-  "anatomy_hits": 9,
-  "anatomy_misses": 53,
-  "repeated_reads_warned": 4,
+  "anatomy_hits": 12,
+  "anatomy_misses": 54,
+  "repeated_reads_warned": 7,
   "cerebrum_warnings": 0,
-  "stop_count": 0
+  "stop_count": 3
 }
