@@ -2,6 +2,25 @@
   "version": 1,
   "bugs": [
     {
+      "id": "bug-signalcard-flip-drift",
+      "timestamp": "2026-07-08T18:53:00.000Z",
+      "error_message": "User: kartları çevir diyince kartlar aşağı kayıyor",
+      "file": "web-app/src/features/signals/components/SignalCard.jsx, web-app/src/features/signals/components/SignalGrid.jsx",
+      "root_cause": "Two distinct issues, verified separately with a Playwright-driven real browser against the live signal-engine: (1) minor: SignalCard's flipped BACK face used position:absolute without top/left, so its containing-block offset defaulted to the in-flow static position instead of the relative FRONT face's top-left corner — cosmetically wrong but not the reported symptom, since BACK content never exceeded FRONT's height in practice. (2) actual root cause: SignalGrid's default sort is by confluenceScore, and the bot emits a new signal every few seconds; each new signal re-sorts the ENTIRE visible list. Clicking 'Çevir' does nothing to the sort, but because the grid keeps re-sorting live in the background, the card the user just flipped (and its neighbors) visually jump to new positions within ~600ms-3s, making it look like flipping itself causes the shift. Verified via instrumented Playwright script: card identities at the same grid index changed completely within 600ms of a flip with zero interaction, purely from live signal arrivals.",
+      "fix": "(1) Added top:0, left:0 to the BACK face's absolute positioning (correctness fix, low impact in practice). (2) Real fix: SignalGrid now tracks a flippedIds Set (via a new onFlipChange callback prop threaded through SignalCard) and freezes the visible sort order in a ref while any card is flipped — new signals still appear (appended at the end, not spliced into their score-sorted position) but no existing card's position changes until the user flips the card back closed. Verified end-to-end with a live signal-engine + market-data + vite dev server under Playwright: card order was byte-identical before and 3 seconds into a flip (during which the bot emitted multiple new signals), and resumed normal live sorting immediately after un-flipping.",
+      "tags": [
+        "signal-card",
+        "flip-animation",
+        "layout-shift",
+        "sorting",
+        "real-time-ui",
+        "css-positioning"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T18:53:00.000Z"
+    },
+    {
       "id": "bug-backtest-broken-import",
       "timestamp": "2026-07-08T14:21:00.000Z",
       "error_message": "would have thrown ERR_MODULE_NOT_FOUND for '../service-signal-engine/src/{indicators,liquidation-pressure,confluence,setup-builder}.js' once those files moved to core/",
@@ -1836,6 +1855,70 @@
       "related_bugs": [],
       "occurrences": 2,
       "last_seen": "2026-07-08T15:29:28.267Z"
+    },
+    {
+      "id": "bug-114",
+      "timestamp": "2026-07-08T15:52:31.120Z",
+      "error_message": "Significant refactor of ",
+      "file": "web-app/src/features/signals/components/SignalGrid.jsx",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 11→27 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T15:52:31.120Z"
+    },
+    {
+      "id": "bug-115",
+      "timestamp": "2026-07-08T15:52:51.435Z",
+      "error_message": "Null/undefined access in ",
+      "file": "web-app/src/features/signals/components/SignalCard.jsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check) | Also: onClick={() => { setFlipped(false); onFlipChange?.(false); } | Also: // Kart unmount olursa (sinyal 15dk penceresinden çıktıysa) ; // flippedIds set'inde takılı kalmasın",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 3,
+      "last_seen": "2026-07-08T15:53:12.072Z"
+    },
+    {
+      "id": "bug-116",
+      "timestamp": "2026-07-08T15:53:30.957Z",
+      "error_message": "Null/undefined access in ",
+      "file": "web-app/src/features/signals/components/SignalGrid.test.jsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T15:53:30.957Z"
+    },
+    {
+      "id": "bug-117",
+      "timestamp": "2026-07-08T15:53:45.347Z",
+      "error_message": "Missing await",
+      "file": "web-app/src/features/signals/components/SignalGrid.test.jsx",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T15:53:45.347Z"
     }
   ]
 }

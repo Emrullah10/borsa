@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useStore } from '@store/useStore.js';
 import { fetchSignals, connectSignalWS } from '@api/signalApi.js';
@@ -34,6 +34,17 @@ export default function SignalGrid() {
   const setPrice = useStore((s) => s.setPrice);
   const missedIds = useStore((s) => s.missedIds);
   const [newIds, setNewIds] = useState(new Set());
+  // Bir kart çevrili iken görünen sıralamayı dondurur — bkz. handleCardFlip
+  const [flippedIds, setFlippedIds] = useState(new Set());
+  const frozenOrderRef = useRef(null);
+
+  const handleCardFlip = useCallback((id, isFlipped) => {
+    setFlippedIds((prev) => {
+      const next = new Set(prev);
+      if (isFlipped) next.add(id); else next.delete(id);
+      return next;
+    });
+  }, []);
 
   // Filtre + sıralama state'i
   const [sortBy, setSortBy] = useState('confidence');
@@ -98,8 +109,24 @@ export default function SignalGrid() {
       if (q && !s.symbol.toUpperCase().includes(q)) return false;
       return true;
     });
-    return sortSignals(filtered, sortBy, missedIds);
-  }, [freshSignals, direction, minConfidence, minRR, search, sortBy, missedIds]);
+    const sorted = sortSignals(filtered, sortBy, missedIds);
+
+    // Kullanıcı bir kartı incelerken (çevrilmişken) canlı sinyal akışının
+    // sıralamayı sürekli değiştirip kartların ekranda kaymasını önle:
+    // önceki görünen sırayı koru, sadece yeni gelen/çıkan sinyalleri ekle/çıkar.
+    if (flippedIds.size > 0 && frozenOrderRef.current) {
+      const byId = new Map(sorted.map((s) => [s.id, s]));
+      const prevOrder = frozenOrderRef.current.filter((s) => byId.has(s.id)).map((s) => byId.get(s.id));
+      const prevIds = new Set(prevOrder.map((s) => s.id));
+      const newOnes = sorted.filter((s) => !prevIds.has(s.id));
+      const result = [...prevOrder, ...newOnes];
+      frozenOrderRef.current = result;
+      return result;
+    }
+
+    frozenOrderRef.current = sorted;
+    return sorted;
+  }, [freshSignals, direction, minConfidence, minRR, search, sortBy, missedIds, flippedIds]);
 
   const filters = (
     <SignalFilters
@@ -163,7 +190,12 @@ export default function SignalGrid() {
           }}
         >
           {visibleSignals.map((sig) => (
-            <SignalCard key={sig.id} signal={sig} isNew={newIds.has(sig.id)} />
+            <SignalCard
+              key={sig.id}
+              signal={sig}
+              isNew={newIds.has(sig.id)}
+              onFlipChange={(isFlipped) => handleCardFlip(sig.id, isFlipped)}
+            />
           ))}
         </Box>
       )}

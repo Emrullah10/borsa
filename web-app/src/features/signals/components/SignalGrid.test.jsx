@@ -8,7 +8,13 @@ vi.mock('@api/signalApi.js', () => ({
 }));
 
 vi.mock('./SignalCard.jsx', () => ({
-  default: ({ signal }) => <div data-testid="signal-card">{signal.symbol}</div>,
+  default: ({ signal, onFlipChange }) => (
+    <div data-testid="signal-card">
+      {signal.symbol}
+      <button onClick={() => onFlipChange?.(true)}>flip-{signal.symbol}</button>
+      <button onClick={() => onFlipChange?.(false)}>unflip-{signal.symbol}</button>
+    </div>
+  ),
 }));
 
 const mkSignal = (over) => ({
@@ -116,6 +122,48 @@ describe('SignalGrid', () => {
       const cards = screen.getAllByTestId('signal-card');
       expect(cards).toHaveLength(1);
       expect(cards[0]).toHaveTextContent('SHORTUSDT');
+    });
+  });
+
+  it('bir kart çevriliyken yeni sinyal gelse bile mevcut kartların sırası değişmez', async () => {
+    fetchSignals.mockResolvedValue([
+      mkSignal({ id: 'a', symbol: 'LOWUSDT', confluenceScore: 0.6 }),
+      mkSignal({ id: 'b', symbol: 'HIGHUSDT', confluenceScore: 0.9 }),
+    ]);
+    render(<SignalGrid />);
+
+    await waitFor(() => {
+      const cards = screen.getAllByTestId('signal-card');
+      expect(cards[0]).toHaveTextContent('HIGHUSDT');
+      expect(cards[1]).toHaveTextContent('LOWUSDT');
+    });
+
+    // LOWUSDT kartını çevir
+    fireEvent.click(screen.getByRole('button', { name: 'flip-LOWUSDT' }));
+
+    // Daha yüksek skorlu yeni bir sinyal gelsin — normalde sıralamayı değiştirirdi
+    useStore.setState((state) => ({
+      signals: [
+        mkSignal({ id: 'c', symbol: 'NEWUSDT', confluenceScore: 0.99 }),
+        ...state.signals,
+      ],
+    }));
+
+    await waitFor(() => {
+      const cards = screen.getAllByTestId('signal-card');
+      expect(cards).toHaveLength(3);
+      // Mevcut iki kartın göreli sırası (HIGH önce LOW) korunmalı;
+      // yeni kart sona eklenir, aralarına girmemeli.
+      expect(cards[0]).toHaveTextContent('HIGHUSDT');
+      expect(cards[1]).toHaveTextContent('LOWUSDT');
+      expect(cards[2]).toHaveTextContent('NEWUSDT');
+    });
+
+    // Kartı geri çevirince normal sıralama devam eder
+    fireEvent.click(screen.getByRole('button', { name: 'unflip-LOWUSDT' }));
+    await waitFor(() => {
+      const cards = screen.getAllByTestId('signal-card');
+      expect(cards[0]).toHaveTextContent('NEWUSDT');
     });
   });
 

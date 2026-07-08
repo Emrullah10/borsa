@@ -233,13 +233,13 @@
       "first_read": "2026-07-08T14:23:05.736Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx": {
-      "count": 1,
+      "count": 3,
       "tokens": 0,
       "first_read": "2026-07-08T14:23:39.358Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx": {
-      "count": 1,
-      "tokens": 0,
+      "count": 6,
+      "tokens": 4651,
       "first_read": "2026-07-08T14:23:39.991Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalFilters.jsx": {
@@ -258,8 +258,8 @@
       "first_read": "2026-07-08T14:23:54.534Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.test.jsx": {
-      "count": 2,
-      "tokens": 1247,
+      "count": 3,
+      "tokens": 0,
       "first_read": "2026-07-08T14:24:22.863Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/AppDrawer.test.jsx": {
@@ -401,6 +401,16 @@
       "count": 1,
       "tokens": 0,
       "first_read": "2026-07-08T15:26:57.586Z"
+    },
+    "/private/tmp/claude-501/bundled-skills/2.1.204/ad6915402a01b28836736d2e18b7e6fb/run/examples/playwright.md": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T15:36:08.009Z"
+    },
+    "/tmp/verify-fix.png": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T15:54:42.413Z"
     }
   },
   "files_written": [
@@ -1135,6 +1145,126 @@
       "action": "edit",
       "tokens": 645,
       "at": "2026-07-08T15:29:28.266Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+      "action": "edit",
+      "tokens": 56,
+      "at": "2026-07-08T15:35:43.654Z"
+    },
+    {
+      "file": "/tmp/flip-test.mjs",
+      "action": "create",
+      "tokens": 782,
+      "at": "2026-07-08T15:37:09.005Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/scratch-flip-test.mjs",
+      "action": "create",
+      "tokens": 496,
+      "at": "2026-07-08T15:37:55.404Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+      "action": "edit",
+      "tokens": 43,
+      "at": "2026-07-08T15:38:15.720Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/scratch-flip-test2.mjs",
+      "action": "create",
+      "tokens": 520,
+      "at": "2026-07-08T15:38:39.735Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/scratch-flip-test3.mjs",
+      "action": "create",
+      "tokens": 423,
+      "at": "2026-07-08T15:39:24.103Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/scratch-flip-test3.mjs",
+      "action": "create",
+      "tokens": 265,
+      "at": "2026-07-08T15:39:31.940Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/scratch-flip-test4.mjs",
+      "action": "create",
+      "tokens": 424,
+      "at": "2026-07-08T15:40:05.345Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+      "action": "edit",
+      "tokens": 53,
+      "at": "2026-07-08T15:40:32.684Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx",
+      "action": "edit",
+      "tokens": 22,
+      "at": "2026-07-08T15:52:13.111Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx",
+      "action": "edit",
+      "tokens": 127,
+      "at": "2026-07-08T15:52:18.997Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx",
+      "action": "edit",
+      "tokens": 374,
+      "at": "2026-07-08T15:52:31.118Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx",
+      "action": "edit",
+      "tokens": 76,
+      "at": "2026-07-08T15:52:38.337Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+      "action": "edit",
+      "tokens": 20,
+      "at": "2026-07-08T15:52:47.070Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+      "action": "edit",
+      "tokens": 32,
+      "at": "2026-07-08T15:52:51.434Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+      "action": "edit",
+      "tokens": 22,
+      "at": "2026-07-08T15:53:00.500Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+      "action": "edit",
+      "tokens": 123,
+      "at": "2026-07-08T15:53:12.071Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.test.jsx",
+      "action": "edit",
+      "tokens": 93,
+      "at": "2026-07-08T15:53:30.955Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.test.jsx",
+      "action": "edit",
+      "tokens": 464,
+      "at": "2026-07-08T15:53:45.346Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/scratch-verify-fix.mjs",
+      "action": "create",
+      "tokens": 451,
+      "at": "2026-07-08T15:54:23.716Z"
     }
   ],
   "edit_counts": {
@@ -1190,11 +1320,11 @@
     "vitest.config.js": 1,
     "web-app/vite.config.js": 1,
     "web-app/jsconfig.json": 1,
-    "web-app/src/features/signals/components/SignalGrid.jsx": 1,
-    "web-app/src/features/signals/components/SignalCard.jsx": 1,
+    "web-app/src/features/signals/components/SignalGrid.jsx": 5,
+    "web-app/src/features/signals/components/SignalCard.jsx": 8,
     "web-app/src/features/signals/components/SignalFilters.jsx": 1,
     "web-app/src/features/signals/components/SignalChart.jsx": 1,
-    "web-app/src/features/signals/components/SignalGrid.test.jsx": 2,
+    "web-app/src/features/signals/components/SignalGrid.test.jsx": 4,
     "web-app/src/layouts/AppDrawer.test.jsx": 1,
     "web-app/src/layouts/TopBar.test.jsx": 1,
     "web-app/src/layouts/AppDrawer.jsx": 1,
@@ -1216,11 +1346,17 @@
     "core/service-signal-engine/test/unit/make-process-candle.test.js": 1,
     "services/service-signal-engine/src/parse-stats-query.js": 1,
     "services/service-signal-engine/test/unit/parse-stats-query.test.js": 1,
-    "web-app/src/api/statsApi.js": 1
+    "web-app/src/api/statsApi.js": 1,
+    "../../../../../tmp/flip-test.mjs": 1,
+    "web-app/scratch-flip-test.mjs": 1,
+    "web-app/scratch-flip-test2.mjs": 1,
+    "web-app/scratch-flip-test3.mjs": 2,
+    "web-app/scratch-flip-test4.mjs": 1,
+    "web-app/scratch-verify-fix.mjs": 1
   },
   "anatomy_hits": 20,
-  "anatomy_misses": 60,
-  "repeated_reads_warned": 21,
+  "anatomy_misses": 62,
+  "repeated_reads_warned": 29,
   "cerebrum_warnings": 0,
-  "stop_count": 3
+  "stop_count": 5
 }

@@ -51,13 +51,20 @@ function pctDiff(from, to) {
   return (((to - from) / from) * 100).toFixed(2);
 }
 
-export default function SignalCard({ signal, isNew }) {
+export default function SignalCard({ signal, isNew, onFlipChange }) {
   const [flipped, setFlipped] = useState(false);
   const [aiText, setAiText] = useState(null);
   const [loading, setLoading] = useState(false);
   const [animated, setAnimated] = useState(isNew);
   const [refreshing, setRefreshing] = useState(false);
   const fetchedRef = useRef(false);
+
+  // Kart unmount olursa (sinyal 15dk penceresinden çıktıysa) parent'taki
+  // flippedIds set'inde takılı kalmasın
+  useEffect(() => {
+    return () => { if (flipped) onFlipChange?.(false); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Fiyat merkezi poller'dan (SignalGrid) store'a yazılıyor — buradan oku
   const livePrice = useStore((s) => s.prices[signal.symbol] ?? null);
@@ -98,6 +105,7 @@ export default function SignalCard({ signal, isNew }) {
 
   async function handleFlip() {
     setFlipped(true);
+    onFlipChange?.(true);
     if (!fetchedRef.current) {
       fetchedRef.current = true;
       setLoading(true);
@@ -308,6 +316,8 @@ export default function SignalCard({ signal, isNew }) {
           <Box
             sx={{
               position: 'absolute',
+              top: 0,
+              left: 0,
               width: '100%',
               height: '100%',
               backfaceVisibility: 'hidden',
@@ -404,7 +414,7 @@ export default function SignalCard({ signal, isNew }) {
               <Button
                 size="small"
                 variant="outlined"
-                onClick={() => setFlipped(false)}
+                onClick={() => { setFlipped(false); onFlipChange?.(false); }}
                 sx={{
                   borderColor: '#30363d',
                   color: '#8b949e',
