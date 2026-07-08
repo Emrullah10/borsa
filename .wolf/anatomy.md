@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T15:55:47.190Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T16:08:00.649Z
 > Files: 518 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
@@ -23,8 +23,8 @@
 ## .codegraph/
 
 - `.gitignore` — Git ignore rules (~47 tok)
-- `codegraph.db-shm` (~8738 tok)
-- `daemon.log` (~4914 tok)
+- `codegraph.db-shm` (~8737 tok)
+- `daemon.log` (~4951 tok)
 - `daemon.pid` (~42 tok)
 
 ## .logs/

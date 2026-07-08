@@ -2,6 +2,26 @@
   "version": 1,
   "bugs": [
     {
+      "id": "bug-redis-subscribe-info-error",
+      "timestamp": "2026-07-08T19:06:00.000Z",
+      "error_message": "[ioredis] Unhandled error event: ReplyError: ERR Can't execute 'info': only (P|S)SUBSCRIBE / (P|S)UNSUBSCRIBE / PING / QUIT / RESET are allowed in this context — logged right after 'Redis reconnect attempt #1'",
+      "file": "services/service-signal-engine/src/subscriber.js, services/service-tracker/src/boot.js, services/service-notifier/src/boot.js",
+      "root_cause": "All three services create a dedicated pub/sub Redis connection via datasources.coreRedis.duplicate() and immediately call psubscribe/subscribe on it, putting that connection into Redis subscribe-mode (server-side, only (P|S)SUBSCRIBE/UNSUBSCRIBE/PING/QUIT/RESET are legal from then on). ioredis defaults to enableReadyCheck:true, which runs an internal INFO command on every (re)connection to verify the server is ready before marking the connection 'ready'. On a reconnect (network blip, redis restart, or in this investigation a deliberate CLIENT KILL to force one), ioredis re-issues that INFO check on the subscribe-mode connection, Redis rejects it per protocol, and ioredis surfaces it as an unhandled error event plus a retry loop — even though the subscription itself is still functioning after reconnect.",
+      "fix": "Pass { enableReadyCheck: false } as the duplicate() override on all three subscribe-only connections (ioredis's own documented workaround for this exact issue — see the wiki link in ioredis's own ready-check warning message). Verified end-to-end: booted all three services, force-killed their subscribe connections at the Redis server via CLIENT KILL to trigger a real reconnect (confirmed via the 'Redis reconnect attempt #1' log line), and confirmed zero 'Unhandled error event'/INFO errors afterward — previously this exact sequence reproduced the bug every time.",
+      "tags": [
+        "ioredis",
+        "redis-subscribe",
+        "ready-check",
+        "reconnect",
+        "signal-engine",
+        "tracker",
+        "notifier"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T19:06:00.000Z"
+    },
+    {
       "id": "bug-signalcard-flip-drift",
       "timestamp": "2026-07-08T18:53:00.000Z",
       "error_message": "User: kartları çevir diyince kartlar aşağı kayıyor",

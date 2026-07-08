@@ -36,7 +36,9 @@ export async function boot() {
   setInterval(() => processOutcomeCandle.refreshPending(), config.refreshIntervalSec * 1000);
 
   // md.*.1m kanallarını dinle → her 1m kapanışta o sembolün outcome'larını kontrol et
-  const subRedis = datasources.coreRedis.duplicate();
+  // enableReadyCheck:false — subscribe-mode bağlantıda INFO komutu reddedilir,
+  // ready-check kapatılmazsa her reconnect'te "Unhandled error event" oluşur.
+  const subRedis = datasources.coreRedis.duplicate({ enableReadyCheck: false });
   await subRedis.psubscribe('md.*.1m');
 
   subRedis.on('pmessage', async (_pattern, _channel, raw) => {

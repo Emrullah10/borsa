@@ -32,7 +32,9 @@ export async function boot() {
   helper.log.warn('E-posta gönderimi devre dışı (main.js içinde yoruma alındı)');
   void buildContainer;
 
-  const sub = datasources.coreRedis.duplicate();
+  // enableReadyCheck:false — subscribe-mode bağlantıda INFO komutu reddedilir,
+  // ready-check kapatılmazsa her reconnect'te "Unhandled error event" oluşur.
+  const sub = datasources.coreRedis.duplicate({ enableReadyCheck: false });
   await sub.subscribe('signals.new');
 
   sub.on('message', async (_channel, raw) => {

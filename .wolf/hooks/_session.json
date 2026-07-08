@@ -38,7 +38,7 @@
       "first_read": "2026-07-08T14:06:03.795Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/subscriber.js": {
-      "count": 1,
+      "count": 2,
       "tokens": 0,
       "first_read": "2026-07-08T14:06:04.138Z"
     },
@@ -353,7 +353,7 @@
       "first_read": "2026-07-08T15:13:33.828Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/boot.js": {
-      "count": 1,
+      "count": 2,
       "tokens": 0,
       "first_read": "2026-07-08T15:13:34.102Z"
     },
@@ -411,6 +411,21 @@
       "count": 1,
       "tokens": 0,
       "first_read": "2026-07-08T15:54:42.413Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/packages/modules/datasource/connectors/redis.js": {
+      "count": 1,
+      "tokens": 162,
+      "first_read": "2026-07-08T16:05:12.242Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/packages/modules/datasource/index.js": {
+      "count": 1,
+      "tokens": 175,
+      "first_read": "2026-07-08T16:05:21.082Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/boot.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T16:06:30.901Z"
     }
   },
   "files_written": [
@@ -1265,6 +1280,24 @@
       "action": "create",
       "tokens": 451,
       "at": "2026-07-08T15:54:23.716Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/subscriber.js",
+      "action": "edit",
+      "tokens": 168,
+      "at": "2026-07-08T16:06:05.978Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/boot.js",
+      "action": "edit",
+      "tokens": 105,
+      "at": "2026-07-08T16:06:26.711Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/boot.js",
+      "action": "edit",
+      "tokens": 78,
+      "at": "2026-07-08T16:06:35.480Z"
     }
   ],
   "edit_counts": {
@@ -1276,7 +1309,7 @@
     "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js": 7,
     "core/service-signal-engine/test/unit/signal-repository.test.js": 3,
     "core/service-signal-engine/src/application/use-cases/make-process-candle.js": 4,
-    "services/service-signal-engine/src/subscriber.js": 1,
+    "services/service-signal-engine/src/subscriber.js": 2,
     "services/service-signal-engine/src/container.js": 2,
     "services/service-signal-engine/src/routes.js": 2,
     "services/service-signal-engine/src/boot.js": 2,
@@ -1299,7 +1332,7 @@
     "core/service-tracker/src/application/use-cases/make-process-outcome-candle.js": 3,
     "core/service-tracker/test/unit/make-process-outcome-candle.test.js": 6,
     "services/service-tracker/src/container.js": 2,
-    "services/service-tracker/src/boot.js": 2,
+    "services/service-tracker/src/boot.js": 3,
     "services/service-tracker/main.js": 1,
     "services/service-tracker/package.json": 1,
     "core/service-notifier/test/unit/formatter.test.js": 1,
@@ -1307,7 +1340,7 @@
     "core/service-notifier/package.json": 1,
     "core/service-notifier/test/unit/mailer.test.js": 1,
     "services/service-notifier/src/container.js": 1,
-    "services/service-notifier/src/boot.js": 1,
+    "services/service-notifier/src/boot.js": 2,
     "services/service-notifier/main.js": 1,
     "core/service-backtest/src/domain/reporter.js": 1,
     "services/service-backtest/src/report-writer.js": 1,
@@ -1354,9 +1387,9 @@
     "web-app/scratch-flip-test4.mjs": 1,
     "web-app/scratch-verify-fix.mjs": 1
   },
-  "anatomy_hits": 20,
-  "anatomy_misses": 62,
-  "repeated_reads_warned": 29,
+  "anatomy_hits": 22,
+  "anatomy_misses": 63,
+  "repeated_reads_warned": 31,
   "cerebrum_warnings": 0,
-  "stop_count": 5
+  "stop_count": 7
 }
