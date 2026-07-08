@@ -1487,3 +1487,19 @@
 | 17:16 | Created services/service-tracker/main.js | — | ~33 |
 | 17:16 | Edited services/service-tracker/package.json | 6→8 lines | ~68 |
 | 17:16 | Edited services/service-tracker/package.json | 6→8 lines | ~68 |
+| 17:18 | Edited core/service-notifier/test/unit/formatter.test.js | "./formatter.js" → "../../src/domain/formatte" | ~24 |
+| 17:18 | Edited core/service-notifier/test/unit/formatter.test.js | "./formatter.js" → "../../src/domain/formatte" | ~24 |
+| 17:18 | Created core/service-notifier/src/infrastructure/mailer.js | — | ~129 |
+| 17:18 | Created core/service-notifier/src/infrastructure/mailer.js | — | ~129 |
+| 17:18 | Created core/service-notifier/package.json | — | ~44 |
+| 17:18 | Created core/service-notifier/package.json | — | ~44 |
+| 17:18 | Created core/service-notifier/test/unit/mailer.test.js | — | ~348 |
+| 17:18 | Created core/service-notifier/test/unit/mailer.test.js | — | ~348 |
+| 17:18 | Created services/service-notifier/src/container.js | — | ~128 |
+| 17:18 | Created services/service-notifier/src/container.js | — | ~128 |
+| 17:18 | Created services/service-notifier/src/boot.js | — | ~625 |
+| 17:18 | Created services/service-notifier/src/boot.js | — | ~625 |
+| 17:18 | Created services/service-notifier/main.js | — | ~33 |
+| 17:18 | Created services/service-notifier/main.js | — | ~33 |
+| 17:19 | Edited services/service-notifier/package.json | 7→8 lines | ~64 |
+| 17:19 | Edited services/service-notifier/package.json | 7→8 lines | ~64 |

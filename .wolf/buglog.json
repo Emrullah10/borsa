@@ -2,6 +2,24 @@
   "version": 1,
   "bugs": [
     {
+      "id": "bug-tracker-broken-import",
+      "timestamp": "2026-07-08T14:17:00.000Z",
+      "error_message": "ERR_MODULE_NOT_FOUND: Cannot find module '.../service-signal-engine/src/signal-repository.js' imported from services/service-tracker/main.js",
+      "file": "services/service-tracker/main.js",
+      "root_cause": "service-tracker discovered a real pre-existing bug: main.js imported getPendingOutcomes/resolveOutcome via a relative cross-service path '../service-signal-engine/src/signal-repository.js'. This broke the moment service-signal-engine's signal-repository.js moved to core/ during the monorepo migration (clean-architecture split), but the underlying anti-pattern (one service reaching into another service's internal src/ via relative import) was already fragile before the migration.",
+      "fix": "Refactored to composition-root pattern: services/service-tracker/src/container.js now imports makeSignalRepository from the shared @borsa-bot/core-signal-engine workspace package and wires it via dependency injection, instead of any relative cross-service import.",
+      "tags": [
+        "cross-service-import",
+        "module-not-found",
+        "monorepo-migration",
+        "service-tracker",
+        "service-signal-engine"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:17:00.000Z"
+    },
+    {
       "id": "bug-backtest-direction",
       "timestamp": "2026-06-01T07:56:00.000Z",
       "error_message": "Backtest PF=-1.53 (matematiksel imkansiz), WIN trade'lerin r=-1.5, Win%=71.7% sahte",
@@ -1350,6 +1368,22 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-08T14:16:32.743Z"
+    },
+    {
+      "id": "bug-085",
+      "timestamp": "2026-07-08T14:18:02.930Z",
+      "error_message": "Incorrect value in code",
+      "file": "core/service-notifier/test/unit/formatter.test.js",
+      "root_cause": "Had './formatter.js'",
+      "fix": "Changed to '../../src/domain/formatter.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:18:02.930Z"
     }
   ]
 }

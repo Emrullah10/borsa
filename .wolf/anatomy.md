@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:16:58.482Z
-> Files: 179 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:19:00.804Z
+> Files: 186 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -212,6 +212,19 @@
 - `candle-repository.test.js` — Declares candle (~540 tok)
 - `make-publisher.test.js` — Declares candle (~500 tok)
 
+## core/service-notifier/
+
+- `package.json` — Node.js package manifest (~44 tok)
+
+## core/service-notifier/src/infrastructure/
+
+- `mailer.js` — Exports makeMailer (~129 tok)
+
+## core/service-notifier/test/unit/
+
+- `formatter.test.js` — Declares longSignal (~458 tok)
+- `mailer.test.js` (~348 tok)
+
 ## core/service-signal-engine/
 
 - `package.json` — Node.js package manifest (~63 tok)
@@ -343,7 +356,13 @@
 
 ## services/service-notifier/
 
-- `package.json` — Node.js package manifest (~106 tok)
+- `main.js` (~33 tok)
+- `package.json` — Node.js package manifest (~116 tok)
+
+## services/service-notifier/src/
+
+- `boot.js` — Exports boot (~625 tok)
+- `container.js` — Exports buildContainer (~128 tok)
 
 ## services/service-signal-engine/
 

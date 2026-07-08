@@ -141,6 +141,36 @@
       "count": 1,
       "tokens": 0,
       "first_read": "2026-07-08T14:16:37.080Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/main.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:17:43.454Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/formatter.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:17:44.353Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/mailer.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:17:44.503Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/formatter.test.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:17:44.752Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/test/unit/formatter.test.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:17:59.255Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/configs/app-config.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:18:34.955Z"
     }
   },
   "files_written": [
@@ -371,12 +401,60 @@
       "action": "edit",
       "tokens": 68,
       "at": "2026-07-08T14:16:58.490Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/test/unit/formatter.test.js",
+      "action": "edit",
+      "tokens": 24,
+      "at": "2026-07-08T14:18:02.929Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/src/infrastructure/mailer.js",
+      "action": "create",
+      "tokens": 129,
+      "at": "2026-07-08T14:18:10.503Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/package.json",
+      "action": "create",
+      "tokens": 44,
+      "at": "2026-07-08T14:18:19.430Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/test/unit/mailer.test.js",
+      "action": "create",
+      "tokens": 348,
+      "at": "2026-07-08T14:18:27.377Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/container.js",
+      "action": "create",
+      "tokens": 128,
+      "at": "2026-07-08T14:18:39.601Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/boot.js",
+      "action": "create",
+      "tokens": 625,
+      "at": "2026-07-08T14:18:51.776Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/main.js",
+      "action": "create",
+      "tokens": 33,
+      "at": "2026-07-08T14:18:55.574Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/package.json",
+      "action": "edit",
+      "tokens": 64,
+      "at": "2026-07-08T14:19:00.813Z"
     }
   ],
   "edit_counts": {
     "../../../.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md": 1,
     ".gitignore": 1,
-    "services/service-notifier/package.json": 1,
+    "services/service-notifier/package.json": 2,
     "package.json": 3,
     "core/service-signal-engine/package.json": 1,
     "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js": 1,
@@ -407,10 +485,17 @@
     "services/service-tracker/src/container.js": 1,
     "services/service-tracker/src/boot.js": 1,
     "services/service-tracker/main.js": 1,
-    "services/service-tracker/package.json": 1
+    "services/service-tracker/package.json": 1,
+    "core/service-notifier/test/unit/formatter.test.js": 1,
+    "core/service-notifier/src/infrastructure/mailer.js": 1,
+    "core/service-notifier/package.json": 1,
+    "core/service-notifier/test/unit/mailer.test.js": 1,
+    "services/service-notifier/src/container.js": 1,
+    "services/service-notifier/src/boot.js": 1,
+    "services/service-notifier/main.js": 1
   },
   "anatomy_hits": 7,
-  "anatomy_misses": 21,
+  "anatomy_misses": 27,
   "repeated_reads_warned": 2,
   "cerebrum_warnings": 0,
   "stop_count": 0
