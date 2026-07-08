@@ -15,7 +15,9 @@
         "service-backtest",
         "service-signal-engine"
       ],
-      "related_bugs": ["bug-tracker-broken-import"],
+      "related_bugs": [
+        "bug-tracker-broken-import"
+      ],
       "occurrences": 1,
       "last_seen": "2026-07-08T14:21:00.000Z"
     },
@@ -1450,6 +1452,166 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-08T14:20:38.582Z"
+    },
+    {
+      "id": "bug-090",
+      "timestamp": "2026-07-08T14:23:57.834Z",
+      "error_message": "Incorrect value in code",
+      "file": "web-app/src/features/signals/components/SignalFilters.jsx",
+      "root_cause": "Had '../theme.js'",
+      "fix": "Changed to '@styles/theme.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:23:57.834Z"
+    },
+    {
+      "id": "bug-091",
+      "timestamp": "2026-07-08T14:24:02.519Z",
+      "error_message": "Incorrect value in code",
+      "file": "web-app/src/features/signals/components/SignalChart.jsx",
+      "root_cause": "Had '../theme.js'",
+      "fix": "Changed to '@styles/theme.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:24:02.519Z"
+    },
+    {
+      "id": "bug-092",
+      "timestamp": "2026-07-08T14:24:26.376Z",
+      "error_message": "Incorrect value in code",
+      "file": "web-app/src/features/signals/components/SignalGrid.test.jsx",
+      "root_cause": "Had '../store/useStore.js'",
+      "fix": "Changed to '@store/useStore.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-07-08T14:26:27.919Z"
+    },
+    {
+      "id": "bug-093",
+      "timestamp": "2026-07-08T14:24:33.770Z",
+      "error_message": "Incorrect value in code",
+      "file": "web-app/src/layouts/AppDrawer.test.jsx",
+      "root_cause": "Had '../store/useStore.js'",
+      "fix": "Changed to '@store/useStore.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:24:33.770Z"
+    },
+    {
+      "id": "bug-094",
+      "timestamp": "2026-07-08T14:24:37.845Z",
+      "error_message": "Incorrect value in code",
+      "file": "web-app/src/layouts/TopBar.test.jsx",
+      "root_cause": "Had '../store/useStore.js'",
+      "fix": "Changed to '@store/useStore.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:24:37.845Z"
+    },
+    {
+      "id": "bug-095",
+      "timestamp": "2026-07-08T14:24:48.308Z",
+      "error_message": "Incorrect value in code",
+      "file": "web-app/src/layouts/AppDrawer.jsx",
+      "root_cause": "Had '../store/useStore.js'",
+      "fix": "Changed to '@store/useStore.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:24:48.308Z"
+    },
+    {
+      "id": "bug-096",
+      "timestamp": "2026-07-08T14:25:02.907Z",
+      "error_message": "Incorrect value in code",
+      "file": "web-app/src/pages/StatsPage.jsx",
+      "root_cause": "Had '../api/statsApi.js'",
+      "fix": "Changed to '@api/statsApi.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:25:02.907Z"
+    },
+    {
+      "id": "bug-097",
+      "timestamp": "2026-07-08T14:25:07.445Z",
+      "error_message": "Incorrect value in code",
+      "file": "web-app/src/features/stats/components/MetricRow.jsx",
+      "root_cause": "Had '../theme.js'",
+      "fix": "Changed to '@styles/theme.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:25:07.445Z"
+    },
+    {
+      "id": "bug-098",
+      "timestamp": "2026-07-08T14:25:23.308Z",
+      "error_message": "Incorrect value in code",
+      "file": "web-app/src/main.jsx",
+      "root_cause": "Had './theme.js'",
+      "fix": "Changed to '@styles/theme.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:25:23.308Z"
+    },
+    {
+      "id": "bug-099",
+      "timestamp": "2026-07-08T14:26:03.039Z",
+      "error_message": "Incorrect value in code",
+      "file": "web-app/src/features/signals/components/SignalCard.test.jsx",
+      "root_cause": "Had '../api/aiApi.js'",
+      "fix": "Changed to '@api/aiApi.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-07-08T14:26:14.277Z"
     }
   ]
 }

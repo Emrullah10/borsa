@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
-import TopBar from './components/TopBar.jsx';
-import AppDrawer from './components/AppDrawer.jsx';
-import SignalGrid from './components/SignalGrid.jsx';
-import StatsPage from './components/StatsPage.jsx';
+import TopBar from '@layouts/TopBar.jsx';
+import AppDrawer from '@layouts/AppDrawer.jsx';
+import SignalGrid from '@features/signals/components/SignalGrid.jsx';
+import StatsPage from '@pages/StatsPage.jsx';
 import { useStore } from './store/useStore.js';
 
 export default function App() {

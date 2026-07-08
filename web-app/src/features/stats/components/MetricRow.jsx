@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { COLORS } from '../theme.js';
+import { COLORS } from '@styles/theme.js';
 
 function Metric({ label, value, color }) {
   return (

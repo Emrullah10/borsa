@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:22:29.458Z
-> Files: 195 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:26:27.909Z
+> Files: 211 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -410,3 +410,37 @@
 
 - `boot.js` — Exports boot (~445 tok)
 - `container.js` — Exports buildContainer (~204 tok)
+
+## web-app/
+
+- `jsconfig.json` (~101 tok)
+- `vite.config.js` — Declares __dirname (~234 tok)
+
+## web-app/src/
+
+- `App.jsx` — App (~198 tok)
+- `main.jsx` (~114 tok)
+
+## web-app/src/features/signals/components/
+
+- `SignalCard.jsx` — FLIP_DURATION (~4619 tok)
+- `SignalCard.test.jsx` — MOCK_SIGNAL (~936 tok)
+- `SignalChart.jsx` — buildSignalChartOption (~732 tok)
+- `SignalFilters.jsx` — SORT_OPTIONS (~1080 tok)
+- `SignalGrid.jsx` — FRESH_WINDOW_MS (~1505 tok)
+- `SignalGrid.test.jsx` — mkSignal (~1246 tok)
+
+## web-app/src/features/stats/components/
+
+- `MetricRow.jsx` — Metric (~256 tok)
+
+## web-app/src/layouts/
+
+- `AppDrawer.jsx` — AppDrawer — renders modal (~1035 tok)
+- `AppDrawer.test.jsx` — mockStore (~835 tok)
+- `TopBar.jsx` — SYMBOLS (~855 tok)
+- `TopBar.test.jsx` — user (~610 tok)
+
+## web-app/src/pages/
+
+- `StatsPage.jsx` — StatBox (~2133 tok)

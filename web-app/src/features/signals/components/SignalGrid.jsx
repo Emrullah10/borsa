@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
-import { useStore } from '../store/useStore.js';
-import { fetchSignals, connectSignalWS } from '../api/signalApi.js';
-import { fetchPrice } from '../api/marketApi.js';
+import { useStore } from '@store/useStore.js';
+import { fetchSignals, connectSignalWS } from '@api/signalApi.js';
+import { fetchPrice } from '@api/marketApi.js';
 import SignalCard from './SignalCard.jsx';
 import SignalFilters from './SignalFilters.jsx';
 

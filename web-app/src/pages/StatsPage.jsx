@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Typography, CircularProgress, Divider } from '@mui/material';
-import { fetchStats } from '../api/statsApi.js';
-import { COLORS } from '../theme.js';
+import { fetchStats } from '@api/statsApi.js';
+import { COLORS } from '@styles/theme.js';
 
 function StatBox({ label, value, color }) {
   return (

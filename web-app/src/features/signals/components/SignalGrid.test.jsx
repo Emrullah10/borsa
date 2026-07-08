@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import SignalGrid from './SignalGrid.jsx';
 
-vi.mock('../api/signalApi.js', () => ({
+vi.mock('@api/signalApi.js', () => ({
   fetchSignals: vi.fn().mockResolvedValue([]),
   connectSignalWS: vi.fn().mockReturnValue({ close: vi.fn() }),
 }));
@@ -21,8 +21,8 @@ const mkSignal = (over) => ({
 });
 
 // Reset store between tests
-import { useStore } from '../store/useStore.js';
-import { fetchSignals, connectSignalWS } from '../api/signalApi.js';
+import { useStore } from '@store/useStore.js';
+import { fetchSignals, connectSignalWS } from '@api/signalApi.js';
 
 beforeEach(() => {
   useStore.setState({ signals: [] });

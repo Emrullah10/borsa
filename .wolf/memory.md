@@ -1521,3 +1521,39 @@
 | 17:21 | Created services/service-backtest/package.json | — | ~99 |
 | 17:22 | Created vitest.config.js | — | ~67 |
 | 17:22 | Created vitest.config.js | — | ~67 |
+| 17:23 | Edited web-app/vite.config.js | expanded (+15 lines) | ~233 |
+| 17:23 | Edited web-app/vite.config.js | expanded (+15 lines) | ~233 |
+| 17:23 | Created web-app/jsconfig.json | — | ~101 |
+| 17:23 | Created web-app/jsconfig.json | — | ~101 |
+| 17:23 | Edited web-app/src/features/signals/components/SignalGrid.jsx | 5→5 lines | ~73 |
+| 17:23 | Edited web-app/src/features/signals/components/SignalGrid.jsx | 5→5 lines | ~73 |
+| 17:23 | Edited web-app/src/features/signals/components/SignalCard.jsx | 7→7 lines | ~108 |
+| 17:23 | Edited web-app/src/features/signals/components/SignalCard.jsx | 7→7 lines | ~108 |
+| 17:23 | Edited web-app/src/features/signals/components/SignalFilters.jsx | "../theme.js" → "@styles/theme.js" | ~12 |
+| 17:23 | Edited web-app/src/features/signals/components/SignalFilters.jsx | "../theme.js" → "@styles/theme.js" | ~12 |
+| 17:24 | Edited web-app/src/features/signals/components/SignalChart.jsx | "../theme.js" → "@styles/theme.js" | ~12 |
+| 17:24 | Edited web-app/src/features/signals/components/SignalChart.jsx | "../theme.js" → "@styles/theme.js" | ~12 |
+| 17:24 | Edited web-app/src/features/signals/components/SignalGrid.test.jsx | 2→2 lines | ~33 |
+| 17:24 | Edited web-app/src/features/signals/components/SignalGrid.test.jsx | 2→2 lines | ~33 |
+| 17:24 | Edited web-app/src/layouts/AppDrawer.test.jsx | "../store/useStore.js" → "@store/useStore.js" | ~16 |
+| 17:24 | Edited web-app/src/layouts/AppDrawer.test.jsx | "../store/useStore.js" → "@store/useStore.js" | ~16 |
+| 17:24 | Edited web-app/src/layouts/TopBar.test.jsx | "../store/useStore.js" → "@store/useStore.js" | ~14 |
+| 17:24 | Edited web-app/src/layouts/TopBar.test.jsx | "../store/useStore.js" → "@store/useStore.js" | ~14 |
+| 17:24 | Edited web-app/src/layouts/AppDrawer.jsx | "../store/useStore.js" → "@store/useStore.js" | ~14 |
+| 17:24 | Edited web-app/src/layouts/AppDrawer.jsx | "../store/useStore.js" → "@store/useStore.js" | ~14 |
+| 17:24 | Edited web-app/src/layouts/TopBar.jsx | 5→5 lines | ~68 |
+| 17:24 | Edited web-app/src/layouts/TopBar.jsx | 5→5 lines | ~68 |
+| 17:25 | Edited web-app/src/pages/StatsPage.jsx | 2→2 lines | ~26 |
+| 17:25 | Edited web-app/src/pages/StatsPage.jsx | 2→2 lines | ~26 |
+| 17:25 | Edited web-app/src/features/stats/components/MetricRow.jsx | "../theme.js" → "@styles/theme.js" | ~12 |
+| 17:25 | Edited web-app/src/features/stats/components/MetricRow.jsx | "../theme.js" → "@styles/theme.js" | ~12 |
+| 17:25 | Edited web-app/src/App.jsx | 6→6 lines | ~83 |
+| 17:25 | Edited web-app/src/App.jsx | 6→6 lines | ~83 |
+| 17:25 | Edited web-app/src/main.jsx | "./theme.js" → "@styles/theme.js" | ~12 |
+| 17:25 | Edited web-app/src/main.jsx | "./theme.js" → "@styles/theme.js" | ~12 |
+| 17:26 | Edited web-app/src/features/signals/components/SignalCard.test.jsx | 3→3 lines | ~86 |
+| 17:26 | Edited web-app/src/features/signals/components/SignalCard.test.jsx | 3→3 lines | ~86 |
+| 17:26 | Edited web-app/src/features/signals/components/SignalCard.test.jsx | "../store/useStore.js" → "@store/useStore.js" | ~18 |
+| 17:26 | Edited web-app/src/features/signals/components/SignalCard.test.jsx | "../store/useStore.js" → "@store/useStore.js" | ~18 |
+| 17:26 | Edited web-app/src/features/signals/components/SignalGrid.test.jsx | "../api/signalApi.js" → "@api/signalApi.js" | ~11 |
+| 17:26 | Edited web-app/src/features/signals/components/SignalGrid.test.jsx | "../api/signalApi.js" → "@api/signalApi.js" | ~11 |

@@ -221,6 +221,91 @@
       "count": 1,
       "tokens": 301,
       "first_read": "2026-07-08T14:20:56.585Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/App.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:23:05.370Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/vite.config.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:23:05.736Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:23:39.358Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:23:39.991Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalFilters.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:23:53.633Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalChart.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:23:54.019Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/utils/entryValidity.test.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:23:54.534Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.test.jsx": {
+      "count": 2,
+      "tokens": 1247,
+      "first_read": "2026-07-08T14:24:22.863Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/AppDrawer.test.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:24:29.641Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/TopBar.test.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:24:30.657Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/App.test.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:24:30.859Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/AppDrawer.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:24:44.444Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/TopBar.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:24:44.852Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:24:57.447Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/stats/components/MetricRow.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:24:57.781Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/main.jsx": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:25:18.776Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.test.jsx": {
+      "count": 2,
+      "tokens": 936,
+      "first_read": "2026-07-08T14:25:57.956Z"
     }
   },
   "files_written": [
@@ -559,6 +644,114 @@
       "action": "create",
       "tokens": 67,
       "at": "2026-07-08T14:22:29.466Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/vite.config.js",
+      "action": "edit",
+      "tokens": 233,
+      "at": "2026-07-08T14:23:29.604Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/jsconfig.json",
+      "action": "create",
+      "tokens": 101,
+      "at": "2026-07-08T14:23:35.661Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx",
+      "action": "edit",
+      "tokens": 73,
+      "at": "2026-07-08T14:23:44.462Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+      "action": "edit",
+      "tokens": 108,
+      "at": "2026-07-08T14:23:49.986Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalFilters.jsx",
+      "action": "edit",
+      "tokens": 12,
+      "at": "2026-07-08T14:23:57.833Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalChart.jsx",
+      "action": "edit",
+      "tokens": 12,
+      "at": "2026-07-08T14:24:02.518Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.test.jsx",
+      "action": "edit",
+      "tokens": 33,
+      "at": "2026-07-08T14:24:26.375Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/AppDrawer.test.jsx",
+      "action": "edit",
+      "tokens": 16,
+      "at": "2026-07-08T14:24:33.769Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/TopBar.test.jsx",
+      "action": "edit",
+      "tokens": 14,
+      "at": "2026-07-08T14:24:37.844Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/AppDrawer.jsx",
+      "action": "edit",
+      "tokens": 14,
+      "at": "2026-07-08T14:24:48.307Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/TopBar.jsx",
+      "action": "edit",
+      "tokens": 68,
+      "at": "2026-07-08T14:24:53.219Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+      "action": "edit",
+      "tokens": 26,
+      "at": "2026-07-08T14:25:02.906Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/stats/components/MetricRow.jsx",
+      "action": "edit",
+      "tokens": 12,
+      "at": "2026-07-08T14:25:07.443Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/App.jsx",
+      "action": "edit",
+      "tokens": 83,
+      "at": "2026-07-08T14:25:14.970Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/main.jsx",
+      "action": "edit",
+      "tokens": 12,
+      "at": "2026-07-08T14:25:23.306Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.test.jsx",
+      "action": "edit",
+      "tokens": 86,
+      "at": "2026-07-08T14:26:03.038Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.test.jsx",
+      "action": "edit",
+      "tokens": 18,
+      "at": "2026-07-08T14:26:14.276Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.test.jsx",
+      "action": "edit",
+      "tokens": 11,
+      "at": "2026-07-08T14:26:27.918Z"
     }
   ],
   "edit_counts": {
@@ -611,11 +804,27 @@
     "services/service-backtest/main.js": 1,
     "core/service-backtest/package.json": 1,
     "services/service-backtest/package.json": 1,
-    "vitest.config.js": 1
+    "vitest.config.js": 1,
+    "web-app/vite.config.js": 1,
+    "web-app/jsconfig.json": 1,
+    "web-app/src/features/signals/components/SignalGrid.jsx": 1,
+    "web-app/src/features/signals/components/SignalCard.jsx": 1,
+    "web-app/src/features/signals/components/SignalFilters.jsx": 1,
+    "web-app/src/features/signals/components/SignalChart.jsx": 1,
+    "web-app/src/features/signals/components/SignalGrid.test.jsx": 2,
+    "web-app/src/layouts/AppDrawer.test.jsx": 1,
+    "web-app/src/layouts/TopBar.test.jsx": 1,
+    "web-app/src/layouts/AppDrawer.jsx": 1,
+    "web-app/src/layouts/TopBar.jsx": 1,
+    "web-app/src/pages/StatsPage.jsx": 1,
+    "web-app/src/features/stats/components/MetricRow.jsx": 1,
+    "web-app/src/App.jsx": 1,
+    "web-app/src/main.jsx": 1,
+    "web-app/src/features/signals/components/SignalCard.test.jsx": 2
   },
   "anatomy_hits": 8,
-  "anatomy_misses": 36,
-  "repeated_reads_warned": 2,
+  "anatomy_misses": 53,
+  "repeated_reads_warned": 4,
   "cerebrum_warnings": 0,
   "stop_count": 0
 }

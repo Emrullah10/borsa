@@ -9,7 +9,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { COLORS } from '../theme.js';
+import { COLORS } from '@styles/theme.js';
 
 export const SORT_OPTIONS = [
   { value: 'confidence', label: 'Güven' },

@@ -2,9 +2,9 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import SignalCard from './SignalCard.jsx';
 
-vi.mock('../api/aiApi.js', () => ({ analyzeSignal: vi.fn().mockResolvedValue('Test AI yorum') }))
-vi.mock('../utils/aiComment.js', () => ({ generateAiComment: vi.fn().mockReturnValue('Fallback yorum') }))
-vi.mock('../api/marketApi.js', () => ({ fetchPrice: vi.fn().mockResolvedValue(67500) }))
+vi.mock('@api/aiApi.js', () => ({ analyzeSignal: vi.fn().mockResolvedValue('Test AI yorum') }))
+vi.mock('@features/ai/utils/aiComment.js', () => ({ generateAiComment: vi.fn().mockReturnValue('Fallback yorum') }))
+vi.mock('@api/marketApi.js', () => ({ fetchPrice: vi.fn().mockResolvedValue(67500) }))
 
 const MOCK_SIGNAL = {
   id: 'sig-1',
@@ -46,7 +46,7 @@ describe('SignalCard', () => {
 
   it('anlık fiyatı (Güncel) gösterir', async () => {
     // Fiyat artık store'dan okunuyor — store'u önceden doldur
-    const { useStore } = await import('../store/useStore.js');
+    const { useStore } = await import('@store/useStore.js');
     useStore.setState({ prices: { BTCUSDT: 67500 } });
     render(<SignalCard signal={MOCK_SIGNAL} isNew={false} />);
     expect(screen.getByText('Güncel')).toBeInTheDocument();
