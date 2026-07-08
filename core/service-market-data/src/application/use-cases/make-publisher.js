@@ -1,14 +1,9 @@
-import datasources from '@borsa-bot/datasource';
-import { pushCandle } from './candle-store.js';
-
-export function createPublisher(redisOverride) {
-  const redis = redisOverride ?? datasources.coreRedis;
-
+export function makePublisher({ redis, candleRepo }) {
   async function publishCandle(symbol, tf, candle) {
     const channel = `md.${symbol}.${tf}`;
     const payload = JSON.stringify({ type: 'candle', symbol, tf, data: candle });
     await redis.publish(channel, payload);
-    await pushCandle(symbol, tf, candle);
+    await candleRepo.pushCandle(symbol, tf, candle);
   }
 
   async function publishFunding(symbol, funding) {

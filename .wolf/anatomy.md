@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:12:37.966Z
-> Files: 160 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:14:58.608Z
+> Files: 171 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -195,6 +195,23 @@
 - `tracker.js` — Açık bir outcome için mum OHLC'ye göre sonuç değerlendir. (~439 tok)
 - `tracker.test.js` — Helper: candle oluştur (~738 tok)
 
+## core/service-market-data/
+
+- `package.json` — Node.js package manifest (~45 tok)
+
+## core/service-market-data/src/application/use-cases/
+
+- `make-publisher.js` — Exports makePublisher (~301 tok)
+
+## core/service-market-data/src/infrastructure/persistence/repositories/
+
+- `candle-repository.js` — Exports makeCandleRepository (~213 tok)
+
+## core/service-market-data/test/unit/
+
+- `candle-repository.test.js` — Declares candle (~540 tok)
+- `make-publisher.test.js` — Declares candle (~500 tok)
+
 ## core/service-signal-engine/
 
 - `package.json` — Node.js package manifest (~63 tok)
@@ -298,6 +315,18 @@
 - `aiComment.test.js` — Declares comment (~313 tok)
 - `entryValidity.js` — Bir sinyalin giriş penceresinin hâlâ geçerli olup olmadığını hesaplar. (~369 tok)
 - `entryValidity.test.js` — Declares base (~782 tok)
+
+## services/service-market-data/
+
+- `main.js` (~33 tok)
+- `package.json` — Node.js package manifest (~125 tok)
+
+## services/service-market-data/src/
+
+- `bitget-ws.js` — Exports startBitgetWS (~2616 tok)
+- `boot.js` — Exports boot (~352 tok)
+- `container.js` — Exports buildContainer (~149 tok)
+- `routes.js` — API routes: GET (3 endpoints) (~240 tok)
 
 ## services/service-notifier/
 

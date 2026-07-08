@@ -1,5 +1,4 @@
 import helper from '@borsa-bot/helper';
-import { createPublisher } from './publisher.js';
 
 const DEFAULT_SYMBOLS = [
   'BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'XRPUSDT', 'BNBUSDT',
@@ -122,8 +121,7 @@ async function startLsrPoller(symbols, publisher) {
   helper.log.info(`LSR poller başlatıldı — ${symbols.length} sembol, ${LSR_POLL_INTERVAL_MS / 60000}dk aralık`);
 }
 
-export async function startBitgetWS() {
-  const publisher = createPublisher();
+export async function startBitgetWS({ publisher }) {
   const symbols = await resolveSymbols();
 
   const bitgetApi = await import('bitget-api');

@@ -1445,3 +1445,27 @@
 | 17:12 | Created services/service-signal-engine/package.json | — | ~124 |
 | 17:12 | Edited package.json | 8→9 lines | ~89 |
 | 17:12 | Edited package.json | 8→9 lines | ~89 |
+| 17:13 | Created core/service-market-data/src/infrastructure/persistence/repositories/candle-repository.js | — | ~213 |
+| 17:13 | Created core/service-market-data/src/infrastructure/persistence/repositories/candle-repository.js | — | ~213 |
+| 17:13 | Created core/service-market-data/src/application/use-cases/make-publisher.js | — | ~301 |
+| 17:13 | Created core/service-market-data/src/application/use-cases/make-publisher.js | — | ~301 |
+| 17:14 | Created core/service-market-data/test/unit/candle-repository.test.js | — | ~540 |
+| 17:14 | Created core/service-market-data/test/unit/candle-repository.test.js | — | ~540 |
+| 17:14 | Created core/service-market-data/test/unit/make-publisher.test.js | — | ~500 |
+| 17:14 | Created core/service-market-data/test/unit/make-publisher.test.js | — | ~500 |
+| 17:14 | Edited services/service-market-data/src/bitget-ws.js | 2→1 lines | ~12 |
+| 17:14 | Edited services/service-market-data/src/bitget-ws.js | 2→1 lines | ~12 |
+| 17:14 | Edited services/service-market-data/src/bitget-ws.js | modified startBitgetWS() | ~27 |
+| 17:14 | Edited services/service-market-data/src/bitget-ws.js | modified startBitgetWS() | ~27 |
+| 17:14 | Created core/service-market-data/package.json | — | ~45 |
+| 17:14 | Created core/service-market-data/package.json | — | ~45 |
+| 17:14 | Created services/service-market-data/src/container.js | — | ~149 |
+| 17:14 | Created services/service-market-data/src/container.js | — | ~149 |
+| 17:14 | Created services/service-market-data/src/routes.js | — | ~240 |
+| 17:14 | Created services/service-market-data/src/routes.js | — | ~240 |
+| 17:14 | Created services/service-market-data/src/boot.js | — | ~352 |
+| 17:14 | Created services/service-market-data/src/boot.js | — | ~352 |
+| 17:14 | Created services/service-market-data/main.js | — | ~33 |
+| 17:14 | Created services/service-market-data/main.js | — | ~33 |
+| 17:14 | Edited services/service-market-data/package.json | 8→9 lines | ~72 |
+| 17:14 | Edited services/service-market-data/package.json | 8→9 lines | ~72 |

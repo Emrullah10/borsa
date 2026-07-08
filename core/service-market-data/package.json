@@ -1,0 +1,9 @@
+{
+  "name": "@borsa-bot/core-market-data",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "vitest run"
+  }
+}

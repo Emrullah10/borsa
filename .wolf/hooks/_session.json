@@ -76,6 +76,41 @@
       "count": 1,
       "tokens": 0,
       "first_read": "2026-07-08T14:12:13.654Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/main.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:13:26.386Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/candle-store.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:13:27.134Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/publisher.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:13:27.484Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/bitget-ws.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:13:27.829Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/test/unit/candle-store.test.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:13:32.617Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/test/unit/publisher.test.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:13:33.647Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/package.json": {
+      "count": 1,
+      "tokens": 301,
+      "first_read": "2026-07-08T14:13:33.659Z"
     }
   },
   "files_written": [
@@ -180,6 +215,78 @@
       "action": "edit",
       "tokens": 89,
       "at": "2026-07-08T14:12:37.974Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/src/infrastructure/persistence/repositories/candle-repository.js",
+      "action": "create",
+      "tokens": 213,
+      "at": "2026-07-08T14:13:44.279Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/src/application/use-cases/make-publisher.js",
+      "action": "create",
+      "tokens": 301,
+      "at": "2026-07-08T14:13:53.024Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/test/unit/candle-repository.test.js",
+      "action": "create",
+      "tokens": 540,
+      "at": "2026-07-08T14:14:07.162Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/test/unit/make-publisher.test.js",
+      "action": "create",
+      "tokens": 500,
+      "at": "2026-07-08T14:14:15.971Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/bitget-ws.js",
+      "action": "edit",
+      "tokens": 12,
+      "at": "2026-07-08T14:14:21.642Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/bitget-ws.js",
+      "action": "edit",
+      "tokens": 27,
+      "at": "2026-07-08T14:14:26.868Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/package.json",
+      "action": "create",
+      "tokens": 45,
+      "at": "2026-07-08T14:14:32.214Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/container.js",
+      "action": "create",
+      "tokens": 149,
+      "at": "2026-07-08T14:14:37.081Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/routes.js",
+      "action": "create",
+      "tokens": 240,
+      "at": "2026-07-08T14:14:43.011Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/boot.js",
+      "action": "create",
+      "tokens": 352,
+      "at": "2026-07-08T14:14:49.082Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/main.js",
+      "action": "create",
+      "tokens": 33,
+      "at": "2026-07-08T14:14:53.247Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/package.json",
+      "action": "edit",
+      "tokens": 72,
+      "at": "2026-07-08T14:14:58.617Z"
     }
   ],
   "edit_counts": {
@@ -197,10 +304,21 @@
     "services/service-signal-engine/src/boot.js": 1,
     "services/service-signal-engine/main.js": 1,
     "services/service-signal-engine/src/ws-server.test.js": 1,
-    "services/service-signal-engine/package.json": 1
+    "services/service-signal-engine/package.json": 1,
+    "core/service-market-data/src/infrastructure/persistence/repositories/candle-repository.js": 1,
+    "core/service-market-data/src/application/use-cases/make-publisher.js": 1,
+    "core/service-market-data/test/unit/candle-repository.test.js": 1,
+    "core/service-market-data/test/unit/make-publisher.test.js": 1,
+    "services/service-market-data/src/bitget-ws.js": 2,
+    "core/service-market-data/package.json": 1,
+    "services/service-market-data/src/container.js": 1,
+    "services/service-market-data/src/routes.js": 1,
+    "services/service-market-data/src/boot.js": 1,
+    "services/service-market-data/main.js": 1,
+    "services/service-market-data/package.json": 1
   },
-  "anatomy_hits": 5,
-  "anatomy_misses": 10,
+  "anatomy_hits": 6,
+  "anatomy_misses": 16,
   "repeated_reads_warned": 1,
   "cerebrum_warnings": 0,
   "stop_count": 0
