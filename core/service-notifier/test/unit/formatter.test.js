@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatEmailSubject, formatEmailHtml } from './formatter.js';
+import { formatEmailSubject, formatEmailHtml } from '../../src/domain/formatter.js';
 
 const longSignal = {
   symbol: 'BTCUSDT',
