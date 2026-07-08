@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T15:23:55.929Z
-> Files: 524 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T15:29:28.257Z
+> Files: 532 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -128,7 +128,7 @@
 
 ## core/service-signal-engine/src/application/use-cases/
 
-- `make-process-candle.js` — Exports makeProcessCandle (~2054 tok)
+- `make-process-candle.js` — Exports makeProcessCandle (~2064 tok)
 
 ## core/service-signal-engine/src/domain/
 
@@ -140,16 +140,17 @@
 
 ## core/service-signal-engine/src/infrastructure/persistence/repositories/
 
-- `signal-repository.js` — Exports makeSignalRepository (~1716 tok)
+- `signal-repository.js` — Kırılım (breakdown) sorgularında sadece bu whitelist'teki grup ifadeleri kullanılabilir. (~2437 tok)
 
 ## core/service-signal-engine/test/unit/
 
 - `confluence.test.js` — ADX >= 25 ile güçlü trend fixture'ları (~1730 tok)
 - `indicators.test.js` — Declares closes20 (~1726 tok)
 - `liquidation-pressure.test.js` — Declares result (~764 tok)
+- `make-process-candle.test.js` — Declares makeCandle (~582 tok)
 - `regime.test.js` — Declares makeCandles (~630 tok)
 - `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~1626 tok)
-- `signal-repository.test.js` — Declares fakeRows (~726 tok)
+- `signal-repository.test.js` — Declares fakeRows (~1776 tok)
 
 ## core/service-tracker/
 
@@ -807,7 +808,26 @@
 
 - `main.js` — SYMBOLS: fetchRegimeSeries, fetchHigherTfSeries, runBacktest, main (~1372 tok)
 
+## services/service-signal-engine/src/
+
+- `boot.js` — Exports boot (~548 tok)
+- `container.js` — Exports buildContainer (~209 tok)
+- `parse-stats-query.js` — Exports parseDays, parseBreakdownQuery (~215 tok)
+- `routes.js` — API routes: GET (5 endpoints) (~573 tok)
+
+## services/service-signal-engine/test/unit/
+
+- `parse-stats-query.test.js` — Declares result (~408 tok)
+
 ## services/service-tracker/src/
 
 - `boot.js` — Exports boot (~549 tok)
 - `container.js` — Exports buildContainer (~209 tok)
+
+## web-app/src/api/
+
+- `statsApi.js` — Exports fetchStats, fetchBreakdown (~147 tok)
+
+## web-app/src/pages/
+
+- `StatsPage.jsx` — DAY_OPTIONS (~3398 tok)

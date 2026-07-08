@@ -1,13 +1,24 @@
-export function makeSignalRepository({ db }) {
+// Kırılım (breakdown) sorgularında sadece bu whitelist'teki grup ifadeleri kullanılabilir.
+// Ham `by` girdisi ASLA SQL'e interpolate edilmez — sadece bu map'te lookup yapılır.
+const BREAKDOWN_GROUP_EXPR = {
+  regime: "COALESCE(s.regime, 'unknown')",
+  tf: 's.trigger_timeframe',
+  direction: 's.direction',
+  hour: 'EXTRACT(HOUR FROM s.created_at)',
+};
+
+export function makeSignalRepository({ db, takerFee = 0.0006 } = {}) {
   async function saveSignal({
     symbol, direction, triggerTimeframe, entryPrice, stopPrice, targetPrice,
     rrRatio, confluenceScore, indicatorsSnapshot, liqPressureScore, liqDirection,
+    regime, higherTfTrend,
   }) {
     const sql = `
       INSERT INTO signals (
         symbol, direction, trigger_timeframe, entry_price, stop_price, target_price,
-        rr_ratio, confluence_score, indicators_snapshot, liq_pressure_score, liq_direction
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+        rr_ratio, confluence_score, indicators_snapshot, liq_pressure_score, liq_direction,
+        regime, higher_tf_trend
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
       RETURNING id, created_at
     `;
     const values = [
@@ -17,6 +28,8 @@ export function makeSignalRepository({ db }) {
       JSON.stringify(indicatorsSnapshot),
       liqPressureScore ?? null,
       liqDirection ?? null,
+      regime ?? null,
+      higherTfTrend ?? null,
     ];
     const result = await db.query(sql, values);
     return result.rows[0];
@@ -78,7 +91,7 @@ export function makeSignalRepository({ db }) {
     ]);
   }
 
-  async function getSignalStats() {
+  async function getSignalStats(days = 7) {
     const sql = `
       SELECT
         COUNT(*)                                                          AS total,
@@ -95,7 +108,7 @@ export function makeSignalRepository({ db }) {
         )                                                                  AS profit_factor,
         ROUND(AVG(o.pnl_r) FILTER (WHERE o.status IN ('tp_hit','sl_hit','timeout')), 4) AS avg_r,
         ROUND(AVG(
-          o.pnl_r - (0.0008 / NULLIF(ABS(s.entry_price - s.stop_price) / NULLIF(s.entry_price, 0), 0))
+          o.pnl_r - ((2 * ${takerFee}) / NULLIF(ABS(s.entry_price - s.stop_price) / NULLIF(s.entry_price, 0), 0))
         ) FILTER (WHERE o.status IN ('tp_hit','sl_hit','timeout')), 4)    AS avg_r_after_fee,
         COUNT(*) FILTER (WHERE s.direction='long')                       AS total_long,
         COUNT(*) FILTER (WHERE s.direction='long' AND o.status='tp_hit') AS long_tp,
@@ -105,16 +118,28 @@ export function makeSignalRepository({ db }) {
         COUNT(*) FILTER (WHERE s.direction='short' AND o.status='sl_hit') AS short_sl,
         COUNT(*) FILTER (WHERE s.trigger_timeframe='1m')                 AS tf_1m,
         COUNT(*) FILTER (WHERE s.trigger_timeframe='5m')                 AS tf_5m,
-        ROUND(AVG(s.confluence_score)*100, 1)                            AS avg_confluence
+        COUNT(*) FILTER (WHERE o.tie_break)                              AS tie_breaks,
+        ROUND(AVG(s.confluence_score)*100, 1)                            AS avg_confluence,
+        ROUND(AVG(
+          EXTRACT(EPOCH FROM (o.resolved_at - s.created_at))/60
+        ) FILTER (WHERE o.status = 'tp_hit'), 1)                          AS avg_min_to_tp,
+        ROUND(AVG(
+          EXTRACT(EPOCH FROM (o.resolved_at - s.created_at))/60
+        ) FILTER (WHERE o.status = 'sl_hit'), 1)                          AS avg_min_to_sl,
+        ROUND(
+          COUNT(*) FILTER (WHERE o.status = 'timeout')::numeric
+          / NULLIF(COUNT(*) FILTER (WHERE o.status IN ('tp_hit','sl_hit','timeout')), 0) * 100
+        , 1)                                                              AS timeout_rate,
+        ROUND(AVG(o.sim_pnl_r) FILTER (WHERE o.sim_pnl_r IS NOT NULL), 4)  AS avg_sim_r
       FROM signal_outcomes o
       JOIN signals s ON s.id = o.signal_id
-      WHERE s.created_at > now() - interval '7 days'
+      WHERE s.created_at > now() - make_interval(days => $1)
     `;
-    const result = await db.query(sql);
+    const result = await db.query(sql, [days]);
     return result.rows[0];
   }
 
-  async function getTopSymbolStats() {
+  async function getTopSymbolStats(days = 7) {
     const sql = `
       SELECT
         s.symbol,
@@ -124,14 +149,39 @@ export function makeSignalRepository({ db }) {
         ROUND(AVG(CASE WHEN o.status='tp_hit' THEN 1.0 WHEN o.status='sl_hit' THEN 0.0 END)*100, 1) AS win_rate
       FROM signal_outcomes o
       JOIN signals s ON s.id = o.signal_id
-      WHERE s.created_at > now() - interval '7 days'
+      WHERE s.created_at > now() - make_interval(days => $1)
         AND o.status IN ('tp_hit','sl_hit')
       GROUP BY s.symbol
       HAVING COUNT(*) >= 3
       ORDER BY win_rate DESC NULLS LAST
       LIMIT 10
     `;
-    const result = await db.query(sql);
+    const result = await db.query(sql, [days]);
+    return result.rows;
+  }
+
+  async function getStatsBreakdown({ by, days = 7 }) {
+    const groupExpr = BREAKDOWN_GROUP_EXPR[by];
+    if (!groupExpr) {
+      throw new Error(`invalid breakdown 'by' value: ${by}`);
+    }
+    const sql = `
+      SELECT
+        ${groupExpr} AS bucket,
+        COUNT(*)                                                          AS total,
+        COUNT(*) FILTER (WHERE o.status = 'tp_hit')                      AS tp_hit,
+        COUNT(*) FILTER (WHERE o.status = 'sl_hit')                      AS sl_hit,
+        COUNT(*) FILTER (WHERE o.status = 'timeout')                     AS timeout,
+        ROUND(AVG(CASE WHEN o.status='tp_hit' THEN 1.0 WHEN o.status='sl_hit' THEN 0.0 END)*100, 1) AS win_rate,
+        ROUND(AVG(o.pnl_r) FILTER (WHERE o.status IN ('tp_hit','sl_hit','timeout')), 4) AS avg_r,
+        ROUND(AVG(o.sim_pnl_r) FILTER (WHERE o.sim_pnl_r IS NOT NULL), 4)  AS avg_sim_r
+      FROM signal_outcomes o
+      JOIN signals s ON s.id = o.signal_id
+      WHERE s.created_at > now() - make_interval(days => $1)
+      GROUP BY bucket
+      ORDER BY bucket
+    `;
+    const result = await db.query(sql, [days]);
     return result.rows;
   }
 
@@ -155,6 +205,7 @@ export function makeSignalRepository({ db }) {
     resolveOutcome,
     getSignalStats,
     getTopSymbolStats,
+    getStatsBreakdown,
     getRecentSignals,
   };
 }

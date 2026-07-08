@@ -1623,3 +1623,37 @@
 | 18:17 | Created scratch-test-fetch.mjs | — | ~69 |
 | 18:23 | Edited .gitignore | 1→2 lines | ~14 |
 | 18:23 | Edited .gitignore | 1→2 lines | ~14 |
+| 18:24 | Edited core/service-signal-engine/test/unit/signal-repository.test.js | expanded (+91 lines) | ~1158 |
+| 18:24 | Edited core/service-signal-engine/test/unit/signal-repository.test.js | expanded (+91 lines) | ~1158 |
+| 18:24 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | modified makeSignalRepository() | ~394 |
+| 18:24 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | modified makeSignalRepository() | ~394 |
+| 18:25 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | added 1 condition(s) | ~1438 |
+| 18:25 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | added 1 condition(s) | ~1438 |
+| 18:25 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | 10→11 lines | ~57 |
+| 18:25 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | 10→11 lines | ~57 |
+| 18:25 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | 13→15 lines | ~136 |
+| 18:25 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | 13→15 lines | ~136 |
+| 18:26 | Created core/service-signal-engine/test/unit/make-process-candle.test.js | — | ~582 |
+| 18:26 | Created core/service-signal-engine/test/unit/make-process-candle.test.js | — | ~582 |
+| 18:27 | Edited services/service-signal-engine/src/container.js | modified buildContainer() | ~45 |
+| 18:27 | Edited services/service-signal-engine/src/container.js | modified buildContainer() | ~45 |
+| 18:27 | Edited services/service-signal-engine/src/boot.js | 7→8 lines | ~129 |
+| 18:27 | Edited services/service-signal-engine/src/boot.js | 7→8 lines | ~129 |
+| 18:27 | Created services/service-signal-engine/src/parse-stats-query.js | — | ~215 |
+| 18:27 | Created services/service-signal-engine/src/parse-stats-query.js | — | ~215 |
+| 18:27 | Created services/service-signal-engine/test/unit/parse-stats-query.test.js | — | ~408 |
+| 18:27 | Created services/service-signal-engine/test/unit/parse-stats-query.test.js | — | ~408 |
+| 18:27 | Edited services/service-signal-engine/src/routes.js | added 2 condition(s) | ~343 |
+| 18:27 | Edited services/service-signal-engine/src/routes.js | added 2 condition(s) | ~343 |
+| 18:28 | Edited web-app/src/api/statsApi.js | added 1 condition(s) | ~147 |
+| 18:28 | Edited web-app/src/api/statsApi.js | added 1 condition(s) | ~147 |
+| 18:28 | Edited web-app/src/pages/StatsPage.jsx | expanded (+8 lines) | ~139 |
+| 18:28 | Edited web-app/src/pages/StatsPage.jsx | expanded (+8 lines) | ~139 |
+| 18:28 | Edited web-app/src/pages/StatsPage.jsx | added 1 condition(s) | ~271 |
+| 18:28 | Edited web-app/src/pages/StatsPage.jsx | added 1 condition(s) | ~271 |
+| 18:28 | Edited web-app/src/pages/StatsPage.jsx | modified parseFloat() | ~418 |
+| 18:28 | Edited web-app/src/pages/StatsPage.jsx | modified parseFloat() | ~418 |
+| 18:29 | Edited web-app/src/pages/StatsPage.jsx | added nullish coalescing | ~336 |
+| 18:29 | Edited web-app/src/pages/StatsPage.jsx | added nullish coalescing | ~336 |
+| 18:29 | Edited web-app/src/pages/StatsPage.jsx | added optional chaining | ~645 |
+| 18:29 | Edited web-app/src/pages/StatsPage.jsx | added optional chaining | ~645 |

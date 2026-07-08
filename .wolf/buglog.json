@@ -1740,6 +1740,102 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-08T15:16:17.352Z"
+    },
+    {
+      "id": "bug-108",
+      "timestamp": "2026-07-08T15:24:52.592Z",
+      "error_message": "Significant refactor of ",
+      "file": "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 23→36 lines (3 removed) | Also: async function getSignalStats() {; o.pnl_r - (0.0008 / NULLIF(ABS(s.entry_price - s.s",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-07-08T15:25:22.625Z"
+    },
+    {
+      "id": "bug-109",
+      "timestamp": "2026-07-08T15:27:46.013Z",
+      "error_message": "Missing guard clause",
+      "file": "services/service-signal-engine/src/routes.js",
+      "root_cause": "No early return/throw for edge case: error",
+      "fix": "Added guard clause: if (error)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T15:27:46.013Z"
+    },
+    {
+      "id": "bug-110",
+      "timestamp": "2026-07-08T15:28:20.855Z",
+      "error_message": "Significant refactor of ",
+      "file": "web-app/src/api/statsApi.js",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 11→21 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T15:28:20.855Z"
+    },
+    {
+      "id": "bug-111",
+      "timestamp": "2026-07-08T15:28:32.163Z",
+      "error_message": "Significant refactor of ",
+      "file": "web-app/src/pages/StatsPage.jsx",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 4→12 lines (3 removed) | Also: const result = await fetchStats();; }, []);",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-07-08T15:28:40.154Z"
+    },
+    {
+      "id": "bug-112",
+      "timestamp": "2026-07-08T15:28:55.648Z",
+      "error_message": "CSS fix: fontWeight",
+      "file": "web-app/src/pages/StatsPage.jsx",
+      "root_cause": "fontWeight: 700, mb: 2, fontSize: '1rem' → 700, fontSize: '1rem'",
+      "fix": "Changed fontWeight: 700, mb: 2, fontSize: '1rem' → 700, fontSize: '1rem'",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T15:28:55.648Z"
+    },
+    {
+      "id": "bug-113",
+      "timestamp": "2026-07-08T15:29:09.439Z",
+      "error_message": "Null/undefined access in ",
+      "file": "web-app/src/pages/StatsPage.jsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check) | Also: {/* Kırılım */}; <Divider sx={{ borderColor: '#21262d', my: 2 }} />",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-07-08T15:29:28.267Z"
     }
   ]
 }

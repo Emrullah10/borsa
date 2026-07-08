@@ -288,8 +288,8 @@
       "first_read": "2026-07-08T14:24:44.852Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx": {
-      "count": 1,
-      "tokens": 0,
+      "count": 5,
+      "tokens": 2773,
       "first_read": "2026-07-08T14:24:57.447Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/stats/components/MetricRow.jsx": {
@@ -338,13 +338,13 @@
       "first_read": "2026-07-08T15:10:12.410Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js": {
-      "count": 1,
-      "tokens": 1591,
+      "count": 2,
+      "tokens": 1716,
       "first_read": "2026-07-08T15:11:07.058Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/signal-repository.test.js": {
-      "count": 1,
-      "tokens": 261,
+      "count": 2,
+      "tokens": 726,
       "first_read": "2026-07-08T15:11:07.431Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/container.js": {
@@ -358,7 +358,7 @@
       "first_read": "2026-07-08T15:13:34.102Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/boot.js": {
-      "count": 1,
+      "count": 2,
       "tokens": 0,
       "first_read": "2026-07-08T15:13:34.363Z"
     },
@@ -381,6 +381,26 @@
       "count": 1,
       "tokens": 908,
       "first_read": "2026-07-08T15:15:22.401Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/routes.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T15:24:05.668Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/api/statsApi.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T15:24:06.559Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/confluence.test.js": {
+      "count": 1,
+      "tokens": 1730,
+      "first_read": "2026-07-08T15:26:43.762Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/container.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T15:26:57.586Z"
     }
   },
   "files_written": [
@@ -1013,6 +1033,108 @@
       "action": "edit",
       "tokens": 15,
       "at": "2026-07-08T15:23:55.938Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/signal-repository.test.js",
+      "action": "edit",
+      "tokens": 1158,
+      "at": "2026-07-08T15:24:30.444Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "action": "edit",
+      "tokens": 394,
+      "at": "2026-07-08T15:24:52.590Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "action": "edit",
+      "tokens": 1438,
+      "at": "2026-07-08T15:25:22.623Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "action": "edit",
+      "tokens": 57,
+      "at": "2026-07-08T15:25:36.799Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+      "action": "edit",
+      "tokens": 136,
+      "at": "2026-07-08T15:25:51.079Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/make-process-candle.test.js",
+      "action": "create",
+      "tokens": 582,
+      "at": "2026-07-08T15:26:14.535Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/container.js",
+      "action": "edit",
+      "tokens": 45,
+      "at": "2026-07-08T15:27:01.391Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/boot.js",
+      "action": "edit",
+      "tokens": 129,
+      "at": "2026-07-08T15:27:11.861Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/parse-stats-query.js",
+      "action": "create",
+      "tokens": 215,
+      "at": "2026-07-08T15:27:23.930Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/test/unit/parse-stats-query.test.js",
+      "action": "create",
+      "tokens": 408,
+      "at": "2026-07-08T15:27:32.246Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/routes.js",
+      "action": "edit",
+      "tokens": 343,
+      "at": "2026-07-08T15:27:46.012Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/api/statsApi.js",
+      "action": "edit",
+      "tokens": 147,
+      "at": "2026-07-08T15:28:20.854Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+      "action": "edit",
+      "tokens": 139,
+      "at": "2026-07-08T15:28:32.162Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+      "action": "edit",
+      "tokens": 271,
+      "at": "2026-07-08T15:28:40.152Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+      "action": "edit",
+      "tokens": 418,
+      "at": "2026-07-08T15:28:55.647Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+      "action": "edit",
+      "tokens": 336,
+      "at": "2026-07-08T15:29:09.438Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+      "action": "edit",
+      "tokens": 645,
+      "at": "2026-07-08T15:29:28.266Z"
     }
   ],
   "edit_counts": {
@@ -1021,13 +1143,13 @@
     "services/service-notifier/package.json": 2,
     "package.json": 4,
     "core/service-signal-engine/package.json": 1,
-    "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js": 4,
-    "core/service-signal-engine/test/unit/signal-repository.test.js": 2,
-    "core/service-signal-engine/src/application/use-cases/make-process-candle.js": 3,
+    "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js": 7,
+    "core/service-signal-engine/test/unit/signal-repository.test.js": 3,
+    "core/service-signal-engine/src/application/use-cases/make-process-candle.js": 4,
     "services/service-signal-engine/src/subscriber.js": 1,
-    "services/service-signal-engine/src/container.js": 1,
-    "services/service-signal-engine/src/routes.js": 1,
-    "services/service-signal-engine/src/boot.js": 1,
+    "services/service-signal-engine/src/container.js": 2,
+    "services/service-signal-engine/src/routes.js": 2,
+    "services/service-signal-engine/src/boot.js": 2,
     "services/service-signal-engine/main.js": 1,
     "services/service-signal-engine/src/ws-server.test.js": 1,
     "services/service-signal-engine/package.json": 1,
@@ -1077,7 +1199,7 @@
     "web-app/src/layouts/TopBar.test.jsx": 1,
     "web-app/src/layouts/AppDrawer.jsx": 1,
     "web-app/src/layouts/TopBar.jsx": 1,
-    "web-app/src/pages/StatsPage.jsx": 1,
+    "web-app/src/pages/StatsPage.jsx": 6,
     "web-app/src/features/stats/components/MetricRow.jsx": 1,
     "web-app/src/App.jsx": 1,
     "web-app/src/main.jsx": 1,
@@ -1090,11 +1212,15 @@
     "core/service-signal-engine/test/unit/regime.test.js": 2,
     "core/service-backtest/test/unit/aligned-buffer.test.js": 1,
     "core/service-backtest/src/domain/aligned-buffer.js": 1,
-    "scratch-test-fetch.mjs": 1
+    "scratch-test-fetch.mjs": 1,
+    "core/service-signal-engine/test/unit/make-process-candle.test.js": 1,
+    "services/service-signal-engine/src/parse-stats-query.js": 1,
+    "services/service-signal-engine/test/unit/parse-stats-query.test.js": 1,
+    "web-app/src/api/statsApi.js": 1
   },
-  "anatomy_hits": 19,
-  "anatomy_misses": 57,
-  "repeated_reads_warned": 14,
+  "anatomy_hits": 20,
+  "anatomy_misses": 60,
+  "repeated_reads_warned": 21,
   "cerebrum_warnings": 0,
   "stop_count": 3
 }

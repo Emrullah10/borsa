@@ -64,4 +64,95 @@ describe('signal-repository', () => {
     const [, params] = db.query.mock.calls[0];
     expect(params).toEqual(['tp_hit', 1150, 1.5, null, false, null, 'outcome-1']);
   });
+
+  it('saveSignal regime ve higherTfTrend parametrelerini INSERT eder', async () => {
+    db.query.mockResolvedValue({ rows: [{ id: 'sig-1', created_at: new Date() }] });
+    await repo.saveSignal({
+      symbol: 'BTCUSDT', direction: 'long', triggerTimeframe: '1m',
+      entryPrice: 100, stopPrice: 90, targetPrice: 120,
+      rrRatio: 1.5, confluenceScore: 0.8, indicatorsSnapshot: {},
+      regime: 'bull', higherTfTrend: 'long',
+    });
+    const [sql, params] = db.query.mock.calls[0];
+    expect(sql).toContain('regime');
+    expect(sql).toContain('higher_tf_trend');
+    expect(params).toContain('bull');
+    expect(params).toContain('long');
+  });
+
+  it('saveSignal regime/higherTfTrend verilmezse null geçer', async () => {
+    db.query.mockResolvedValue({ rows: [{ id: 'sig-1', created_at: new Date() }] });
+    await repo.saveSignal({
+      symbol: 'BTCUSDT', direction: 'long', triggerTimeframe: '1m',
+      entryPrice: 100, stopPrice: 90, targetPrice: 120,
+      rrRatio: 1.5, confluenceScore: 0.8, indicatorsSnapshot: {},
+    });
+    const [, params] = db.query.mock.calls[0];
+    expect(params).toContain(null);
+  });
+
+  it('getSignalStats days parametresini interval olarak geçirir', async () => {
+    db.query.mockResolvedValue({ rows: [{}] });
+    await repo.getSignalStats(14);
+    const [sql, params] = db.query.mock.calls[0];
+    expect(sql).toContain('make_interval');
+    expect(params).toEqual([14]);
+  });
+
+  it('getSignalStats varsayılan days=7 kullanır', async () => {
+    db.query.mockResolvedValue({ rows: [{}] });
+    await repo.getSignalStats();
+    const [, params] = db.query.mock.calls[0];
+    expect(params).toEqual([7]);
+  });
+
+  it('getSignalStats tie_breaks sayısını da döner', async () => {
+    db.query.mockResolvedValue({ rows: [{}] });
+    await repo.getSignalStats();
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toContain('tie_break');
+  });
+
+  it('getTopSymbolStats days parametresini kabul eder', async () => {
+    db.query.mockResolvedValue({ rows: [] });
+    await repo.getTopSymbolStats(30);
+    const [sql, params] = db.query.mock.calls[0];
+    expect(sql).toContain('make_interval');
+    expect(params).toEqual([30]);
+  });
+
+  it('getStatsBreakdown geçerli by="regime" için whitelist SQL üretir', async () => {
+    db.query.mockResolvedValue({ rows: [] });
+    await repo.getStatsBreakdown({ by: 'regime', days: 7 });
+    const [sql, params] = db.query.mock.calls[0];
+    expect(sql).toContain('regime');
+    expect(params).toEqual([7]);
+  });
+
+  it('getStatsBreakdown geçerli by="tf" için trigger_timeframe kolonunu kullanır', async () => {
+    db.query.mockResolvedValue({ rows: [] });
+    await repo.getStatsBreakdown({ by: 'tf', days: 7 });
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toContain('trigger_timeframe');
+  });
+
+  it('getStatsBreakdown geçerli by="hour" için EXTRACT(HOUR) kullanır', async () => {
+    db.query.mockResolvedValue({ rows: [] });
+    await repo.getStatsBreakdown({ by: 'hour', days: 7 });
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toContain('EXTRACT(HOUR');
+  });
+
+  it('getStatsBreakdown geçerli by="direction" için direction kolonunu kullanır', async () => {
+    db.query.mockResolvedValue({ rows: [] });
+    await repo.getStatsBreakdown({ by: 'direction', days: 7 });
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toContain('s.direction');
+  });
+
+  it('getStatsBreakdown geçersiz by değeri için hata fırlatır (asla ham input SQL\'e girmez)', async () => {
+    await expect(repo.getStatsBreakdown({ by: "regime'; DROP TABLE signals; --", days: 7 }))
+      .rejects.toThrow(/invalid/i);
+    expect(db.query).not.toHaveBeenCalled();
+  });
 });
