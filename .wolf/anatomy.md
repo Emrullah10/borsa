@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:14:58.608Z
-> Files: 171 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:16:58.482Z
+> Files: 179 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -228,6 +228,19 @@
 
 - `signal-repository.test.js` — Declares fakeRows (~261 tok)
 
+## core/service-tracker/
+
+- `package.json` — Node.js package manifest (~44 tok)
+
+## core/service-tracker/src/application/use-cases/
+
+- `make-process-outcome-candle.js` — Exports makeProcessOutcomeCandle (~648 tok)
+
+## core/service-tracker/test/unit/
+
+- `evaluate-outcome.test.js` — Helper: candle oluştur (~745 tok)
+- `make-process-outcome-candle.test.js` — Declares TIMEOUT_MS (~668 tok)
+
 ## docs/
 
 - `gateaway-ARCHITECTURE.md` — account-web-gateway — Sıfırdan Anlama Rehberi: Bir API Gateway'in Anatomisi (~6048 tok)
@@ -344,3 +357,13 @@
 - `routes.js` — API routes: GET (4 endpoints) (~409 tok)
 - `subscriber.js` — Exports startSubscriber (~344 tok)
 - `ws-server.test.js` — Declares sent (~315 tok)
+
+## services/service-tracker/
+
+- `main.js` (~33 tok)
+- `package.json` — Node.js package manifest (~120 tok)
+
+## services/service-tracker/src/
+
+- `boot.js` — Exports boot (~445 tok)
+- `container.js` — Exports buildContainer (~204 tok)

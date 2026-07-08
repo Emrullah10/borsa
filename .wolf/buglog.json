@@ -1318,6 +1318,38 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-08T14:12:16.299Z"
+    },
+    {
+      "id": "bug-082",
+      "timestamp": "2026-07-08T14:15:59.943Z",
+      "error_message": "Incorrect value in code",
+      "file": "core/service-tracker/test/unit/evaluate-outcome.test.js",
+      "root_cause": "Had './tracker.js'",
+      "fix": "Changed to '../../src/domain/evaluate-outcome.js'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:15:59.943Z"
+    },
+    {
+      "id": "bug-083",
+      "timestamp": "2026-07-08T14:16:32.743Z",
+      "error_message": "Incorrect value in code",
+      "file": "core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+      "root_cause": "Had 'refreshPending: pending outcome'",
+      "fix": "Changed to 'refreshPending: pending outcomeları yükler'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-08T14:16:32.743Z"
     }
   ]
 }

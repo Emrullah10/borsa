@@ -1469,3 +1469,21 @@
 | 17:14 | Created services/service-market-data/main.js | — | ~33 |
 | 17:14 | Edited services/service-market-data/package.json | 8→9 lines | ~72 |
 | 17:14 | Edited services/service-market-data/package.json | 8→9 lines | ~72 |
+| 17:15 | Created core/service-tracker/package.json | — | ~44 |
+| 17:15 | Created core/service-tracker/package.json | — | ~44 |
+| 17:15 | Edited core/service-tracker/test/unit/evaluate-outcome.test.js | "./tracker.js" → "../../src/domain/evaluate" | ~21 |
+| 17:15 | Edited core/service-tracker/test/unit/evaluate-outcome.test.js | "./tracker.js" → "../../src/domain/evaluate" | ~21 |
+| 17:16 | Created core/service-tracker/src/application/use-cases/make-process-outcome-candle.js | — | ~648 |
+| 17:16 | Created core/service-tracker/src/application/use-cases/make-process-outcome-candle.js | — | ~648 |
+| 17:16 | Created core/service-tracker/test/unit/make-process-outcome-candle.test.js | — | ~668 |
+| 17:16 | Created core/service-tracker/test/unit/make-process-outcome-candle.test.js | — | ~668 |
+| 17:16 | Edited core/service-tracker/test/unit/make-process-outcome-candle.test.js | "refreshPending: pending o" → "refreshPending: pending o" | ~19 |
+| 17:16 | Edited core/service-tracker/test/unit/make-process-outcome-candle.test.js | "refreshPending: pending o" → "refreshPending: pending o" | ~19 |
+| 17:16 | Created services/service-tracker/src/container.js | — | ~204 |
+| 17:16 | Created services/service-tracker/src/container.js | — | ~204 |
+| 17:16 | Created services/service-tracker/src/boot.js | — | ~445 |
+| 17:16 | Created services/service-tracker/src/boot.js | — | ~445 |
+| 17:16 | Created services/service-tracker/main.js | — | ~33 |
+| 17:16 | Created services/service-tracker/main.js | — | ~33 |
+| 17:16 | Edited services/service-tracker/package.json | 6→8 lines | ~68 |
+| 17:16 | Edited services/service-tracker/package.json | 6→8 lines | ~68 |

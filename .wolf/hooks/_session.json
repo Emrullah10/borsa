@@ -18,8 +18,8 @@
       "first_read": "2026-07-08T14:03:58.878Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/package.json": {
-      "count": 1,
-      "tokens": 0,
+      "count": 2,
+      "tokens": 301,
       "first_read": "2026-07-08T14:04:35.071Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/package.json": {
@@ -111,6 +111,36 @@
       "count": 1,
       "tokens": 301,
       "first_read": "2026-07-08T14:13:33.659Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/main.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:15:26.674Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/tracker.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:15:27.041Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/tracker.test.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:15:27.404Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/evaluate-outcome.test.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:15:55.979Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js": {
+      "count": 1,
+      "tokens": 668,
+      "first_read": "2026-07-08T14:16:29.371Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/configs/app-config.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-08T14:16:37.080Z"
     }
   },
   "files_written": [
@@ -287,6 +317,60 @@
       "action": "edit",
       "tokens": 72,
       "at": "2026-07-08T14:14:58.617Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/package.json",
+      "action": "create",
+      "tokens": 44,
+      "at": "2026-07-08T14:15:42.078Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/evaluate-outcome.test.js",
+      "action": "edit",
+      "tokens": 21,
+      "at": "2026-07-08T14:15:59.942Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/application/use-cases/make-process-outcome-candle.js",
+      "action": "create",
+      "tokens": 648,
+      "at": "2026-07-08T14:16:13.654Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+      "action": "create",
+      "tokens": 668,
+      "at": "2026-07-08T14:16:24.797Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+      "action": "edit",
+      "tokens": 19,
+      "at": "2026-07-08T14:16:32.742Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/container.js",
+      "action": "create",
+      "tokens": 204,
+      "at": "2026-07-08T14:16:41.940Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/boot.js",
+      "action": "create",
+      "tokens": 445,
+      "at": "2026-07-08T14:16:49.773Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/main.js",
+      "action": "create",
+      "tokens": 33,
+      "at": "2026-07-08T14:16:53.612Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/package.json",
+      "action": "edit",
+      "tokens": 68,
+      "at": "2026-07-08T14:16:58.490Z"
     }
   ],
   "edit_counts": {
@@ -315,11 +399,19 @@
     "services/service-market-data/src/routes.js": 1,
     "services/service-market-data/src/boot.js": 1,
     "services/service-market-data/main.js": 1,
-    "services/service-market-data/package.json": 1
+    "services/service-market-data/package.json": 1,
+    "core/service-tracker/package.json": 1,
+    "core/service-tracker/test/unit/evaluate-outcome.test.js": 1,
+    "core/service-tracker/src/application/use-cases/make-process-outcome-candle.js": 1,
+    "core/service-tracker/test/unit/make-process-outcome-candle.test.js": 2,
+    "services/service-tracker/src/container.js": 1,
+    "services/service-tracker/src/boot.js": 1,
+    "services/service-tracker/main.js": 1,
+    "services/service-tracker/package.json": 1
   },
-  "anatomy_hits": 6,
-  "anatomy_misses": 16,
-  "repeated_reads_warned": 1,
+  "anatomy_hits": 7,
+  "anatomy_misses": 21,
+  "repeated_reads_warned": 2,
   "cerebrum_warnings": 0,
   "stop_count": 0
 }
