@@ -553,6 +553,12 @@
       "action": "create",
       "tokens": 99,
       "at": "2026-07-08T14:21:09.302Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/vitest.config.js",
+      "action": "create",
+      "tokens": 67,
+      "at": "2026-07-08T14:22:29.466Z"
     }
   ],
   "edit_counts": {
@@ -604,7 +610,8 @@
     "core/service-backtest/test/unit/fetcher.test.js": 2,
     "services/service-backtest/main.js": 1,
     "core/service-backtest/package.json": 1,
-    "services/service-backtest/package.json": 1
+    "services/service-backtest/package.json": 1,
+    "vitest.config.js": 1
   },
   "anatomy_hits": 8,
   "anatomy_misses": 36,

@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:21:09.293Z
-> Files: 194 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T14:22:29.458Z
+> Files: 195 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -22,6 +22,7 @@
 - `docker-compose.yml` — Docker Compose services (~169 tok)
 - `launch.sh` — Scalp Bot — tüm backend servislerini başlatır (~1066 tok)
 - `package.json` — Node.js package manifest (~301 tok)
+- `vitest.config.js` — /*.test.js', 'services/**/*.test.js', 'packages/**/*.test.js'], (~67 tok)
 
 ## .claude/
 
