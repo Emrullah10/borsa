@@ -8,14 +8,21 @@ import { interpolateFunding } from '../infrastructure/fetcher.js';
 import { simulateTrade } from './simulator.js';
 
 const COOLDOWN_MS = 5 * 60 * 1000;
+const DEFAULT_MIN_STOP_PCT = 0.014; // canlıdaki MIN_STOP_PCT_BY_TF['1m'] ile aynı (backtest sadece 1m kullanır)
 
 // Canlı make-process-candle.js ile birebir aynı karar zinciri (parite kritik):
 // indicators → liqPressure → regime/higherTfTrend → confluence → entry-filters
-// → cooldown → buildSetup → simulateTrade. Pure — sweep.js bu fonksiyonu farklı
-// threshold/filterParams kombinasyonlarıyla aynı mum verisi üzerinde tekrar çağırır.
+// → cooldown → buildSetup (supportLevel/resistanceLevel/minStopPct dahil)
+// → simulateTrade. Pure — sweep.js bu fonksiyonu farklı threshold/filterParams
+// kombinasyonlarıyla aynı mum verisi üzerinde tekrar çağırır.
+//
+// NOT (2026-07-13 düzeltildi): bu fonksiyon önceden buildSetup'a supportLevel/
+// resistanceLevel/minStopPct geçirmiyordu — canlıda S/R kapağı hedefi kırpıp
+// rrRatio'yu düşürebiliyor, backtest'te bu hiç olmuyordu. Bu, sweep sonuçlarının
+// gerçek canlı davranışı yanlış simüle etmesine yol açan bir parite kopukluğuydu.
 export function runStrategyOverCandles({
   candles, fundingHistory, regimeBuffer, higherTfBuffer,
-  window, threshold, symbol, filterParams,
+  window, threshold, symbol, filterParams, minStopPct = DEFAULT_MIN_STOP_PCT,
 }) {
   if (candles.length < window) return [];
 
@@ -62,6 +69,9 @@ export function runStrategyOverCandles({
       direction,
       currentPrice: current.close,
       atr: indicators.atr,
+      supportLevel: indicators.supportLevel,
+      resistanceLevel: indicators.resistanceLevel,
+      minStopPct,
     });
 
     const remainingCandles = candles.slice(i + 1);
@@ -74,6 +84,8 @@ export function runStrategyOverCandles({
       entryPrice: setup.entryPrice,
       stopPrice: setup.stopPrice,
       targetPrice: setup.targetPrice,
+      rrRatio: setup.rrRatio,
+      srCapped: setup.srCapped,
       confluenceScore: confluence.score,
       regime,
       higherTfTrend,

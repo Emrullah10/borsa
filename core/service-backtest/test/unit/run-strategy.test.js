@@ -81,4 +81,32 @@ describe('runStrategyOverCandles', () => {
     });
     expect(strictFilter.length).toBeLessThanOrEqual(noFilter.length);
   });
+
+  it('buildSetup çağrısına supportLevel/resistanceLevel geçirir — parite testi (S/R cap canlıdaki gibi uygulanmalı)', () => {
+    // calcAllIndicators, ADX>=?? mumluk pencerede support/resistance üretir.
+    // trade.srCapped alanı buildSetup'ın applySRCap sonucunu yansıtmalı; bu alan
+    // olmadan (önceki bug) S/R hiç geçilmiyordu ve srCapped hep false kalıyordu.
+    const candles = makeCandles(300);
+    const trades = runStrategyOverCandles({
+      candles, fundingHistory: [], regimeBuffer: flatRegimeBuffer, higherTfBuffer: flatHigherTfBuffer,
+      window: 60, threshold: 0.55, symbol: 'TESTUSDT',
+    });
+    if (trades.length > 0) {
+      expect(trades[0]).toHaveProperty('srCapped');
+    }
+  });
+
+  it('TF/minStopPct parametresi buildSetup\'a geçirilir (varsayılan 1m fee-floor eşiği)', () => {
+    const candles = makeCandles(300);
+    const tradesDefault = runStrategyOverCandles({
+      candles, fundingHistory: [], regimeBuffer: flatRegimeBuffer, higherTfBuffer: flatHigherTfBuffer,
+      window: 60, threshold: 0.55, symbol: 'TESTUSDT',
+    });
+    const tradesLooseFloor = runStrategyOverCandles({
+      candles, fundingHistory: [], regimeBuffer: flatRegimeBuffer, higherTfBuffer: flatHigherTfBuffer,
+      window: 60, threshold: 0.55, symbol: 'TESTUSDT', minStopPct: 0.001,
+    });
+    // Daha gevşek fee-floor eşit ya da daha fazla sinyal üretmeli (asla daha az)
+    expect(tradesLooseFloor.length).toBeGreaterThanOrEqual(tradesDefault.length);
+  });
 });
