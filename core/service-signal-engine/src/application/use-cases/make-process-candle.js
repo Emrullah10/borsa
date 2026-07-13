@@ -2,6 +2,7 @@ import { calcAllIndicators } from '../../domain/indicators.js';
 import { calcLiquidationPressure } from '../../domain/liquidation-pressure.js';
 import { calcConfluence } from '../../domain/confluence.js';
 import { calcRegime, calcHigherTfTrend } from '../../domain/regime.js';
+import { applyEntryFilters } from '../../domain/entry-filters.js';
 import { buildSetup } from '../../domain/setup-builder.js';
 
 const CANDLE_BUFFER_SIZE = 60;
@@ -11,11 +12,12 @@ const SIGNAL_COOLDOWN_MS = 10 * 60 * 1000; // fallback
 // 1m daha dar stop eğilimliydi → daha sıkı fee floor; 5m baseline'a eşit tutuldu
 const MIN_STOP_PCT_BY_TF = { '1m': 0.014, '5m': 0.012 };
 
-export function makeProcessCandle({ signalRepo, publish, log, confluenceThreshold }) {
+export function makeProcessCandle({ signalRepo, publish, log, confluenceThreshold, filterParams }) {
   const candleBuffers = {};   // { 'BTCUSDT.1m': Candle[] }
   const marketState = {};     // { 'BTCUSDT': { funding, oi, lsr } }
   const lastSignalTs = {};    // cooldown tracking
   const signalLocks = {};     // per-symbol async lock (race condition önlemi)
+  const filterRejectCounts = {}; // { 'overextension': n, 'adx-exhaustion': n } — gözlemlenebilirlik
 
   let _currentRegime = 'neutral';
 
@@ -103,6 +105,15 @@ export function makeProcessCandle({ signalRepo, publish, log, confluenceThreshol
     const higherTfTrend = tf === '1m' ? getHigherTfTrend(symbol, '5m') : null;
     const confluence = calcConfluence(indicators, liqPressure, confluenceThreshold, higherTfTrend, regime);
     if (!confluence.isCandidate) return;
+
+    // Giriş kalite filtreleri: aşırı-uzama (band tepesinden long/dibinden short)
+    // ve ADX tükenme tavanı. Bkz. core/service-signal-engine/src/domain/entry-filters.js
+    const filterResult = applyEntryFilters({ direction: confluence.direction, indicators, params: filterParams });
+    if (!filterResult.allowed) {
+      filterRejectCounts[filterResult.reason] = (filterRejectCounts[filterResult.reason] ?? 0) + 1;
+      log.debug(`Entry filtered: ${symbol} ${confluence.direction} reason=${filterResult.reason} (toplam ${filterResult.reason}: ${filterRejectCounts[filterResult.reason]})`);
+      return;
+    }
 
     // Per-symbol lock: aynı anda iki TF'den sinyal üretilmesini önler (async race condition)
     if (signalLocks[symbol]) return;
