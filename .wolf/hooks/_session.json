@@ -58,8 +58,8 @@
       "first_read": "2026-07-13T11:54:05.111Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/sweep.js": {
-      "count": 1,
-      "tokens": 1292,
+      "count": 2,
+      "tokens": 1369,
       "first_read": "2026-07-13T11:56:10.450Z"
     }
   },
@@ -249,6 +249,12 @@
       "action": "edit",
       "tokens": 138,
       "at": "2026-07-13T11:57:06.279Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/sweep.js",
+      "action": "edit",
+      "tokens": 151,
+      "at": "2026-07-13T12:32:54.053Z"
     }
   ],
   "edit_counts": {
@@ -260,14 +266,14 @@
     "core/service-backtest/src/domain/run-strategy.js": 7,
     "core/service-backtest/package.json": 2,
     "services/service-backtest/main.js": 1,
-    "services/service-backtest/src/sweep.js": 6,
+    "services/service-backtest/src/sweep.js": 7,
     "package.json": 1,
     "core/service-signal-engine/test/unit/setup-builder.test.js": 1,
     "core/service-signal-engine/src/domain/setup-builder.js": 2
   },
   "anatomy_hits": 11,
   "anatomy_misses": 1,
-  "repeated_reads_warned": 5,
+  "repeated_reads_warned": 6,
   "cerebrum_warnings": 0,
-  "stop_count": 3
+  "stop_count": 5
 }

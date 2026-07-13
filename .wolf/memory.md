@@ -1795,3 +1795,9 @@
 | 14:56 | Edited services/service-backtest/src/sweep.js | modified formatSweepTable() | ~140 |
 | 14:57 | Edited services/service-backtest/src/sweep.js | modified for() | ~138 |
 | 14:57 | Edited services/service-backtest/src/sweep.js | modified for() | ~138 |
+| 14:57 | Session end: 31 writes across 11 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 12 reads | ~24006 tok |
+| 14:57 | Session end: 31 writes across 11 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 12 reads | ~24006 tok |
+| 15:24 | Session end: 31 writes across 11 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 12 reads | ~24006 tok |
+| 15:24 | Session end: 31 writes across 11 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 12 reads | ~24006 tok |
+| 15:32 | Edited services/service-backtest/src/sweep.js | 2→7 lines | ~151 |
+| 15:32 | Edited services/service-backtest/src/sweep.js | 2→7 lines | ~151 |

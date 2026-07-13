@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T11:57:06.269Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T12:32:54.037Z
 > Files: 525 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
@@ -808,4 +808,4 @@
 
 ## services/service-backtest/src/
 
-- `sweep.js` — Overfit riskini azaltmak için 2 yerine en az 4-5 likit sembol. (~1369 tok)
+- `sweep.js` — 2026-07-13: BTC/ETH/SOL/BNB/XRP gibi büyük-cap coinlerle test edilmişti, ama (~1480 tok)
