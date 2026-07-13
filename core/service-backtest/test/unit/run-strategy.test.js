@@ -109,4 +109,19 @@ describe('runStrategyOverCandles', () => {
     // Daha gevşek fee-floor eşit ya da daha fazla sinyal üretmeli (asla daha az)
     expect(tradesLooseFloor.length).toBeGreaterThanOrEqual(tradesDefault.length);
   });
+
+  it('atrStopMult/targetRR verilirse buildSetup\'a geçirilir (sweep parametreleri)', () => {
+    const candles = makeCandles(300);
+    const trades = runStrategyOverCandles({
+      candles, fundingHistory: [], regimeBuffer: flatRegimeBuffer, higherTfBuffer: flatHigherTfBuffer,
+      window: 60, threshold: 0.55, symbol: 'TESTUSDT', atrStopMult: 1.0, targetRR: 1.2,
+    });
+    if (trades.length > 0) {
+      // rrRatio S/R cap olmadıkça targetRR'a yakın olmalı (1.2)
+      const uncapped = trades.filter(t => !t.srCapped);
+      if (uncapped.length > 0) {
+        expect(uncapped[0].rrRatio).toBeCloseTo(1.2, 1);
+      }
+    }
+  });
 });

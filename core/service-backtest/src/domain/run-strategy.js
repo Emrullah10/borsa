@@ -23,6 +23,7 @@ const DEFAULT_MIN_STOP_PCT = 0.014; // canlıdaki MIN_STOP_PCT_BY_TF['1m'] ile a
 export function runStrategyOverCandles({
   candles, fundingHistory, regimeBuffer, higherTfBuffer,
   window, threshold, symbol, filterParams, minStopPct = DEFAULT_MIN_STOP_PCT, requireSrCap = false,
+  atrStopMult, targetRR,
 }) {
   if (candles.length < window) return [];
 
@@ -73,6 +74,8 @@ export function runStrategyOverCandles({
       resistanceLevel: indicators.resistanceLevel,
       minStopPct,
       requireSrCap,
+      ...(atrStopMult != null ? { atrStopMult } : {}),
+      ...(targetRR != null ? { targetRR } : {}),
     });
 
     // Canlı make-process-candle.js'nin meetsMinTarget/meetsMinRR/meetsFeeFloor/
