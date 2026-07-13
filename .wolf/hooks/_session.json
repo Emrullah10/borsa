@@ -8,8 +8,8 @@
       "first_read": "2026-07-13T10:48:43.212Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js": {
-      "count": 1,
-      "tokens": 2064,
+      "count": 2,
+      "tokens": 2292,
       "first_read": "2026-07-13T10:49:33.490Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/main.js": {
@@ -23,7 +23,7 @@
       "first_read": "2026-07-13T10:50:36.062Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/domain/setup-builder.js": {
-      "count": 1,
+      "count": 2,
       "tokens": 880,
       "first_read": "2026-07-13T10:50:44.826Z"
     },
@@ -43,14 +43,24 @@
       "first_read": "2026-07-13T10:54:29.743Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/domain/run-strategy.js": {
-      "count": 3,
-      "tokens": 1083,
+      "count": 4,
+      "tokens": 1100,
       "first_read": "2026-07-13T11:26:24.138Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/unit/run-strategy.test.js": {
       "count": 1,
       "tokens": 975,
       "first_read": "2026-07-13T11:26:30.669Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/setup-builder.test.js": {
+      "count": 1,
+      "tokens": 1626,
+      "first_read": "2026-07-13T11:54:05.111Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/sweep.js": {
+      "count": 1,
+      "tokens": 1292,
+      "first_read": "2026-07-13T11:56:10.450Z"
     }
   },
   "files_written": [
@@ -167,23 +177,97 @@
       "action": "edit",
       "tokens": 102,
       "at": "2026-07-13T11:27:35.795Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/setup-builder.test.js",
+      "action": "edit",
+      "tokens": 411,
+      "at": "2026-07-13T11:54:21.332Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/domain/setup-builder.js",
+      "action": "edit",
+      "tokens": 48,
+      "at": "2026-07-13T11:54:28.958Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/domain/setup-builder.js",
+      "action": "edit",
+      "tokens": 238,
+      "at": "2026-07-13T11:54:41.122Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+      "action": "edit",
+      "tokens": 35,
+      "at": "2026-07-13T11:55:06.918Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+      "action": "edit",
+      "tokens": 279,
+      "at": "2026-07-13T11:55:21.827Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/domain/run-strategy.js",
+      "action": "edit",
+      "tokens": 58,
+      "at": "2026-07-13T11:55:43.648Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/domain/run-strategy.js",
+      "action": "edit",
+      "tokens": 199,
+      "at": "2026-07-13T11:55:53.243Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/sweep.js",
+      "action": "edit",
+      "tokens": 160,
+      "at": "2026-07-13T11:56:24.011Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/sweep.js",
+      "action": "edit",
+      "tokens": 102,
+      "at": "2026-07-13T11:56:31.738Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/sweep.js",
+      "action": "edit",
+      "tokens": 159,
+      "at": "2026-07-13T11:56:47.955Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/sweep.js",
+      "action": "edit",
+      "tokens": 140,
+      "at": "2026-07-13T11:56:58.387Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/sweep.js",
+      "action": "edit",
+      "tokens": 138,
+      "at": "2026-07-13T11:57:06.279Z"
     }
   ],
   "edit_counts": {
     "../../../.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md": 1,
     "core/service-signal-engine/test/unit/entry-filters.test.js": 1,
     "core/service-signal-engine/src/domain/entry-filters.js": 1,
-    "core/service-signal-engine/src/application/use-cases/make-process-candle.js": 3,
+    "core/service-signal-engine/src/application/use-cases/make-process-candle.js": 5,
     "core/service-backtest/test/unit/run-strategy.test.js": 3,
-    "core/service-backtest/src/domain/run-strategy.js": 5,
+    "core/service-backtest/src/domain/run-strategy.js": 7,
     "core/service-backtest/package.json": 2,
     "services/service-backtest/main.js": 1,
-    "services/service-backtest/src/sweep.js": 1,
-    "package.json": 1
+    "services/service-backtest/src/sweep.js": 6,
+    "package.json": 1,
+    "core/service-signal-engine/test/unit/setup-builder.test.js": 1,
+    "core/service-signal-engine/src/domain/setup-builder.js": 2
   },
-  "anatomy_hits": 9,
+  "anatomy_hits": 11,
   "anatomy_misses": 1,
-  "repeated_reads_warned": 2,
+  "repeated_reads_warned": 5,
   "cerebrum_warnings": 0,
-  "stop_count": 2
+  "stop_count": 3
 }

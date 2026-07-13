@@ -1769,3 +1769,29 @@
 | 14:27 | Edited core/service-backtest/src/domain/run-strategy.js | 5→8 lines | ~66 |
 | 14:27 | Edited core/service-backtest/src/domain/run-strategy.js | 12→14 lines | ~102 |
 | 14:27 | Edited core/service-backtest/src/domain/run-strategy.js | 12→14 lines | ~102 |
+| 14:28 | Session end: 19 writes across 9 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 10 reads | ~18876 tok |
+| 14:28 | Session end: 19 writes across 9 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 10 reads | ~18876 tok |
+| 14:54 | Edited core/service-signal-engine/test/unit/setup-builder.test.js | expanded (+24 lines) | ~411 |
+| 14:54 | Edited core/service-signal-engine/test/unit/setup-builder.test.js | expanded (+24 lines) | ~411 |
+| 14:54 | Edited core/service-signal-engine/src/domain/setup-builder.js | added 1 import(s) | ~48 |
+| 14:54 | Edited core/service-signal-engine/src/domain/setup-builder.js | added 1 import(s) | ~48 |
+| 14:54 | Edited core/service-signal-engine/src/domain/setup-builder.js | expanded (+6 lines) | ~238 |
+| 14:54 | Edited core/service-signal-engine/src/domain/setup-builder.js | expanded (+6 lines) | ~238 |
+| 14:55 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | inline fix | ~35 |
+| 14:55 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | inline fix | ~35 |
+| 14:55 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | added 1 condition(s) | ~279 |
+| 14:55 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | added 1 condition(s) | ~279 |
+| 14:55 | Edited core/service-backtest/src/domain/run-strategy.js | modified runStrategyOverCandles() | ~58 |
+| 14:55 | Edited core/service-backtest/src/domain/run-strategy.js | modified runStrategyOverCandles() | ~58 |
+| 14:55 | Edited core/service-backtest/src/domain/run-strategy.js | added 1 condition(s) | ~199 |
+| 14:55 | Edited core/service-backtest/src/domain/run-strategy.js | added 1 condition(s) | ~199 |
+| 14:56 | Edited services/service-backtest/src/sweep.js | 5→9 lines | ~160 |
+| 14:56 | Edited services/service-backtest/src/sweep.js | 5→9 lines | ~160 |
+| 14:56 | Edited services/service-backtest/src/sweep.js | modified buildFilterParams() | ~102 |
+| 14:56 | Edited services/service-backtest/src/sweep.js | modified buildFilterParams() | ~102 |
+| 14:56 | Edited services/service-backtest/src/sweep.js | added 1 import(s) | ~159 |
+| 14:56 | Edited services/service-backtest/src/sweep.js | added 1 import(s) | ~159 |
+| 14:56 | Edited services/service-backtest/src/sweep.js | modified formatSweepTable() | ~140 |
+| 14:56 | Edited services/service-backtest/src/sweep.js | modified formatSweepTable() | ~140 |
+| 14:57 | Edited services/service-backtest/src/sweep.js | modified for() | ~138 |
+| 14:57 | Edited services/service-backtest/src/sweep.js | modified for() | ~138 |

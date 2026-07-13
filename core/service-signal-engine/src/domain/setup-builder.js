@@ -40,6 +40,7 @@ export function buildSetup({
   supportLevel,
   resistanceLevel,
   minStopPct = MIN_STOP_PCT_DEFAULT,
+  requireSrCap = false,
 }) {
   const stopDist = atr * ATR_STOP_MULT;
 
@@ -76,6 +77,11 @@ export function buildSetup({
   const feeR = stopPct > 0 ? FEE_ROUNDTRIP / stopPct : Infinity;
   const meetsFeeFloor = stopPct >= minStopPct && (rrRatio - feeR) >= 1.0;
 
+  // S/R kapaksız ("açık sahada") sinyaller canlı veride sistematik olarak kötü
+  // performans gösteriyor (kapaklı ~%46 WR vs kapaksız ~%33 WR — 2026-07-13).
+  // requireSrCap=false iken bu gate her zaman true döner (davranış-koruma).
+  const meetsSrCapRequirement = !requireSrCap || srCapped;
+
   return {
     direction,
     entryPrice: currentPrice,
@@ -88,6 +94,7 @@ export function buildSetup({
     meetsMinTarget,
     meetsMinRR,
     meetsFeeFloor,
+    meetsSrCapRequirement,
     stopPct,
     feeR: parseFloat(feeR.toFixed(4)),
     dynamicRR: parseFloat(dynamicRR.toFixed(3)),

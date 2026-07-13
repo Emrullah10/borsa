@@ -12,7 +12,7 @@ const SIGNAL_COOLDOWN_MS = 10 * 60 * 1000; // fallback
 // 1m daha dar stop eğilimliydi → daha sıkı fee floor; 5m baseline'a eşit tutuldu
 const MIN_STOP_PCT_BY_TF = { '1m': 0.014, '5m': 0.012 };
 
-export function makeProcessCandle({ signalRepo, publish, log, confluenceThreshold, filterParams }) {
+export function makeProcessCandle({ signalRepo, publish, log, confluenceThreshold, filterParams, requireSrCap = false }) {
   const candleBuffers = {};   // { 'BTCUSDT.1m': Candle[] }
   const marketState = {};     // { 'BTCUSDT': { funding, oi, lsr } }
   const lastSignalTs = {};    // cooldown tracking
@@ -129,6 +129,7 @@ export function makeProcessCandle({ signalRepo, publish, log, confluenceThreshol
       supportLevel: indicators.supportLevel,
       resistanceLevel: indicators.resistanceLevel,
       minStopPct: MIN_STOP_PCT_BY_TF[tf] ?? 0.012,
+      requireSrCap,
     });
     if (!setup.meetsMinTarget) {
       log.debug(`Min target not met: ${symbol} targetPct=${(setup.targetPct * 100).toFixed(3)}%`);
@@ -140,6 +141,10 @@ export function makeProcessCandle({ signalRepo, publish, log, confluenceThreshol
     }
     if (!setup.meetsFeeFloor) {
       log.debug(`Fee floor not met: ${symbol} stopPct=${(setup.stopPct * 100).toFixed(3)}% feeR=${setup.feeR} netRR=${(setup.rrRatio - setup.feeR).toFixed(2)}`);
+      return;
+    }
+    if (!setup.meetsSrCapRequirement) {
+      log.debug(`S/R cap gerekli ama yok: ${symbol} ${confluence.direction} — "açık sahada" hedef reddedildi`);
       return;
     }
 

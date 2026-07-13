@@ -11,14 +11,18 @@ const WINDOW = 60;
 const REGIME_SYMBOL = 'BTCUSDT';
 const REGIME_LEAD_DAYS = 10;
 
-// Grid: threshold × adxMax × extension-gate (açık/kapalı).
-// "kapalı" = filtre pratik olarak devre dışı (aşırı gevşek eşikler).
+// Grid: threshold × extension-gate × requireSrCap.
+// İlk sweep turunda (2026-07-13) adxMax'ın (60/65/70/yok) sonuca hiçbir etkisi
+// olmadığı görüldü — grid'den çıkarıldı, sabit 65 kullanılıyor.
+// requireSrCap: canlı veride S/R-kapaklı sinyaller (%46 WR) kapaksızlardan
+// (%33 WR) çok daha iyi performans gösteriyor — bu turun asıl test ettiği boyut.
 const THRESHOLDS = [0.65, 0.70, 0.75];
-const ADX_MAX_OPTIONS = [null, 60, 65, 70]; // null = gate yok
+const FIXED_ADX_MAX = 65;
 const EXTENSION_GATE_OPTIONS = [true, false]; // false = pb/rsi eşikleri gevşetilir (etkisiz)
+const REQUIRE_SR_CAP_OPTIONS = [true, false];
 
-function buildFilterParams(adxMax, extensionGateOn) {
-  const params = { adxMax: adxMax ?? Infinity };
+function buildFilterParams(extensionGateOn) {
+  const params = { adxMax: FIXED_ADX_MAX };
   if (extensionGateOn) {
     Object.assign(params, { maxPbLong: 0.85, minPbShort: 0.15, rsiMaxLong: 70, rsiMinShort: 30 });
   } else {
@@ -47,7 +51,7 @@ async function fetchAllSymbolData() {
   return { regimeBuffer, perSymbol };
 }
 
-function runCombo({ regimeBuffer, perSymbol, threshold, filterParams }) {
+function runCombo({ regimeBuffer, perSymbol, threshold, filterParams, requireSrCap }) {
   const allTrades = [];
   for (const [symbol, data] of Object.entries(perSymbol)) {
     if (data.candles.length < WINDOW) continue;
@@ -60,6 +64,7 @@ function runCombo({ regimeBuffer, perSymbol, threshold, filterParams }) {
       threshold,
       symbol,
       filterParams,
+      requireSrCap,
     });
     allTrades.push(...trades);
   }
@@ -67,11 +72,11 @@ function runCombo({ regimeBuffer, perSymbol, threshold, filterParams }) {
 }
 
 function formatSweepTable(rows) {
-  const header = ['Threshold', 'AdxMax', 'ExtGate', 'Signals', 'Win%', 'PF', 'MaxDD', 'AvgR'];
+  const header = ['Threshold', 'ExtGate', 'SrCapReq', 'Signals', 'Win%', 'PF', 'MaxDD', 'AvgR'];
   const body = rows.map(r => [
     r.threshold.toFixed(2),
-    r.adxMax == null ? '-' : String(r.adxMax),
     r.extensionGateOn ? 'on' : 'off',
+    r.requireSrCap ? 'on' : 'off',
     r.metrics.totalSignals,
     (r.metrics.winRate * 100).toFixed(1) + '%',
     r.metrics.profitFactor === Infinity ? 'inf' : r.metrics.profitFactor.toFixed(2),
@@ -93,12 +98,12 @@ async function main() {
 
   const rows = [];
   for (const threshold of THRESHOLDS) {
-    for (const adxMax of ADX_MAX_OPTIONS) {
-      for (const extensionGateOn of EXTENSION_GATE_OPTIONS) {
-        const filterParams = buildFilterParams(adxMax, extensionGateOn);
-        const trades = runCombo({ regimeBuffer, perSymbol, threshold, filterParams });
+    for (const extensionGateOn of EXTENSION_GATE_OPTIONS) {
+      for (const requireSrCap of REQUIRE_SR_CAP_OPTIONS) {
+        const filterParams = buildFilterParams(extensionGateOn);
+        const trades = runCombo({ regimeBuffer, perSymbol, threshold, filterParams, requireSrCap });
         const metrics = calcMetrics(trades);
-        rows.push({ threshold, adxMax, extensionGateOn, metrics });
+        rows.push({ threshold, extensionGateOn, requireSrCap, metrics });
       }
     }
   }

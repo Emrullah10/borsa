@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T11:27:35.785Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T11:57:06.269Z
 > Files: 525 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
@@ -74,7 +74,7 @@
 
 - `aligned-buffer.js` — Backtest'te düşük-frekanslı bir mum serisini (örn. 4h/5m), yüksek-frekanslı (~172 tok)
 - `reporter.js` — Exports calcMetrics, formatTable (~617 tok)
-- `run-strategy.js` — Exports runStrategyOverCandles (~1100 tok)
+- `run-strategy.js` — Exports runStrategyOverCandles (~1225 tok)
 - `simulator.js` — Exports simulateTrade (~335 tok)
 
 ## core/service-backtest/src/infrastructure/
@@ -129,7 +129,7 @@
 
 ## core/service-signal-engine/src/application/use-cases/
 
-- `make-process-candle.js` — Exports makeProcessCandle (~2292 tok)
+- `make-process-candle.js` — Exports makeProcessCandle (~2354 tok)
 
 ## core/service-signal-engine/src/domain/
 
@@ -138,7 +138,7 @@
 - `indicators.js` — Exports calcEMA, calcRSI, calcBollingerBands, calcATR + 6 more (~1587 tok)
 - `liquidation-pressure.js` — Exports calcLiquidationPressure (~572 tok)
 - `regime.js` — BTC trendine göre piyasa rejimini hesaplar (~601 tok)
-- `setup-builder.js` — Exports applySRCap, buildSetup (~880 tok)
+- `setup-builder.js` — Exports applySRCap, buildSetup (~980 tok)
 
 ## core/service-signal-engine/src/infrastructure/persistence/repositories/
 
@@ -151,7 +151,7 @@
 - `indicators.test.js` — Declares closes20 (~1726 tok)
 - `liquidation-pressure.test.js` — Declares result (~764 tok)
 - `regime.test.js` — Declares makeCandles (~630 tok)
-- `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~1626 tok)
+- `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~1953 tok)
 - `signal-repository.test.js` — Declares fakeRows (~1776 tok)
 
 ## core/service-tracker/
@@ -808,4 +808,4 @@
 
 ## services/service-backtest/src/
 
-- `sweep.js` — Overfit riskini azaltmak için 2 yerine en az 4-5 likit sembol. (~1292 tok)
+- `sweep.js` — Overfit riskini azaltmak için 2 yerine en az 4-5 likit sembol. (~1369 tok)
