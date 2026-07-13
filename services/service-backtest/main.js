@@ -1,12 +1,7 @@
-import { fetchCandles, fetchFundingHistory, fetchOISnapshot, interpolateFunding } from '@borsa-bot/core-backtest/src/infrastructure/fetcher.js';
-import { simulateTrade } from '@borsa-bot/core-backtest/src/domain/simulator.js';
+import { fetchCandles, fetchFundingHistory, fetchOISnapshot } from '@borsa-bot/core-backtest/src/infrastructure/fetcher.js';
 import { makeAlignedBuffer } from '@borsa-bot/core-backtest/src/domain/aligned-buffer.js';
+import { runStrategyOverCandles } from '@borsa-bot/core-backtest/src/domain/run-strategy.js';
 import { generateReport } from './src/report-writer.js';
-import { calcAllIndicators } from '@borsa-bot/core-signal-engine/src/domain/indicators.js';
-import { calcLiquidationPressure } from '@borsa-bot/core-signal-engine/src/domain/liquidation-pressure.js';
-import { calcConfluence } from '@borsa-bot/core-signal-engine/src/domain/confluence.js';
-import { calcRegime, calcHigherTfTrend } from '@borsa-bot/core-signal-engine/src/domain/regime.js';
-import { buildSetup } from '@borsa-bot/core-signal-engine/src/domain/setup-builder.js';
 
 const SYMBOLS   = ['BTCUSDT', 'ETHUSDT'];
 const DAYS      = 30;
@@ -38,72 +33,15 @@ async function runBacktest(symbol, regimeBuffer) {
   }
 
   const fundingHistory = await fetchFundingHistory(symbol);
-  const oiSnapshot     = await fetchOISnapshot(symbol);
+  await fetchOISnapshot(symbol); // şu an trade üretimine katılmıyor, sadece erişim doğrulaması
   const higherTfBuffer = await fetchHigherTfSeries(symbol, DAYS);
 
   console.log(`[${symbol}] ${candles.length} mum yüklendi. Simülasyon başlıyor...`);
 
-  const trades = [];
-  const cooldowns = new Map();
-
-  for (let i = WINDOW; i < candles.length; i++) {
-    const window = candles.slice(i - WINDOW, i);
-    const current = candles[i];
-
-    const indicators = calcAllIndicators(window);
-    indicators.currentPrice = current.close;
-
-    const funding = interpolateFunding(current.timestamp, fundingHistory);
-
-    const liqPressure = calcLiquidationPressure({
-      fundingRate:  funding,
-      oiDelta:      0,
-      longRatio:    0.5,
-      shortRatio:   0.5,
-      priceChange:  window.length > 1
-        ? (current.close - window[window.length - 2].close) / window[window.length - 2].close
-        : 0,
-    });
-
-    // Canlıdaki gibi: rejim BTC 4h trendi, higherTfTrend sadece 1m sinyalleri için 5m EMA9/21
-    const regime = calcRegime(regimeBuffer.at(current.timestamp));
-    const higherTfTrend = TIMEFRAME === '1m'
-      ? calcHigherTfTrend(higherTfBuffer.at(current.timestamp).map(c => c.close))
-      : null;
-
-    const confluence = calcConfluence(indicators, liqPressure, THRESHOLD, higherTfTrend, regime);
-    if (!confluence.isCandidate) continue;
-
-    const direction = confluence.direction;
-
-    const lastSignal = cooldowns.get(direction) ?? 0;
-    if (current.timestamp - lastSignal < 5 * 60 * 1000) continue;
-    cooldowns.set(direction, current.timestamp);
-
-    if (!indicators.atr || indicators.atr === 0) continue;
-
-    const setup = buildSetup({
-      direction,
-      currentPrice: current.close,
-      atr: indicators.atr,
-    });
-
-    const remainingCandles = candles.slice(i + 1);
-    const result = simulateTrade(setup, remainingCandles);
-
-    trades.push({
-      symbol,
-      direction,
-      timestamp: current.timestamp,
-      entryPrice: setup.entryPrice,
-      stopPrice: setup.stopPrice,
-      targetPrice: setup.targetPrice,
-      confluenceScore: confluence.score,
-      regime,
-      higherTfTrend,
-      ...result,
-    });
-  }
+  const trades = runStrategyOverCandles({
+    candles, fundingHistory, regimeBuffer, higherTfBuffer,
+    window: WINDOW, threshold: THRESHOLD, symbol,
+  });
 
   console.log(`[${symbol}] ${trades.length} sinyal üretildi.`);
   return trades;
