@@ -16,12 +16,20 @@ INSERT INTO watchlist (symbol) VALUES ('BTCUSDT'), ('ETHUSDT')
 ON CONFLICT (symbol) DO NOTHING;
 
 INSERT INTO bot_config (key, value) VALUES
-  ('confluence_threshold', '0.65'),
+  ('confluence_threshold', '0.70'),
   ('ai_confidence_threshold', '0.70'),
   ('ai_enabled', 'true'),
   ('ai_cooldown_seconds', '30'),
   ('rr_min', '1.5'),
   ('taker_fee', '0.0006'),
   ('slippage_pct', '0.0003'),
-  ('sim_enabled', 'true')
+  ('sim_enabled', 'true'),
+  ('atr_stop_mult', '1.5'),
+  ('target_rr', '1.2'),
+  ('require_sr_cap', 'true'),
+  ('adx_max', '65'),
+  ('max_pb_long', '0.85'),
+  ('min_pb_short', '0.15'),
+  ('rsi_max_long', '70'),
+  ('rsi_min_short', '30')
 ON CONFLICT (key) DO NOTHING;
