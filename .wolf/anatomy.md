@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T12:55:55.462Z
-> Files: 525 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T14:13:19.188Z
+> Files: 528 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -129,7 +129,7 @@
 
 ## core/service-signal-engine/src/application/use-cases/
 
-- `make-process-candle.js` — Exports makeProcessCandle (~2354 tok)
+- `make-process-candle.js` — Exports makeProcessCandle (~2391 tok)
 
 ## core/service-signal-engine/src/domain/
 
@@ -174,12 +174,13 @@
 ## db-schemas/
 
 - `00-init.sql` (~138 tok)
-- `01-config-watchlist.sql` — SQL: tables: watchlist, bot_config (~240 tok)
+- `01-config-watchlist.sql` — SQL: tables: watchlist, bot_config (~280 tok)
 - `02-signals.sql` — SQL: tables: signals, signal_outcomes (~452 tok)
 
 ## db-schemas/migrations/
 
 - `2026-07-08-01-paper-regime-tiebreak.sql` — Additive, idempotent migration: paper-trading, backtest regime parity, tie-break logging. (~185 tok)
+- `2026-07-13-01-signal-quality-params.sql` — Additive/idempotent: sinyal kalitesi iyileştirme parametreleri. (~208 tok)
 
 ## docs/
 
@@ -809,3 +810,8 @@
 ## services/service-backtest/src/
 
 - `sweep.js` — 2026-07-13: BTC/ETH/SOL/BNB/XRP gibi büyük-cap coinlerle test edilmişti, ama (~1612 tok)
+
+## services/service-signal-engine/src/
+
+- `boot.js` — Exports boot (~759 tok)
+- `container.js` — Exports buildContainer (~243 tok)

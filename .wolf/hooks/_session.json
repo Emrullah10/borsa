@@ -8,8 +8,8 @@
       "first_read": "2026-07-13T10:48:43.212Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js": {
-      "count": 2,
-      "tokens": 2292,
+      "count": 4,
+      "tokens": 2362,
       "first_read": "2026-07-13T10:49:33.490Z"
     },
     "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/main.js": {
@@ -61,6 +61,26 @@
       "count": 3,
       "tokens": 1480,
       "first_read": "2026-07-13T11:56:10.450Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/domain/entry-filters.js": {
+      "count": 1,
+      "tokens": 427,
+      "first_read": "2026-07-13T14:11:39.841Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/boot.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-13T14:12:13.512Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/container.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-13T14:12:13.890Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/packages/modules/datasource/connectors/postgre.js": {
+      "count": 1,
+      "tokens": 96,
+      "first_read": "2026-07-13T14:13:31.012Z"
     }
   },
   "files_written": [
@@ -333,13 +353,49 @@
       "action": "edit",
       "tokens": 182,
       "at": "2026-07-13T12:55:55.471Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/db-schemas/migrations/2026-07-13-01-signal-quality-params.sql",
+      "action": "create",
+      "tokens": 223,
+      "at": "2026-07-13T14:11:51.823Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/db-schemas/01-config-watchlist.sql",
+      "action": "edit",
+      "tokens": 149,
+      "at": "2026-07-13T14:12:05.589Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+      "action": "edit",
+      "tokens": 43,
+      "at": "2026-07-13T14:12:41.109Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+      "action": "edit",
+      "tokens": 114,
+      "at": "2026-07-13T14:12:56.918Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/container.js",
+      "action": "edit",
+      "tokens": 145,
+      "at": "2026-07-13T14:13:04.957Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/boot.js",
+      "action": "edit",
+      "tokens": 340,
+      "at": "2026-07-13T14:13:19.197Z"
     }
   ],
   "edit_counts": {
     "../../../.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md": 1,
     "core/service-signal-engine/test/unit/entry-filters.test.js": 1,
     "core/service-signal-engine/src/domain/entry-filters.js": 1,
-    "core/service-signal-engine/src/application/use-cases/make-process-candle.js": 5,
+    "core/service-signal-engine/src/application/use-cases/make-process-candle.js": 7,
     "core/service-backtest/test/unit/run-strategy.test.js": 5,
     "core/service-backtest/src/domain/run-strategy.js": 9,
     "core/service-backtest/package.json": 2,
@@ -347,11 +403,15 @@
     "services/service-backtest/src/sweep.js": 12,
     "package.json": 1,
     "core/service-signal-engine/test/unit/setup-builder.test.js": 2,
-    "core/service-signal-engine/src/domain/setup-builder.js": 5
+    "core/service-signal-engine/src/domain/setup-builder.js": 5,
+    "db-schemas/migrations/2026-07-13-01-signal-quality-params.sql": 1,
+    "db-schemas/01-config-watchlist.sql": 1,
+    "services/service-signal-engine/src/container.js": 1,
+    "services/service-signal-engine/src/boot.js": 1
   },
-  "anatomy_hits": 11,
-  "anatomy_misses": 1,
-  "repeated_reads_warned": 11,
+  "anatomy_hits": 13,
+  "anatomy_misses": 3,
+  "repeated_reads_warned": 13,
   "cerebrum_warnings": 0,
-  "stop_count": 6
+  "stop_count": 8
 }

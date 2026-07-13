@@ -1823,3 +1823,19 @@
 | 15:55 | Edited services/service-backtest/src/sweep.js | modified formatSweepTable() | ~149 |
 | 15:55 | Edited services/service-backtest/src/sweep.js | modified for() | ~182 |
 | 15:55 | Edited services/service-backtest/src/sweep.js | modified for() | ~182 |
+| 15:56 | Session end: 45 writes across 11 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 12 reads | ~27508 tok |
+| 15:56 | Session end: 45 writes across 11 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 12 reads | ~27508 tok |
+| 16:11 | Session end: 45 writes across 11 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 12 reads | ~27508 tok |
+| 16:11 | Session end: 45 writes across 11 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 12 reads | ~27508 tok |
+| 17:11 | Created db-schemas/migrations/2026-07-13-01-signal-quality-params.sql | — | ~208 |
+| 17:11 | Created db-schemas/migrations/2026-07-13-01-signal-quality-params.sql | — | ~208 |
+| 17:12 | Edited db-schemas/01-config-watchlist.sql | expanded (+8 lines) | ~139 |
+| 17:12 | Edited db-schemas/01-config-watchlist.sql | expanded (+8 lines) | ~139 |
+| 17:12 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | modified makeProcessCandle() | ~43 |
+| 17:12 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | modified makeProcessCandle() | ~43 |
+| 17:12 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | 8→10 lines | ~114 |
+| 17:12 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | 8→10 lines | ~114 |
+| 17:13 | Edited services/service-signal-engine/src/container.js | modified buildContainer() | ~145 |
+| 17:13 | Edited services/service-signal-engine/src/container.js | modified buildContainer() | ~145 |
+| 17:13 | Edited services/service-signal-engine/src/boot.js | modified parseFloat() | ~340 |
+| 17:13 | Edited services/service-signal-engine/src/boot.js | modified parseFloat() | ~340 |
