@@ -3,8 +3,13 @@ import { makeAlignedBuffer } from '@borsa-bot/core-backtest/src/domain/aligned-b
 import { runStrategyOverCandles } from '@borsa-bot/core-backtest/src/domain/run-strategy.js';
 import { calcMetrics } from '@borsa-bot/core-backtest/src/domain/reporter.js';
 
-// Overfit riskini azaltmak için 2 yerine en az 4-5 likit sembol.
-const SYMBOLS = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'XRPUSDT'];
+// 2026-07-13: BTC/ETH/SOL/BNB/XRP gibi büyük-cap coinlerle test edilmişti, ama
+// canlı sistem (MARKET_DATA_SYMBOLS=TOP:50) fiilen çoğunlukla küçük-cap, yüksek
+// volatiliteli altcoinlerde sinyal üretiyor — son 7 günün en çok sinyal üreten
+// 5 sembolü (BTC son 3 günde sıfır sinyal üretti). Büyük-cap coinlerin ATR%'si
+// (~%0.04) bu coinlerinkinden (~%1.0+) çok farklı, bu yüzden eski sweep sonuçları
+// gerçek sinyal evrenini temsil etmiyordu.
+const SYMBOLS = ['EVAAUSDT', 'LABUSDT', 'VANRYUSDT', 'KORUUSDT', 'VELVETUSDT'];
 const DAYS = 30;
 const TIMEFRAME = '1m';
 const WINDOW = 60;
