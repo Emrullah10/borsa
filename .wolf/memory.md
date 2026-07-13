@@ -1753,3 +1753,7 @@
 | 13:51 | Edited core/service-backtest/package.json | 3→4 lines | ~27 |
 | 13:52 | Created services/service-backtest/main.js | — | ~743 |
 | 13:52 | Created services/service-backtest/main.js | — | ~743 |
+| 13:54 | Created services/service-backtest/src/sweep.js | — | ~1292 |
+| 13:54 | Created services/service-backtest/src/sweep.js | — | ~1292 |
+| 13:54 | Edited package.json | 1→2 lines | ~46 |
+| 13:54 | Edited package.json | 1→2 lines | ~46 |

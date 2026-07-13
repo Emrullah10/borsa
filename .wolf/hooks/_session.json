@@ -31,6 +31,16 @@
       "count": 1,
       "tokens": 329,
       "first_read": "2026-07-13T10:51:31.439Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/domain/reporter.js": {
+      "count": 1,
+      "tokens": 617,
+      "first_read": "2026-07-13T10:53:57.419Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/package.json": {
+      "count": 1,
+      "tokens": 329,
+      "first_read": "2026-07-13T10:54:29.743Z"
     }
   },
   "files_written": [
@@ -111,6 +121,18 @@
       "action": "create",
       "tokens": 743,
       "at": "2026-07-13T10:52:09.572Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/sweep.js",
+      "action": "create",
+      "tokens": 1292,
+      "at": "2026-07-13T10:54:22.972Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/package.json",
+      "action": "edit",
+      "tokens": 46,
+      "at": "2026-07-13T10:54:37.121Z"
     }
   ],
   "edit_counts": {
@@ -121,9 +143,11 @@
     "core/service-backtest/test/unit/run-strategy.test.js": 2,
     "core/service-backtest/src/domain/run-strategy.js": 2,
     "core/service-backtest/package.json": 2,
-    "services/service-backtest/main.js": 1
+    "services/service-backtest/main.js": 1,
+    "services/service-backtest/src/sweep.js": 1,
+    "package.json": 1
   },
-  "anatomy_hits": 5,
+  "anatomy_hits": 7,
   "anatomy_misses": 1,
   "repeated_reads_warned": 0,
   "cerebrum_warnings": 0,

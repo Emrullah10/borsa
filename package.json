@@ -21,6 +21,7 @@
     "dev:market-data": "node --env-file=.env services/service-market-data/main.js",
     "dev:signal-engine": "node --env-file=.env services/service-signal-engine/main.js",
     "backtest": "node --env-file=.env services/service-backtest/main.js",
+    "backtest:sweep": "node --env-file=.env services/service-backtest/src/sweep.js",
     "dev:notifier": "node --env-file=.env services/service-notifier/main.js",
     "dev:tracker": "node --env-file=.env services/service-tracker/main.js"
   },

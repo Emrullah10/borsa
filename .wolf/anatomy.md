@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T10:52:09.563Z
-> Files: 524 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T10:54:37.111Z
+> Files: 525 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -13,7 +13,7 @@
 - `CLAUDE.md` — OpenWolf (~57 tok)
 - `docker-compose.yml` — Docker Compose services (~169 tok)
 - `package-lock.json` — npm lock file (~30286 tok)
-- `package.json` — Node.js package manifest (~329 tok)
+- `package.json` — Node.js package manifest (~354 tok)
 - `vitest.config.js` — /*.test.js', 'services/**/*.test.js', 'packages/**/*.test.js'], (~67 tok)
 
 ## .claude/
@@ -805,3 +805,7 @@
 ## services/service-backtest/
 
 - `main.js` — SYMBOLS: fetchRegimeSeries, fetchHigherTfSeries, runBacktest, main (~743 tok)
+
+## services/service-backtest/src/
+
+- `sweep.js` — Overfit riskini azaltmak için 2 yerine en az 4-5 likit sembol. (~1292 tok)
