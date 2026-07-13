@@ -1745,3 +1745,11 @@
 | 13:49 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | modified makeProcessCandle() | ~132 |
 | 13:50 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | added nullish coalescing | ~246 |
 | 13:50 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | added nullish coalescing | ~246 |
+| 13:51 | Created core/service-backtest/test/unit/run-strategy.test.js | — | ~975 |
+| 13:51 | Created core/service-backtest/test/unit/run-strategy.test.js | — | ~975 |
+| 13:51 | Created core/service-backtest/src/domain/run-strategy.js | — | ~900 |
+| 13:51 | Created core/service-backtest/src/domain/run-strategy.js | — | ~900 |
+| 13:51 | Edited core/service-backtest/package.json | 3→4 lines | ~27 |
+| 13:51 | Edited core/service-backtest/package.json | 3→4 lines | ~27 |
+| 13:52 | Created services/service-backtest/main.js | — | ~743 |
+| 13:52 | Created services/service-backtest/main.js | — | ~743 |

@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T10:50:02.527Z
-> Files: 521 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T10:52:09.563Z
+> Files: 524 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -68,12 +68,13 @@
 
 ## core/service-backtest/
 
-- `package.json` — Node.js package manifest (~59 tok)
+- `package.json` — Node.js package manifest (~71 tok)
 
 ## core/service-backtest/src/domain/
 
 - `aligned-buffer.js` — Backtest'te düşük-frekanslı bir mum serisini (örn. 4h/5m), yüksek-frekanslı (~172 tok)
 - `reporter.js` — Exports calcMetrics, formatTable (~617 tok)
+- `run-strategy.js` — Exports runStrategyOverCandles (~900 tok)
 - `simulator.js` — Exports simulateTrade (~335 tok)
 
 ## core/service-backtest/src/infrastructure/
@@ -85,6 +86,7 @@
 - `aligned-buffer.test.js` — Declares makeCandles (~537 tok)
 - `fetcher.test.js` — Declares candles (~572 tok)
 - `reporter.test.js` — Declares sampleTrades (~474 tok)
+- `run-strategy.test.js` — Yeterince uzun, dalgalı bir seri üretir — ADX/RSI/BB gibi göstergelerin (~975 tok)
 - `simulator.test.js` — Declares candle (~542 tok)
 
 ## core/service-market-data/
@@ -799,3 +801,7 @@
 - `docs.py` — get_swagger_ui_html, get_redoc_html, get_swagger_ui_oauth2_redirect_html (~2959 tok)
 - `models.py` — Pydantic: BaseModelWithConfig (158 fields) (~4400 tok)
 - `utils.py` — URL configuration (~6368 tok)
+
+## services/service-backtest/
+
+- `main.js` — SYMBOLS: fetchRegimeSeries, fetchHigherTfSeries, runBacktest, main (~743 tok)
