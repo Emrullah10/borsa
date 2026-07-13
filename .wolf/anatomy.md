@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T12:32:54.037Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T12:55:55.462Z
 > Files: 525 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
@@ -74,7 +74,7 @@
 
 - `aligned-buffer.js` — Backtest'te düşük-frekanslı bir mum serisini (örn. 4h/5m), yüksek-frekanslı (~172 tok)
 - `reporter.js` — Exports calcMetrics, formatTable (~617 tok)
-- `run-strategy.js` — Exports runStrategyOverCandles (~1225 tok)
+- `run-strategy.js` — Exports runStrategyOverCandles (~1262 tok)
 - `simulator.js` — Exports simulateTrade (~335 tok)
 
 ## core/service-backtest/src/infrastructure/
@@ -86,7 +86,7 @@
 - `aligned-buffer.test.js` — Declares makeCandles (~537 tok)
 - `fetcher.test.js` — Declares candles (~572 tok)
 - `reporter.test.js` — Declares sampleTrades (~474 tok)
-- `run-strategy.test.js` — Yeterince uzun, dalgalı bir seri üretir — ADX/RSI/BB gibi göstergelerin (~1396 tok)
+- `run-strategy.test.js` — Yeterince uzun, dalgalı bir seri üretir — ADX/RSI/BB gibi göstergelerin (~1577 tok)
 - `simulator.test.js` — Declares candle (~542 tok)
 
 ## core/service-market-data/
@@ -138,7 +138,7 @@
 - `indicators.js` — Exports calcEMA, calcRSI, calcBollingerBands, calcATR + 6 more (~1587 tok)
 - `liquidation-pressure.js` — Exports calcLiquidationPressure (~572 tok)
 - `regime.js` — BTC trendine göre piyasa rejimini hesaplar (~601 tok)
-- `setup-builder.js` — Exports applySRCap, buildSetup (~980 tok)
+- `setup-builder.js` — Exports applySRCap, buildSetup (~1004 tok)
 
 ## core/service-signal-engine/src/infrastructure/persistence/repositories/
 
@@ -151,7 +151,7 @@
 - `indicators.test.js` — Declares closes20 (~1726 tok)
 - `liquidation-pressure.test.js` — Declares result (~764 tok)
 - `regime.test.js` — Declares makeCandles (~630 tok)
-- `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~1953 tok)
+- `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~2202 tok)
 - `signal-repository.test.js` — Declares fakeRows (~1776 tok)
 
 ## core/service-tracker/
@@ -808,4 +808,4 @@
 
 ## services/service-backtest/src/
 
-- `sweep.js` — 2026-07-13: BTC/ETH/SOL/BNB/XRP gibi büyük-cap coinlerle test edilmişti, ama (~1480 tok)
+- `sweep.js` — 2026-07-13: BTC/ETH/SOL/BNB/XRP gibi büyük-cap coinlerle test edilmişti, ama (~1612 tok)

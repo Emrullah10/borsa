@@ -163,4 +163,23 @@ describe('buildSetup', () => {
       expect(setup.meetsSrCapRequirement).toBe(true);
     });
   });
+
+  describe('atrStopMult / targetRR parametreleri (sweep için, davranış-koruyucu default)', () => {
+    it('parametre verilmezse default (1.5 / 1.8) kullanılır', () => {
+      const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2 });
+      expect(setup.stopDist).toBe(3); // atr(2) * 1.5
+      expect(setup.dynamicRR).toBe(1.8);
+    });
+
+    it('atrStopMult override edilirse stop mesafesi değişir', () => {
+      const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2, atrStopMult: 1.0 });
+      expect(setup.stopDist).toBe(2); // atr(2) * 1.0
+    });
+
+    it('targetRR override edilirse hedef mesafesi ve dynamicRR değişir', () => {
+      const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2, targetRR: 1.2 });
+      expect(setup.dynamicRR).toBe(1.2);
+      expect(setup.rrRatio).toBeCloseTo(1.2, 1);
+    });
+  });
 });

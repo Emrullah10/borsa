@@ -1,11 +1,11 @@
-const ATR_STOP_MULT = 1.5;
+const ATR_STOP_MULT_DEFAULT = 1.5;
 const MIN_TARGET_PCT = 0.01; // Hedef girişten en az %1 uzakta olmalı
 
 const FEE_ROUNDTRIP = 0.0008;       // maker gidiş-dönüş ~%0.08
 const MIN_STOP_PCT_DEFAULT = 0.012; // stop >= %1.2 — tek kârlı fee bucket (veri kanıtladı)
 
 // Sabit R/R — confluence skoru ve ADX win rate'i öngörmediği için (veri: 694 sinyal)
-const TARGET_RR = 1.8;
+const TARGET_RR_DEFAULT = 1.8;
 
 // --- Katman 3: Destek/Direnç kapağı ---
 // Hedef, yoldaki S/R seviyesini aşmasın (fiyat oraya varmadan döner)
@@ -41,10 +41,12 @@ export function buildSetup({
   resistanceLevel,
   minStopPct = MIN_STOP_PCT_DEFAULT,
   requireSrCap = false,
+  atrStopMult = ATR_STOP_MULT_DEFAULT,
+  targetRR = TARGET_RR_DEFAULT,
 }) {
-  const stopDist = atr * ATR_STOP_MULT;
+  const stopDist = atr * atrStopMult;
 
-  const dynamicRR = TARGET_RR;
+  const dynamicRR = targetRR;
 
   const rawTargetDist = stopDist * dynamicRR;
 

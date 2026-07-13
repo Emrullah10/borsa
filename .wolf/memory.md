@@ -1801,3 +1801,25 @@
 | 15:24 | Session end: 31 writes across 11 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 12 reads | ~24006 tok |
 | 15:32 | Edited services/service-backtest/src/sweep.js | 2→7 lines | ~151 |
 | 15:32 | Edited services/service-backtest/src/sweep.js | 2→7 lines | ~151 |
+| 15:33 | Session end: 32 writes across 11 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 12 reads | ~24234 tok |
+| 15:33 | Session end: 32 writes across 11 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 12 reads | ~24234 tok |
+| 15:53 | Edited core/service-signal-engine/test/unit/setup-builder.test.js | modified mesafesi() | ~344 |
+| 15:53 | Edited core/service-signal-engine/test/unit/setup-builder.test.js | modified mesafesi() | ~344 |
+| 15:53 | Edited core/service-signal-engine/src/domain/setup-builder.js | modified giri() | ~109 |
+| 15:53 | Edited core/service-signal-engine/src/domain/setup-builder.js | modified giri() | ~109 |
+| 15:54 | Edited core/service-signal-engine/src/domain/setup-builder.js | modified buildSetup() | ~88 |
+| 15:54 | Edited core/service-signal-engine/src/domain/setup-builder.js | modified buildSetup() | ~88 |
+| 15:54 | Edited core/service-backtest/src/domain/run-strategy.js | modified runStrategyOverCandles() | ~65 |
+| 15:54 | Edited core/service-backtest/src/domain/run-strategy.js | modified runStrategyOverCandles() | ~65 |
+| 15:54 | Edited core/service-backtest/src/domain/run-strategy.js | 9→11 lines | ~102 |
+| 15:54 | Edited core/service-backtest/src/domain/run-strategy.js | 9→11 lines | ~102 |
+| 15:54 | Edited core/service-backtest/test/unit/run-strategy.test.js | added 2 condition(s) | ~231 |
+| 15:54 | Edited core/service-backtest/test/unit/run-strategy.test.js | added 2 condition(s) | ~231 |
+| 15:55 | Edited services/service-backtest/src/sweep.js | modified geometrisinin() | ~222 |
+| 15:55 | Edited services/service-backtest/src/sweep.js | modified geometrisinin() | ~222 |
+| 15:55 | Edited services/service-backtest/src/sweep.js | modified runCombo() | ~176 |
+| 15:55 | Edited services/service-backtest/src/sweep.js | modified runCombo() | ~176 |
+| 15:55 | Edited services/service-backtest/src/sweep.js | modified formatSweepTable() | ~149 |
+| 15:55 | Edited services/service-backtest/src/sweep.js | modified formatSweepTable() | ~149 |
+| 15:55 | Edited services/service-backtest/src/sweep.js | modified for() | ~182 |
+| 15:55 | Edited services/service-backtest/src/sweep.js | modified for() | ~182 |
