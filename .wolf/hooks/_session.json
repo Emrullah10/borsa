@@ -41,6 +41,16 @@
       "count": 1,
       "tokens": 329,
       "first_read": "2026-07-13T10:54:29.743Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/domain/run-strategy.js": {
+      "count": 3,
+      "tokens": 1083,
+      "first_read": "2026-07-13T11:26:24.138Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/unit/run-strategy.test.js": {
+      "count": 1,
+      "tokens": 975,
+      "first_read": "2026-07-13T11:26:30.669Z"
     }
   },
   "files_written": [
@@ -133,6 +143,30 @@
       "action": "edit",
       "tokens": 46,
       "at": "2026-07-13T10:54:37.121Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/unit/run-strategy.test.js",
+      "action": "edit",
+      "tokens": 636,
+      "at": "2026-07-13T11:26:50.944Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/domain/run-strategy.js",
+      "action": "edit",
+      "tokens": 296,
+      "at": "2026-07-13T11:27:06.545Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/domain/run-strategy.js",
+      "action": "edit",
+      "tokens": 66,
+      "at": "2026-07-13T11:27:17.753Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/domain/run-strategy.js",
+      "action": "edit",
+      "tokens": 102,
+      "at": "2026-07-13T11:27:35.795Z"
     }
   ],
   "edit_counts": {
@@ -140,16 +174,16 @@
     "core/service-signal-engine/test/unit/entry-filters.test.js": 1,
     "core/service-signal-engine/src/domain/entry-filters.js": 1,
     "core/service-signal-engine/src/application/use-cases/make-process-candle.js": 3,
-    "core/service-backtest/test/unit/run-strategy.test.js": 2,
-    "core/service-backtest/src/domain/run-strategy.js": 2,
+    "core/service-backtest/test/unit/run-strategy.test.js": 3,
+    "core/service-backtest/src/domain/run-strategy.js": 5,
     "core/service-backtest/package.json": 2,
     "services/service-backtest/main.js": 1,
     "services/service-backtest/src/sweep.js": 1,
     "package.json": 1
   },
-  "anatomy_hits": 7,
+  "anatomy_hits": 9,
   "anatomy_misses": 1,
-  "repeated_reads_warned": 0,
+  "repeated_reads_warned": 2,
   "cerebrum_warnings": 0,
-  "stop_count": 0
+  "stop_count": 2
 }

@@ -1757,3 +1757,15 @@
 | 13:54 | Created services/service-backtest/src/sweep.js | — | ~1292 |
 | 13:54 | Edited package.json | 1→2 lines | ~46 |
 | 13:54 | Edited package.json | 1→2 lines | ~46 |
+| 13:59 | Session end: 15 writes across 9 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 8 reads | ~15718 tok |
+| 13:59 | Session end: 15 writes across 9 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 8 reads | ~15718 tok |
+| 14:16 | Session end: 15 writes across 9 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 8 reads | ~15718 tok |
+| 14:16 | Session end: 15 writes across 9 files (imdi-benim-ayn-ekilde-eager-ember.md, entry-filters.test.js, entry-filters.js, make-process-candle.js, run-strategy.test.js) | 8 reads | ~15718 tok |
+| 14:26 | Edited core/service-backtest/test/unit/run-strategy.test.js | added nullish coalescing | ~636 |
+| 14:26 | Edited core/service-backtest/test/unit/run-strategy.test.js | added nullish coalescing | ~636 |
+| 14:27 | Edited core/service-backtest/src/domain/run-strategy.js | modified runStrategyOverCandles() | ~296 |
+| 14:27 | Edited core/service-backtest/src/domain/run-strategy.js | modified runStrategyOverCandles() | ~296 |
+| 14:27 | Edited core/service-backtest/src/domain/run-strategy.js | 5→8 lines | ~66 |
+| 14:27 | Edited core/service-backtest/src/domain/run-strategy.js | 5→8 lines | ~66 |
+| 14:27 | Edited core/service-backtest/src/domain/run-strategy.js | 12→14 lines | ~102 |
+| 14:27 | Edited core/service-backtest/src/domain/run-strategy.js | 12→14 lines | ~102 |

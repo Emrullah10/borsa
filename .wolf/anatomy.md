@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T10:54:37.111Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T11:27:35.785Z
 > Files: 525 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
@@ -74,7 +74,7 @@
 
 - `aligned-buffer.js` — Backtest'te düşük-frekanslı bir mum serisini (örn. 4h/5m), yüksek-frekanslı (~172 tok)
 - `reporter.js` — Exports calcMetrics, formatTable (~617 tok)
-- `run-strategy.js` — Exports runStrategyOverCandles (~900 tok)
+- `run-strategy.js` — Exports runStrategyOverCandles (~1100 tok)
 - `simulator.js` — Exports simulateTrade (~335 tok)
 
 ## core/service-backtest/src/infrastructure/
@@ -86,7 +86,7 @@
 - `aligned-buffer.test.js` — Declares makeCandles (~537 tok)
 - `fetcher.test.js` — Declares candles (~572 tok)
 - `reporter.test.js` — Declares sampleTrades (~474 tok)
-- `run-strategy.test.js` — Yeterince uzun, dalgalı bir seri üretir — ADX/RSI/BB gibi göstergelerin (~975 tok)
+- `run-strategy.test.js` — Yeterince uzun, dalgalı bir seri üretir — ADX/RSI/BB gibi göstergelerin (~1396 tok)
 - `simulator.test.js` — Declares candle (~542 tok)
 
 ## core/service-market-data/
