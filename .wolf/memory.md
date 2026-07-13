@@ -1711,3 +1711,37 @@
 | 19:06 | Edited services/service-tracker/src/boot.js | 3→5 lines | ~105 |
 | 19:06 | Edited services/service-notifier/src/boot.js | 2→4 lines | ~78 |
 | 19:06 | Edited services/service-notifier/src/boot.js | 2→4 lines | ~78 |
+| 19:08 | Session end: 145 writes across 64 files (imdi-benim-ayn-ekilde-eager-ember.md, .gitignore, package.json, signal-repository.js, signal-repository.test.js) | 85 reads | ~67424 tok |
+| 19:08 | Session end: 145 writes across 64 files (imdi-benim-ayn-ekilde-eager-ember.md, .gitignore, package.json, signal-repository.js, signal-repository.test.js) | 85 reads | ~67424 tok |
+
+## Session: 2026-07-09 20:58
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-07-09 20:58
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-07-12 19:50
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-07-12 19:50
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 13:48 | Created ../../../.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md | — | ~1622 |
+| 13:48 | Created ../../../.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md | — | ~1622 |
+| 13:49 | Created core/service-signal-engine/test/unit/entry-filters.test.js | — | ~1098 |
+| 13:49 | Created core/service-signal-engine/test/unit/entry-filters.test.js | — | ~1098 |
+| 13:49 | Created core/service-signal-engine/src/domain/entry-filters.js | — | ~427 |
+| 13:49 | Created core/service-signal-engine/src/domain/entry-filters.js | — | ~427 |
+| 13:49 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | added 1 import(s) | ~116 |
+| 13:49 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | added 1 import(s) | ~116 |
+| 13:49 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | modified makeProcessCandle() | ~132 |
+| 13:49 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | modified makeProcessCandle() | ~132 |
+| 13:50 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | added nullish coalescing | ~246 |
+| 13:50 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | added nullish coalescing | ~246 |

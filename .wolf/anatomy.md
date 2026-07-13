@@ -1,7 +1,11 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-08T16:08:00.649Z
-> Files: 518 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T10:50:02.527Z
+> Files: 521 tracked | Anatomy hits: 0 | Misses: 0
+
+## ../../../.claude/plans/
+
+- `imdi-benim-ayn-ekilde-eager-ember.md` — Plan: Sinyal Kalitesini Kurtarma — Veri Kanıtlı Giriş Filtreleri (~1520 tok)
 
 ## ./
 
@@ -123,11 +127,12 @@
 
 ## core/service-signal-engine/src/application/use-cases/
 
-- `make-process-candle.js` — Exports makeProcessCandle (~2064 tok)
+- `make-process-candle.js` — Exports makeProcessCandle (~2292 tok)
 
 ## core/service-signal-engine/src/domain/
 
 - `confluence.js` — Exports adaptiveThreshold, calcConfluence (~1522 tok)
+- `entry-filters.js` — Saf fonksiyon — DB/Redis bağımlılığı yok. (~427 tok)
 - `indicators.js` — Exports calcEMA, calcRSI, calcBollingerBands, calcATR + 6 more (~1587 tok)
 - `liquidation-pressure.js` — Exports calcLiquidationPressure (~572 tok)
 - `regime.js` — BTC trendine göre piyasa rejimini hesaplar (~601 tok)
@@ -140,6 +145,7 @@
 ## core/service-signal-engine/test/unit/
 
 - `confluence.test.js` — ADX >= 25 ile güçlü trend fixture'ları (~1730 tok)
+- `entry-filters.test.js` — Declares baseParams (~1098 tok)
 - `indicators.test.js` — Declares closes20 (~1726 tok)
 - `liquidation-pressure.test.js` — Declares result (~764 tok)
 - `regime.test.js` — Declares makeCandles (~630 tok)

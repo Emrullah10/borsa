@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-05-31T10:59:47.960Z",
   "lifetime": {
-    "total_tokens_estimated": 2550497,
-    "total_reads": 2128,
-    "total_writes": 3766,
-    "total_sessions": 39,
-    "anatomy_hits": 1339,
-    "anatomy_misses": 762,
-    "repeated_reads_blocked": 1113,
-    "estimated_savings_vs_bare_cli": 1029009
+    "total_tokens_estimated": 2617921,
+    "total_reads": 2213,
+    "total_writes": 3911,
+    "total_sessions": 41,
+    "anatomy_hits": 1361,
+    "anatomy_misses": 825,
+    "repeated_reads_blocked": 1144,
+    "estimated_savings_vs_bare_cli": 1077010
   },
   "sessions": [
     {
@@ -34083,6 +34083,1258 @@
         "writes_count": 142,
         "repeated_reads_blocked": 29,
         "anatomy_lookups": 20
+      }
+    },
+    {
+      "id": "session-2026-07-08-1655",
+      "started": "2026-07-08T13:55:52.506Z",
+      "ended": "2026-07-08T16:08:19.274Z",
+      "reads": [
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/backend/package.json",
+          "tokens_estimated": 297,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/launch.sh",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/.gitignore",
+          "tokens_estimated": 55,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/package.json",
+          "tokens_estimated": 301,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/package.json",
+          "tokens_estimated": 301,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/.vscode/launch.json",
+          "tokens_estimated": 1055,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/main.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/subscriber.js",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/signal-repository.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/test/unit/signal-repository.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/package.json",
+          "tokens_estimated": 282,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/indicators.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/ws-server.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/packages/modules/helper/index.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/ws-server.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/main.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/candle-store.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/publisher.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/bitget-ws.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/test/unit/candle-store.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/test/unit/publisher.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/package.json",
+          "tokens_estimated": 301,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/main.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/tracker.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/tracker.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/evaluate-outcome.test.js",
+          "tokens_estimated": 745,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+          "tokens_estimated": 1536,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/configs/app-config.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/main.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/formatter.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/mailer.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/formatter.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/test/unit/formatter.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/configs/app-config.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/main.js",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/fetcher.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/simulator.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/reporter.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/domain/reporter.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/reporter.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/unit/reporter.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/unit/simulator.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/unit/fetcher.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/package.json",
+          "tokens_estimated": 301,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/App.jsx",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/vite.config.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 4651,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalFilters.jsx",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalChart.jsx",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/utils/entryValidity.test.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.test.jsx",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/AppDrawer.test.jsx",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/TopBar.test.jsx",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/App.test.jsx",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/AppDrawer.jsx",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/TopBar.jsx",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+          "tokens_estimated": 2773,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/stats/components/MetricRow.jsx",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/main.jsx",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.test.jsx",
+          "tokens_estimated": 936,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/docs/MONOREPO_STRUCTURE.md",
+          "tokens_estimated": 3404,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/db-schemas/02-signals.sql",
+          "tokens_estimated": 398,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/application/use-cases/make-process-outcome-candle.js",
+          "tokens_estimated": 648,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/.claude/plans/imdi-benim-ayn-ekilde-eager-ember-agent-ae7b0681a0c30e1fa.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/db-schemas/01-config-watchlist.sql",
+          "tokens_estimated": 216,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/domain/evaluate-outcome.js",
+          "tokens_estimated": 439,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+          "tokens_estimated": 1716,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/signal-repository.test.js",
+          "tokens_estimated": 726,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/container.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/boot.js",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/boot.js",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+          "tokens_estimated": 2209,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/domain/regime.js",
+          "tokens_estimated": 395,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/regime.test.js",
+          "tokens_estimated": 383,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/infrastructure/fetcher.js",
+          "tokens_estimated": 908,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/routes.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/api/statsApi.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/confluence.test.js",
+          "tokens_estimated": 1730,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/container.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/private/tmp/claude-501/bundled-skills/2.1.204/ad6915402a01b28836736d2e18b7e6fb/run/examples/playwright.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/tmp/verify-fix.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/packages/modules/datasource/connectors/redis.js",
+          "tokens_estimated": 162,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/packages/modules/datasource/index.js",
+          "tokens_estimated": 175,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/boot.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/emrullah/.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md",
+          "tokens_estimated": 1955,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/.gitignore",
+          "tokens_estimated": 58,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/package.json",
+          "tokens_estimated": 106,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/package.json",
+          "tokens_estimated": 15,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/package.json",
+          "tokens_estimated": 15,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/package.json",
+          "tokens_estimated": 63,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+          "tokens_estimated": 1591,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/signal-repository.test.js",
+          "tokens_estimated": 261,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+          "tokens_estimated": 2209,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/subscriber.js",
+          "tokens_estimated": 344,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/container.js",
+          "tokens_estimated": 203,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/routes.js",
+          "tokens_estimated": 409,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/boot.js",
+          "tokens_estimated": 526,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/main.js",
+          "tokens_estimated": 33,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/ws-server.test.js",
+          "tokens_estimated": 14,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/package.json",
+          "tokens_estimated": 124,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/package.json",
+          "tokens_estimated": 89,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/src/infrastructure/persistence/repositories/candle-repository.js",
+          "tokens_estimated": 213,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/src/application/use-cases/make-publisher.js",
+          "tokens_estimated": 301,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/test/unit/candle-repository.test.js",
+          "tokens_estimated": 540,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/test/unit/make-publisher.test.js",
+          "tokens_estimated": 500,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/bitget-ws.js",
+          "tokens_estimated": 12,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/bitget-ws.js",
+          "tokens_estimated": 27,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/package.json",
+          "tokens_estimated": 45,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/container.js",
+          "tokens_estimated": 149,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/routes.js",
+          "tokens_estimated": 240,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/boot.js",
+          "tokens_estimated": 352,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/main.js",
+          "tokens_estimated": 33,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/package.json",
+          "tokens_estimated": 72,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/package.json",
+          "tokens_estimated": 44,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/evaluate-outcome.test.js",
+          "tokens_estimated": 21,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/application/use-cases/make-process-outcome-candle.js",
+          "tokens_estimated": 648,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+          "tokens_estimated": 668,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+          "tokens_estimated": 19,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/container.js",
+          "tokens_estimated": 204,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/boot.js",
+          "tokens_estimated": 445,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/main.js",
+          "tokens_estimated": 33,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/package.json",
+          "tokens_estimated": 68,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/test/unit/formatter.test.js",
+          "tokens_estimated": 24,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/src/infrastructure/mailer.js",
+          "tokens_estimated": 129,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/package.json",
+          "tokens_estimated": 44,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/test/unit/mailer.test.js",
+          "tokens_estimated": 348,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/container.js",
+          "tokens_estimated": 128,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/boot.js",
+          "tokens_estimated": 625,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/main.js",
+          "tokens_estimated": 33,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/package.json",
+          "tokens_estimated": 64,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/domain/reporter.js",
+          "tokens_estimated": 617,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/src/report-writer.js",
+          "tokens_estimated": 406,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/unit/reporter.test.js",
+          "tokens_estimated": 21,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/unit/simulator.test.js",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/unit/fetcher.test.js",
+          "tokens_estimated": 30,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/unit/fetcher.test.js",
+          "tokens_estimated": 30,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/main.js",
+          "tokens_estimated": 979,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/package.json",
+          "tokens_estimated": 59,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/package.json",
+          "tokens_estimated": 99,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/vitest.config.js",
+          "tokens_estimated": 67,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/vite.config.js",
+          "tokens_estimated": 233,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/jsconfig.json",
+          "tokens_estimated": 101,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx",
+          "tokens_estimated": 73,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 108,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalFilters.jsx",
+          "tokens_estimated": 12,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalChart.jsx",
+          "tokens_estimated": 12,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.test.jsx",
+          "tokens_estimated": 33,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/AppDrawer.test.jsx",
+          "tokens_estimated": 16,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/TopBar.test.jsx",
+          "tokens_estimated": 14,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/AppDrawer.jsx",
+          "tokens_estimated": 14,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/layouts/TopBar.jsx",
+          "tokens_estimated": 68,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+          "tokens_estimated": 26,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/stats/components/MetricRow.jsx",
+          "tokens_estimated": 12,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/App.jsx",
+          "tokens_estimated": 83,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/main.jsx",
+          "tokens_estimated": 12,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.test.jsx",
+          "tokens_estimated": 86,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.test.jsx",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.test.jsx",
+          "tokens_estimated": 11,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/.claude/plans/imdi-benim-ayn-ekilde-eager-ember.md",
+          "tokens_estimated": 2614,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/db-schemas/migrations/2026-07-08-01-paper-regime-tiebreak.sql",
+          "tokens_estimated": 185,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/db-schemas/02-signals.sql",
+          "tokens_estimated": 208,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/db-schemas/01-config-watchlist.sql",
+          "tokens_estimated": 89,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/package.json",
+          "tokens_estimated": 67,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/evaluate-outcome.test.js",
+          "tokens_estimated": 40,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/evaluate-outcome.test.js",
+          "tokens_estimated": 247,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/evaluate-outcome.test.js",
+          "tokens_estimated": 776,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/domain/evaluate-outcome.js",
+          "tokens_estimated": 416,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/signal-repository.test.js",
+          "tokens_estimated": 630,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+          "tokens_estimated": 364,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+          "tokens_estimated": 51,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+          "tokens_estimated": 51,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+          "tokens_estimated": 267,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+          "tokens_estimated": 915,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+          "tokens_estimated": 81,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/application/use-cases/make-process-outcome-candle.js",
+          "tokens_estimated": 76,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/src/application/use-cases/make-process-outcome-candle.js",
+          "tokens_estimated": 610,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+          "tokens_estimated": 167,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/container.js",
+          "tokens_estimated": 109,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/boot.js",
+          "tokens_estimated": 139,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/domain/regime.js",
+          "tokens_estimated": 245,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/regime.test.js",
+          "tokens_estimated": 39,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/regime.test.js",
+          "tokens_estimated": 305,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+          "tokens_estimated": 96,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+          "tokens_estimated": 72,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/test/unit/aligned-buffer.test.js",
+          "tokens_estimated": 537,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-backtest/src/domain/aligned-buffer.js",
+          "tokens_estimated": 172,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-backtest/main.js",
+          "tokens_estimated": 1344,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/scratch-test-fetch.mjs",
+          "tokens_estimated": 74,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/.gitignore",
+          "tokens_estimated": 15,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/signal-repository.test.js",
+          "tokens_estimated": 1158,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+          "tokens_estimated": 394,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+          "tokens_estimated": 1438,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+          "tokens_estimated": 57,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+          "tokens_estimated": 136,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/make-process-candle.test.js",
+          "tokens_estimated": 582,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/container.js",
+          "tokens_estimated": 45,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/boot.js",
+          "tokens_estimated": 129,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/parse-stats-query.js",
+          "tokens_estimated": 215,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/test/unit/parse-stats-query.test.js",
+          "tokens_estimated": 408,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/routes.js",
+          "tokens_estimated": 343,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/api/statsApi.js",
+          "tokens_estimated": 147,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+          "tokens_estimated": 139,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+          "tokens_estimated": 271,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+          "tokens_estimated": 418,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+          "tokens_estimated": 336,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/pages/StatsPage.jsx",
+          "tokens_estimated": 645,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 56,
+          "action": "edit"
+        },
+        {
+          "file": "/tmp/flip-test.mjs",
+          "tokens_estimated": 782,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/scratch-flip-test.mjs",
+          "tokens_estimated": 496,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 43,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/scratch-flip-test2.mjs",
+          "tokens_estimated": 520,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/scratch-flip-test3.mjs",
+          "tokens_estimated": 423,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/scratch-flip-test3.mjs",
+          "tokens_estimated": 265,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/scratch-flip-test4.mjs",
+          "tokens_estimated": 424,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 53,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx",
+          "tokens_estimated": 22,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx",
+          "tokens_estimated": 127,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx",
+          "tokens_estimated": 374,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx",
+          "tokens_estimated": 76,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 20,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 32,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 22,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 123,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.test.jsx",
+          "tokens_estimated": 93,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.test.jsx",
+          "tokens_estimated": 464,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/scratch-verify-fix.mjs",
+          "tokens_estimated": 451,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/subscriber.js",
+          "tokens_estimated": 168,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-tracker/src/boot.js",
+          "tokens_estimated": 105,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/boot.js",
+          "tokens_estimated": 78,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 27043,
+        "output_tokens_estimated": 40381,
+        "reads_count": 85,
+        "writes_count": 145,
+        "repeated_reads_blocked": 31,
+        "anatomy_lookups": 22
       }
     }
   ],
