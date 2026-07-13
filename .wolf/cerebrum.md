@@ -23,6 +23,15 @@
 
 <!-- Significant technical decisions with rationale. Why X was chosen over Y. -->
 
+**[2026-07-13] Sinyal kalitesi krizi: WR %37.8 → backtest sweep ile %54.7'ye yükseltildi (bot_config canlıya uygulandı):**
+Kullanıcı "tahminler çok kötü, acilen iyileştirmeliyiz, app kullanılacak" dedi. Kırılım analizi iki sistematik kayıp kohortu gösterdi: aşırı-uzama (BB %B>0.8 long'lar %19.6 WR vs ≤0.8 %42.9) ve ADX tükenme (kaybedenler ADX~66-76, kazananlar~55-58). `entry-filters.js` (applyEntryFilters: overextension + adx-exhaustion gate'leri) eklendi — **ama gerçek kazanım filtrelerden gelmedi**, backtest sweep'te 5 ayrı tur ve **4 kritik metodoloji hatası** bulundu ve düzeltildi, sırasıyla:
+1. Backtest'in `buildSetup` çağrısı `supportLevel/resistanceLevel/minStopPct` hiç geçirmiyordu (canlı geçiriyordu) — S/R cap hiç uygulanmıyordu, backtest RR hep 1.8 sabit simüle ediyordu ama canlıda RR'ların %76'sı S/R cap'le 1.5'e düşüyordu. Düzeltme WR'ı %37.8→%46'ya çıkardı.
+2. Backtest, `meetsMinTarget/meetsMinRR/meetsFeeFloor` gate'lerini **hiç kontrol etmiyordu** — canlıda reddedilecek her setup simüle ediliyordu.
+3. Sweep sembol seçimi (BTC/ETH/SOL/BNB/XRP) canlı sistemin fiilen ürettiği sinyal evrenini (küçük-cap altcoinler: EVAAUSDT, LABUSDT vb. — BTC 3 günde SIFIR sinyal üretmişti) hiç temsil etmiyordu; büyük-cap ATR%'si (~0.04%) altcoinlerinkinden (~1.0%+) 25× farklıydı, bu yüzden `meetsMinTarget` (ATR-tabanlı hedef mesafesi ≥%1 gerektiriyor) tüm adaylar reddediyordu.
+4. Canlı DB'de S/R-kapaklı sinyaller (RR~1.5) %45.7 WR, kapaksız "açık sahada" sinyaller (RR~1.8) sadece %33 WR — bu, filtrelerden çok daha güçlü bir sinyaldi. `buildSetup`'a `requireSrCap` gate'i eklendi (S/R'a yakın hedef yoksa sinyal reddedilir).
+Son sweep (gerçek semboller + tüm düzeltmeler): setup-builder'ın sabit `ATR_STOP_MULT=1.5`/`TARGET_RR=1.8` değerleri de parametrize edilip 48-kombinasyonluk grid tarandı. Kazanan: `threshold=0.70, atrStopMult=1.5, targetRR=1.2, requireSrCap=true` → **%54.7 WR, PF 1.33, avgR +0.149**, ayda ~130 sinyal (günde 4-5, "az ama kaliteli" — kullanıcı onayı). `db-schemas/migrations/2026-07-13-01-signal-quality-params.sql` ile canlı `bot_config`'e uygulandı, boot.js/container.js üzerinden `makeProcessCandle`'a bağlandı, canlıda RR~1.1-1.2 sinyaller üretilerek doğrulandı.
+**Ders**: backtest/canlı parite, "aynı fonksiyonu çağırmak" kadar "aynı gate'leri kontrol etmek" ve "aynı sembol evrenini kullanmak" da gerektiriyor — bunlardan biri eksik olursa sweep sonuçları anlamlı ama yanlış yöne işaret edebilir.
+
 **[2026-07-08] 5 iyileştirme: paper-trading, backtest rejimi, kırılımlı istatistik, süre metrikleri, tie-break:**
 Canlı istatistikler (27 sinyal, %50 WR) örneklem olarak "işlem açsam kazanır mıyım" sorusuna cevap veremeyecek kadar küçüktü. Beş iyileştirme fazlı uygulandı (hepsi additive migration + testler yeşil + servisler boot ediyor doğrulamasıyla):
 1. **Paper-trading**: `signal_outcomes.sim_entry_price/sim_pnl_r` — sim giriş = sinyalden sonraki ilk 1m mumun open'ı ± sabit slippage (config'ten, ticker-spread tahmini değil — kullanıcı onayı). Gerçek dolum fiyatının sinyal-anı kapanış fiyatından farklı olduğunu modelliyor.
