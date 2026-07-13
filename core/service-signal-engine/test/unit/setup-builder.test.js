@@ -139,4 +139,28 @@ describe('buildSetup', () => {
     const expected = Math.abs(setup.targetPrice - setup.entryPrice) / setup.entryPrice;
     expect(Math.abs(setup.targetPct - expected)).toBeLessThan(1e-10);
   });
+
+  // Canlı veri: S/R-kapaklı (RR~1.5) sinyaller %45.7 WR, S/R'sız "açık sahada"
+  // (RR~1.8, kapaksız) sinyaller sadece %33 WR (2026-07-13 kırılım analizi).
+  describe('requireSrCap — S/R kapaksız sinyalleri eleme (opsiyonel gate)', () => {
+    it('requireSrCap verilmezse meetsSrCapRequirement her zaman true (davranış-koruma)', () => {
+      const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2 });
+      expect(setup.srCapped).toBe(false);
+      expect(setup.meetsSrCapRequirement).toBe(true);
+    });
+
+    it('requireSrCap=true + srCapped=false → meetsSrCapRequirement=false', () => {
+      const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2, requireSrCap: true });
+      expect(setup.srCapped).toBe(false);
+      expect(setup.meetsSrCapRequirement).toBe(false);
+    });
+
+    it('requireSrCap=true + srCapped=true → meetsSrCapRequirement=true', () => {
+      const setup = buildSetup({
+        direction: 'long', currentPrice: 100, atr: 2, resistanceLevel: 103, requireSrCap: true,
+      });
+      expect(setup.srCapped).toBe(true);
+      expect(setup.meetsSrCapRequirement).toBe(true);
+    });
+  });
 });

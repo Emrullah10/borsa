@@ -22,7 +22,7 @@ const DEFAULT_MIN_STOP_PCT = 0.014; // canlıdaki MIN_STOP_PCT_BY_TF['1m'] ile a
 // gerçek canlı davranışı yanlış simüle etmesine yol açan bir parite kopukluğuydu.
 export function runStrategyOverCandles({
   candles, fundingHistory, regimeBuffer, higherTfBuffer,
-  window, threshold, symbol, filterParams, minStopPct = DEFAULT_MIN_STOP_PCT,
+  window, threshold, symbol, filterParams, minStopPct = DEFAULT_MIN_STOP_PCT, requireSrCap = false,
 }) {
   if (candles.length < window) return [];
 
@@ -72,7 +72,16 @@ export function runStrategyOverCandles({
       supportLevel: indicators.supportLevel,
       resistanceLevel: indicators.resistanceLevel,
       minStopPct,
+      requireSrCap,
     });
+
+    // Canlı make-process-candle.js'nin meetsMinTarget/meetsMinRR/meetsFeeFloor/
+    // meetsSrCapRequirement gate'leriyle parite (önceden backtest bunları hiç
+    // kontrol etmiyordu — her setup simüle ediliyordu, canlıda reddedilecek
+    // olanlar dahil).
+    if (!setup.meetsMinTarget || !setup.meetsMinRR || !setup.meetsFeeFloor || !setup.meetsSrCapRequirement) {
+      continue;
+    }
 
     const remainingCandles = candles.slice(i + 1);
     const result = simulateTrade(setup, remainingCandles);
