@@ -7,7 +7,7 @@ const SYMBOLS   = ['BTCUSDT', 'ETHUSDT'];
 const DAYS      = 30;
 const TIMEFRAME = '1m';
 const WINDOW    = 60;
-const THRESHOLD = 0.65;
+const THRESHOLD = 0.80;
 const REGIME_SYMBOL = 'BTCUSDT'; // canlıdaki gibi rejim her zaman BTC 4h'a bakar
 const REGIME_LEAD_DAYS = 10; // dönem başında ≥30 4h mum garantisi için ekstra geçmiş
 

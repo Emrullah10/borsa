@@ -7,8 +7,11 @@ import { buildSetup } from '@borsa-bot/core-signal-engine/src/domain/setup-build
 import { interpolateFunding } from '../infrastructure/fetcher.js';
 import { simulateTrade } from './simulator.js';
 
-const COOLDOWN_MS = 5 * 60 * 1000;
-const DEFAULT_MIN_STOP_PCT = 0.014; // canlıdaki MIN_STOP_PCT_BY_TF['1m'] ile aynı (backtest sadece 1m kullanır)
+// Parite düzeltmesi (2026-08-20): canlıdaki COOLDOWN_BY_TF['1m'] = 60dk ile eşitlendi.
+// Eski 5dk cooldown backtest'in ~13× fazla sinyal üretmesine yol açıyordu → şişirilmiş metrikler.
+const COOLDOWN_MS = 60 * 60 * 1000;
+// Parite: canlıdaki MIN_STOP_PCT_BY_TF['1m'] = 0.025 ile eşitlendi.
+const DEFAULT_MIN_STOP_PCT = 0.025;
 
 // Canlı make-process-candle.js ile birebir aynı karar zinciri (parite kritik):
 // indicators → liqPressure → regime/higherTfTrend → confluence → entry-filters
@@ -60,9 +63,11 @@ export function runStrategyOverCandles({
     const filterResult = applyEntryFilters({ direction, indicators, params: filterParams });
     if (!filterResult.allowed) continue;
 
-    const lastSignal = cooldowns.get(direction) ?? 0;
+    // Parite düzeltmesi: canlı per-symbol cooldown kullanıyor, backtest per-direction kullanıyordu.
+    // Per-direction → aynı coin'de hem long hem short spam yapılabiliyordu.
+    const lastSignal = cooldowns.get(symbol) ?? 0;
     if (current.timestamp - lastSignal < COOLDOWN_MS) continue;
-    cooldowns.set(direction, current.timestamp);
+    cooldowns.set(symbol, current.timestamp);
 
     if (!indicators.atr || indicators.atr === 0) continue;
 
