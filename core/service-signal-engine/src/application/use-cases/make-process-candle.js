@@ -6,11 +6,14 @@ import { applyEntryFilters } from '../../domain/entry-filters.js';
 import { buildSetup } from '../../domain/setup-builder.js';
 
 const CANDLE_BUFFER_SIZE = 60;
-// TF bazlı cooldown: 1m → 10dk, 5m → 30dk (her TF'in mum süresinin 6×)
-const COOLDOWN_BY_TF = { '1m': 10 * 60 * 1000, '5m': 30 * 60 * 1000 };
-const SIGNAL_COOLDOWN_MS = 10 * 60 * 1000; // fallback
-// 1m daha dar stop eğilimliydi → daha sıkı fee floor; 5m baseline'a eşit tutuldu
-const MIN_STOP_PCT_BY_TF = { '1m': 0.014, '5m': 0.012 };
+// TF bazlı cooldown: 1m → 60dk, 5m → 120dk
+// Eski değerler (10dk/30dk) günde ~666 sinyal üretiyordu — fee yükü edge'den büyüktü.
+// Yeni değerler günde ~5-15 sinyal hedefliyor (kalite > miktar).
+const COOLDOWN_BY_TF = { '1m': 60 * 60 * 1000, '5m': 120 * 60 * 1000 };
+const SIGNAL_COOLDOWN_MS = 60 * 60 * 1000; // fallback
+// Min stop %2.5: eski %1.2-1.4 stop normal piyasa gürültüsünde 2dk'da vuruluyordu.
+// Daha geniş stop = daha az noise-triggered kayıp = daha yüksek WR.
+const MIN_STOP_PCT_BY_TF = { '1m': 0.025, '5m': 0.025 };
 
 export function makeProcessCandle({
   signalRepo, publish, log, confluenceThreshold, filterParams,

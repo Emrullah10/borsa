@@ -58,29 +58,29 @@ describe('buildSetup', () => {
     expect(setup.direction).toBe('short');
   });
 
-  it('sabit R/R = 1.8', () => {
+  it('sabit R/R = 1.2 (tuned default)', () => {
     const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2 });
-    expect(setup.dynamicRR).toBe(1.8);
-    expect(setup.rrRatio).toBeCloseTo(1.8, 1);
+    expect(setup.dynamicRR).toBe(1.2);
+    expect(setup.rrRatio).toBeCloseTo(1.2, 1);
   });
 
-  it('farklı parametrelerle de dynamicRR sabit 1.8', () => {
+  it('farklı parametrelerle de dynamicRR sabit 1.2', () => {
     const a = buildSetup({ direction: 'long', currentPrice: 50000, atr: 500 });
     const b = buildSetup({ direction: 'short', currentPrice: 100, atr: 0.5 });
-    expect(a.dynamicRR).toBe(1.8);
-    expect(b.dynamicRR).toBe(1.8);
+    expect(a.dynamicRR).toBe(1.2);
+    expect(b.dynamicRR).toBe(1.2);
   });
 
   it('S/R cap: direnç hedefi kısaltır', () => {
-    // stop=97, target=105.4 — resistance=103 araya giriyor
+    // stop=95, target=106 — resistance=103 araya giriyor
     const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2, resistanceLevel: 103 });
     expect(setup.targetPrice).toBe(103);
     expect(setup.srCapped).toBe(true);
-    expect(setup.rrRatio).toBeLessThan(1.8);
+    expect(setup.rrRatio).toBeLessThan(1.2);
   });
 
   it('S/R cap sonrası R/R < 1.0 → meetsMinRR=false', () => {
-    // resistance=101 → reward=1, risk=3 → R/R=0.33
+    // resistance=101 → reward=1, risk=5 → R/R=0.2
     const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2, resistanceLevel: 101 });
     expect(setup.meetsMinRR).toBe(false);
     expect(setup.rrRatio).toBeLessThan(1.0);
@@ -103,17 +103,17 @@ describe('buildSetup', () => {
     expect(setup.meetsMinTarget).toBe(false);
   });
 
-  it('fee floor: dar stop (%0.3) → meetsFeeFloor=false', () => {
-    // currentPrice=1000, atr=2 → stopDist=3, stopPct=0.3% < 1.2%
+  it('fee floor: dar stop (%0.5) → meetsFeeFloor=false', () => {
+    // currentPrice=1000, atr=2 → stopDist=5, stopPct=0.5% < 2.5%
     const setup = buildSetup({ direction: 'long', currentPrice: 1000, atr: 2 });
-    expect(setup.stopPct).toBeLessThan(0.012);
+    expect(setup.stopPct).toBeLessThan(0.025);
     expect(setup.meetsFeeFloor).toBe(false);
   });
 
-  it('fee floor: geniş stop (%3) → meetsFeeFloor=true', () => {
-    // currentPrice=100, atr=2 → stopDist=3, stopPct=3% > 1.2%
+  it('fee floor: geniş stop (%5) → meetsFeeFloor=true', () => {
+    // currentPrice=100, atr=2 → stopDist=5, stopPct=5% > 2.5%
     const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2 });
-    expect(setup.stopPct).toBeGreaterThanOrEqual(0.012);
+    expect(setup.stopPct).toBeGreaterThanOrEqual(0.025);
     expect(setup.meetsFeeFloor).toBe(true);
   });
 
@@ -165,10 +165,10 @@ describe('buildSetup', () => {
   });
 
   describe('atrStopMult / targetRR parametreleri (sweep için, davranış-koruyucu default)', () => {
-    it('parametre verilmezse default (1.5 / 1.8) kullanılır', () => {
+    it('parametre verilmezse default (2.5 / 1.2) kullanılır', () => {
       const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2 });
-      expect(setup.stopDist).toBe(3); // atr(2) * 1.5
-      expect(setup.dynamicRR).toBe(1.8);
+      expect(setup.stopDist).toBe(5); // atr(2) * 2.5
+      expect(setup.dynamicRR).toBe(1.2);
     });
 
     it('atrStopMult override edilirse stop mesafesi değişir', () => {

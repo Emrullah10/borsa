@@ -17,28 +17,25 @@ const REGIME_SYMBOL = 'BTCUSDT';
 const REGIME_LEAD_DAYS = 10;
 
 // Grid: threshold × extension-gate × atrStopMult × targetRR.
-// Önceki turlarda netleşenler sabitlendi:
-//  - adxMax: 60/65/70/yok arasında hiçbir fark yok → sabit 65.
-//  - requireSrCap: gerçek sinyal evreninde (altcoin sembolleri) açıkken WR
-//    %45-46, kapalıyken %38-40 — net kazanan, sabit true.
-// Bu turun asıl amacı: setup-builder'ın ATR_STOP_MULT (1.5) ve TARGET_RR (1.8)
-// sabitlerinin gerçekten optimal olup olmadığını test etmek — WR henüz %50
-// hedefinin altında olduğu için stop/hedef geometrisinin kendisi sorgulanıyor.
-const THRESHOLDS = [0.65, 0.70];
+// 2026-08-20 Parametre Tuning Sweep:
+// Önceki turun teşhisi: günde ~666 sinyal, %41.9 WR, fee > edge → net kayıp.
+// Bu turun amacı: "daha az ama kaliteli" sinyal üreten parametreleri bulmak.
+//   - Threshold yükseltildi: 0.75-0.85 (eski 0.65-0.70 çok gevşekti)
+//   - ATR stop genişletildi: 2.0-3.0 (eski 1.0-2.0 gürültü stopuna yol açıyordu)
+//   - Target RR düşürüldü: 1.0-1.5 (eski 1.8-2.2 nadiren tutuyordu)
+//   - Extension gate sabit ON (önceki sweep'te kanıtlandı)
+const THRESHOLDS = [0.75, 0.80, 0.85];
 const FIXED_ADX_MAX = 65;
-const EXTENSION_GATE_OPTIONS = [true, false];
+const FIXED_EXTENSION_GATE = true;
 const FIXED_REQUIRE_SR_CAP = true;
-const ATR_STOP_MULT_OPTIONS = [1.0, 1.5, 2.0];
-const TARGET_RR_OPTIONS = [1.2, 1.5, 1.8, 2.2];
+const ATR_STOP_MULT_OPTIONS = [2.0, 2.5, 3.0];
+const TARGET_RR_OPTIONS = [1.0, 1.2, 1.5];
 
-function buildFilterParams(extensionGateOn) {
-  const params = { adxMax: FIXED_ADX_MAX };
-  if (extensionGateOn) {
-    Object.assign(params, { maxPbLong: 0.85, minPbShort: 0.15, rsiMaxLong: 70, rsiMinShort: 30 });
-  } else {
-    Object.assign(params, { maxPbLong: Infinity, minPbShort: -Infinity, rsiMaxLong: 100, rsiMinShort: 0 });
-  }
-  return params;
+function buildFilterParams() {
+  return {
+    adxMax: FIXED_ADX_MAX,
+    maxPbLong: 0.85, minPbShort: 0.15, rsiMaxLong: 70, rsiMinShort: 30,
+  };
 }
 
 async function fetchAllSymbolData() {
@@ -83,19 +80,29 @@ function runCombo({ regimeBuffer, perSymbol, threshold, filterParams, requireSrC
   return allTrades;
 }
 
+// Fee-aware metrikler: round-trip taker fee'yi R cinsine çevirip düş
+const TAKER_FEE_RT = 0.0012; // %0.06 × 2 = %0.12 round-trip
+
 function formatSweepTable(rows) {
-  const header = ['Threshold', 'ExtGate', 'AtrMult', 'TargetRR', 'Signals', 'Win%', 'PF', 'MaxDD', 'AvgR'];
-  const body = rows.map(r => [
-    r.threshold.toFixed(2),
-    r.extensionGateOn ? 'on' : 'off',
-    r.atrStopMult.toFixed(1),
-    r.targetRR.toFixed(1),
-    r.metrics.totalSignals,
-    (r.metrics.winRate * 100).toFixed(1) + '%',
-    r.metrics.profitFactor === Infinity ? 'inf' : r.metrics.profitFactor.toFixed(2),
-    r.metrics.maxDrawdown,
-    r.metrics.avgR.toFixed(3),
-  ]);
+  const header = ['Threshold', 'AtrMult', 'TargetRR', 'Signals', 'Sig/Day', 'Win%', 'PF', 'MaxDD', 'AvgR', 'NetR'];
+  const body = rows.map(r => {
+    const sigPerDay = (r.metrics.totalSignals / DAYS).toFixed(1);
+    // Net R: brüt avgR - fee impact (fee/stop yaklaşık 0.05R — stop genişliğine bağlı)
+    const avgFeeR = TAKER_FEE_RT / (r.atrStopMult * 0.01); // yaklaşık fee/R
+    const netR = (r.metrics.avgR - avgFeeR).toFixed(3);
+    return [
+      r.threshold.toFixed(2),
+      r.atrStopMult.toFixed(1),
+      r.targetRR.toFixed(1),
+      r.metrics.totalSignals,
+      sigPerDay,
+      (r.metrics.winRate * 100).toFixed(1) + '%',
+      r.metrics.profitFactor === Infinity ? 'inf' : r.metrics.profitFactor.toFixed(2),
+      r.metrics.maxDrawdown,
+      r.metrics.avgR.toFixed(3),
+      netR,
+    ];
+  });
   const widths = header.map((h, i) => Math.max(h.length, ...body.map(row => String(row[i]).length)));
   const pad = (s, w) => String(s).padEnd(w);
   const line = widths.map(w => '-'.repeat(w)).join('  ');
@@ -110,29 +117,28 @@ async function main() {
   const { regimeBuffer, perSymbol } = await fetchAllSymbolData();
 
   const rows = [];
+  const filterParams = buildFilterParams();
   for (const threshold of THRESHOLDS) {
-    for (const extensionGateOn of EXTENSION_GATE_OPTIONS) {
-      for (const atrStopMult of ATR_STOP_MULT_OPTIONS) {
-        for (const targetRR of TARGET_RR_OPTIONS) {
-          const filterParams = buildFilterParams(extensionGateOn);
-          const trades = runCombo({
-            regimeBuffer, perSymbol, threshold, filterParams,
-            requireSrCap: FIXED_REQUIRE_SR_CAP, atrStopMult, targetRR,
-          });
-          const metrics = calcMetrics(trades);
-          rows.push({ threshold, extensionGateOn, atrStopMult, targetRR, metrics });
-        }
+    for (const atrStopMult of ATR_STOP_MULT_OPTIONS) {
+      for (const targetRR of TARGET_RR_OPTIONS) {
+        const trades = runCombo({
+          regimeBuffer, perSymbol, threshold, filterParams,
+          requireSrCap: FIXED_REQUIRE_SR_CAP, atrStopMult, targetRR,
+        });
+        const metrics = calcMetrics(trades);
+        rows.push({ threshold, atrStopMult, targetRR, metrics });
       }
     }
   }
 
-  // En iyi kombinasyonları win rate'e göre sırala (referans için)
-  rows.sort((a, b) => b.metrics.winRate - a.metrics.winRate);
+  // En iyi kombinasyonları: önce pozitif NetR, sonra WR'ye göre sırala
+  rows.sort((a, b) => b.metrics.avgR - a.metrics.avgR || b.metrics.winRate - a.metrics.winRate);
 
-  console.log('\n=== PARAMETRE SWEEP SONUÇLARI ===');
-  console.log(`Semboller: ${SYMBOLS.join(', ')} | Dönem: ${DAYS} gün\n`);
+  console.log('\n=== PARAMETRE SWEEP SONUÇLARI (v2 — kalite odaklı) ===');
+  console.log(`Semboller: ${SYMBOLS.join(', ')} | Dönem: ${DAYS} gün`);
+  console.log(`Cooldown: 60dk (per-symbol) | MinStop: %2.5 | ExtGate: ON | SrCap: ON\n`);
   console.log(formatSweepTable(rows));
-  console.log('\nNot: WR ≥ %50 ve pozitif AvgR arayın; günlük sinyal sayısının makul kalmasına dikkat edin (çok düşükse overfit riski).');
+  console.log('\nHedef: WR ≥ %50, NetR > 0, Sig/Day 1-15 arası. NetR negatifse o combo fee kaybettiriyor.');
 }
 
 main().catch(err => {

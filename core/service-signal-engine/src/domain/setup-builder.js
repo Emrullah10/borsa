@@ -1,11 +1,14 @@
-const ATR_STOP_MULT_DEFAULT = 1.5;
+// Eski: 1.5 → gürültü stopları 2dk'da tetikleniyordu. 2.5× ATR daha geniş stop = daha az noise kayıp.
+const ATR_STOP_MULT_DEFAULT = 2.5;
 const MIN_TARGET_PCT = 0.01; // Hedef girişten en az %1 uzakta olmalı
 
 const FEE_ROUNDTRIP = 0.0008;       // maker gidiş-dönüş ~%0.08
-const MIN_STOP_PCT_DEFAULT = 0.012; // stop >= %1.2 — tek kârlı fee bucket (veri kanıtladı)
+// Eski: %1.2 — piyasa gürültüsünden dar. %2.5 ile fee/R oranı düşer, WR artar.
+const MIN_STOP_PCT_DEFAULT = 0.025;
 
-// Sabit R/R — confluence skoru ve ADX win rate'i öngörmediği için (veri: 694 sinyal)
-const TARGET_RR_DEFAULT = 1.8;
+// Eski: 1.8 — yüksek hedef ama nadiren ulaşılıyor (%42 WR).
+// 1.2 RR ile hedefler daha sık tutturulur → WR %55+ hedefi.
+const TARGET_RR_DEFAULT = 1.2;
 
 // --- Katman 3: Destek/Direnç kapağı ---
 // Hedef, yoldaki S/R seviyesini aşmasın (fiyat oraya varmadan döner)
