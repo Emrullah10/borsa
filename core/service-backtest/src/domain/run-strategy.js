@@ -26,7 +26,7 @@ const DEFAULT_MIN_STOP_PCT = 0.025;
 export function runStrategyOverCandles({
   candles, fundingHistory, regimeBuffer, higherTfBuffer,
   window, threshold, symbol, filterParams, minStopPct = DEFAULT_MIN_STOP_PCT, requireSrCap = false,
-  atrStopMult, targetRR,
+  atrStopMult, targetRR, fees,
 }) {
   if (candles.length < window) return [];
 
@@ -42,6 +42,13 @@ export function runStrategyOverCandles({
 
     const funding = interpolateFunding(current.timestamp, fundingHistory);
 
+    // BİLİNEN SAPMA (B7, 2026-08-20 doğrulama araştırması): Bitget'in tarihsel
+    // OI/uzun-kısa oranı verisi kolay çekilemediği için oiDelta/longRatio/shortRatio
+    // burada nötr sabitlerle besleniyor — canlıda gerçek OI/LSR kullanılıyor
+    // (core/service-signal-engine/.../make-process-candle.js). confluence skorunun
+    // liq bileşeni backtest'te her zaman nötr çıkar; canlıda ±(liq ağırlığı kadar)
+    // sapabilir. Düzeltme değil, ölçülü bir kısıtlama: sweep sonuçları liq
+    // bileşeninin etkisini yakalayamaz.
     const liqPressure = calcLiquidationPressure({
       fundingRate:  funding,
       oiDelta:      0,
@@ -92,7 +99,7 @@ export function runStrategyOverCandles({
     }
 
     const remainingCandles = candles.slice(i + 1);
-    const result = simulateTrade(setup, remainingCandles);
+    const result = simulateTrade(setup, remainingCandles, fees);
 
     trades.push({
       symbol,

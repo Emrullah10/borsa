@@ -54,4 +54,20 @@ export function registerRoutes(app, { signalRepo, processCandle }) {
       res.status(500).json({ error: err.message });
     }
   });
+
+  // Faz 3 execution doğrulama (borsa-strategy-validation-plan): gerçek dolum
+  // fiyatını kaydeder — istatistiksel edge kanıtı için değil, slippage
+  // modelinin (sim_entry_price) gerçekle ne kadar uyuştuğunu ölçmek için.
+  app.post('/outcomes/:id/real-fill', async (req, res) => {
+    const { realEntryPrice, realExitPrice, realEntryAt, notes } = req.body ?? {};
+    if (realEntryPrice == null && realExitPrice == null) {
+      return res.status(400).json({ error: 'realEntryPrice veya realExitPrice gerekli' });
+    }
+    try {
+      await signalRepo.recordRealFill(req.params.id, { realEntryPrice, realExitPrice, realEntryAt, notes });
+      res.json({ ok: true });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
 }

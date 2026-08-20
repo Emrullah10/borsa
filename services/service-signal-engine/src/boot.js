@@ -15,6 +15,7 @@ export async function boot() {
   const config = loadConfig(appConfigSchema);
   const app = express();
   app.use((_req, res, next) => { res.setHeader('Access-Control-Allow-Origin', '*'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); next(); });
+  app.use(express.json()); // Faz 3 execution doğrulama: POST /outcomes/:id/real-fill
   const httpServer = http.createServer(app);
 
   await createDatasources(config).catch(helper.exitOnError);

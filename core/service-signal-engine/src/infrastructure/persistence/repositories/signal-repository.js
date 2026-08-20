@@ -77,6 +77,21 @@ export function makeSignalRepository({ db, takerFee = 0.0006 } = {}) {
     await db.query(sql, [simEntryPrice, outcomeId]);
   }
 
+  // Faz 3 execution doğrulama (borsa-strategy-validation-plan): gerçek dolum
+  // fiyatının sistemin sim_entry_price'ıyla ne kadar uyuştuğunu ölçmek içindir —
+  // istatistiksel edge kanıtı değil, sadece slippage modelinin doğruluğu.
+  async function recordRealFill(outcomeId, { realEntryPrice, realExitPrice, realEntryAt, notes }) {
+    const sql = `
+      UPDATE signal_outcomes
+      SET real_entry_price = $1, real_exit_price = $2, real_entry_at = $3, real_notes = $4
+      WHERE id = $5
+    `;
+    await db.query(sql, [
+      realEntryPrice ?? null, realExitPrice ?? null, realEntryAt ?? null, notes ?? null,
+      outcomeId,
+    ]);
+  }
+
   async function resolveOutcome(outcomeId, { status, exitPrice, pnlR, simPnlR, tieBreak, notes }) {
     const sql = `
       UPDATE signal_outcomes
@@ -92,48 +107,71 @@ export function makeSignalRepository({ db, takerFee = 0.0006 } = {}) {
   }
 
   async function getSignalStats(days = 7) {
+    // fee_adj_pnl: fee/slippage düşülmüş R (avg_r_after_fee ile aynı formül,
+    // profit_factor_after_fee ve win_rate_incl_timeout için de kullanılır).
     const sql = `
+      WITH base AS (
+        SELECT
+          o.*, s.direction, s.trigger_timeframe, s.confluence_score, s.created_at AS signal_created_at,
+          o.pnl_r - ((2 * ${takerFee}) / NULLIF(ABS(s.entry_price - s.stop_price) / NULLIF(s.entry_price, 0), 0)) AS fee_adj_pnl
+        FROM signal_outcomes o
+        JOIN signals s ON s.id = o.signal_id
+        WHERE s.created_at > now() - make_interval(days => $1)
+      )
       SELECT
         COUNT(*)                                                          AS total,
-        COUNT(*) FILTER (WHERE o.status = 'tp_hit')                      AS tp_hit,
-        COUNT(*) FILTER (WHERE o.status = 'sl_hit')                      AS sl_hit,
-        COUNT(*) FILTER (WHERE o.status = 'timeout')                     AS timeout,
-        COUNT(*) FILTER (WHERE o.status IN ('pending','active'))         AS pending,
-        ROUND(AVG(CASE WHEN o.status='tp_hit' THEN 1.0 WHEN o.status='sl_hit' THEN 0.0 END)*100, 1) AS win_rate,
+        COUNT(*) FILTER (WHERE status = 'tp_hit')                        AS tp_hit,
+        COUNT(*) FILTER (WHERE status = 'sl_hit')                        AS sl_hit,
+        COUNT(*) FILTER (WHERE status = 'timeout')                       AS timeout,
+        COUNT(*) FILTER (WHERE status IN ('pending','active'))           AS pending,
+        -- win_rate paydası: SADECE tp_hit+sl_hit (total ile karıştırılmasın, bkz. resolved_n)
+        COUNT(*) FILTER (WHERE status IN ('tp_hit','sl_hit'))            AS resolved_n,
+        ROUND(AVG(CASE WHEN status='tp_hit' THEN 1.0 WHEN status='sl_hit' THEN 0.0 END)*100, 1) AS win_rate,
+        -- timeout dahil: timeout pnl_r>0 ise kazanç sayılır (C1 düzeltmesi)
+        ROUND(AVG(
+          CASE
+            WHEN status = 'tp_hit' THEN 1.0
+            WHEN status = 'sl_hit' THEN 0.0
+            WHEN status = 'timeout' THEN CASE WHEN pnl_r > 0 THEN 1.0 ELSE 0.0 END
+          END
+        ) FILTER (WHERE status IN ('tp_hit','sl_hit','timeout')) * 100, 1) AS win_rate_incl_timeout,
         ROUND(
-          CASE WHEN COALESCE(SUM(o.pnl_r) FILTER (WHERE o.pnl_r < 0), 0) = 0 THEN NULL
-          ELSE SUM(o.pnl_r) FILTER (WHERE o.pnl_r > 0) /
-               ABS(SUM(o.pnl_r) FILTER (WHERE o.pnl_r < 0))
+          CASE WHEN COALESCE(SUM(pnl_r) FILTER (WHERE pnl_r < 0), 0) = 0 THEN NULL
+          ELSE SUM(pnl_r) FILTER (WHERE pnl_r > 0) /
+               ABS(SUM(pnl_r) FILTER (WHERE pnl_r < 0))
           END, 2
         )                                                                  AS profit_factor,
-        ROUND(AVG(o.pnl_r) FILTER (WHERE o.status IN ('tp_hit','sl_hit','timeout')), 4) AS avg_r,
-        ROUND(AVG(
-          o.pnl_r - ((2 * ${takerFee}) / NULLIF(ABS(s.entry_price - s.stop_price) / NULLIF(s.entry_price, 0), 0))
-        ) FILTER (WHERE o.status IN ('tp_hit','sl_hit','timeout')), 4)    AS avg_r_after_fee,
-        COUNT(*) FILTER (WHERE s.direction='long')                       AS total_long,
-        COUNT(*) FILTER (WHERE s.direction='long' AND o.status='tp_hit') AS long_tp,
-        COUNT(*) FILTER (WHERE s.direction='long' AND o.status='sl_hit') AS long_sl,
-        COUNT(*) FILTER (WHERE s.direction='short')                      AS total_short,
-        COUNT(*) FILTER (WHERE s.direction='short' AND o.status='tp_hit') AS short_tp,
-        COUNT(*) FILTER (WHERE s.direction='short' AND o.status='sl_hit') AS short_sl,
-        COUNT(*) FILTER (WHERE s.trigger_timeframe='1m')                 AS tf_1m,
-        COUNT(*) FILTER (WHERE s.trigger_timeframe='5m')                 AS tf_5m,
-        COUNT(*) FILTER (WHERE o.tie_break)                              AS tie_breaks,
-        ROUND(AVG(s.confluence_score)*100, 1)                            AS avg_confluence,
-        ROUND(AVG(
-          EXTRACT(EPOCH FROM (o.resolved_at - s.created_at))/60
-        ) FILTER (WHERE o.status = 'tp_hit'), 1)                          AS avg_min_to_tp,
-        ROUND(AVG(
-          EXTRACT(EPOCH FROM (o.resolved_at - s.created_at))/60
-        ) FILTER (WHERE o.status = 'sl_hit'), 1)                          AS avg_min_to_sl,
+        -- fee'li profit factor (C3 düzeltmesi): ham profit_factor fee'yi görmez
         ROUND(
-          COUNT(*) FILTER (WHERE o.status = 'timeout')::numeric
-          / NULLIF(COUNT(*) FILTER (WHERE o.status IN ('tp_hit','sl_hit','timeout')), 0) * 100
+          CASE WHEN COALESCE(SUM(fee_adj_pnl) FILTER (WHERE fee_adj_pnl < 0), 0) = 0 THEN NULL
+          ELSE SUM(fee_adj_pnl) FILTER (WHERE fee_adj_pnl > 0) /
+               ABS(SUM(fee_adj_pnl) FILTER (WHERE fee_adj_pnl < 0))
+          END, 2
+        )                                                                  AS profit_factor_after_fee,
+        ROUND(AVG(pnl_r) FILTER (WHERE status IN ('tp_hit','sl_hit','timeout')), 4) AS avg_r,
+        ROUND(AVG(fee_adj_pnl) FILTER (WHERE status IN ('tp_hit','sl_hit','timeout')), 4) AS avg_r_after_fee,
+        COUNT(*) FILTER (WHERE direction='long')                         AS total_long,
+        COUNT(*) FILTER (WHERE direction='long' AND status='tp_hit')     AS long_tp,
+        COUNT(*) FILTER (WHERE direction='long' AND status='sl_hit')     AS long_sl,
+        COUNT(*) FILTER (WHERE direction='short')                        AS total_short,
+        COUNT(*) FILTER (WHERE direction='short' AND status='tp_hit')    AS short_tp,
+        COUNT(*) FILTER (WHERE direction='short' AND status='sl_hit')    AS short_sl,
+        COUNT(*) FILTER (WHERE trigger_timeframe='1m')                   AS tf_1m,
+        COUNT(*) FILTER (WHERE trigger_timeframe='5m')                   AS tf_5m,
+        COUNT(*) FILTER (WHERE tie_break)                                AS tie_breaks,
+        ROUND(AVG(confluence_score)*100, 1)                              AS avg_confluence,
+        ROUND(AVG(
+          EXTRACT(EPOCH FROM (resolved_at - signal_created_at))/60
+        ) FILTER (WHERE status = 'tp_hit'), 1)                            AS avg_min_to_tp,
+        ROUND(AVG(
+          EXTRACT(EPOCH FROM (resolved_at - signal_created_at))/60
+        ) FILTER (WHERE status = 'sl_hit'), 1)                            AS avg_min_to_sl,
+        ROUND(
+          COUNT(*) FILTER (WHERE status = 'timeout')::numeric
+          / NULLIF(COUNT(*) FILTER (WHERE status IN ('tp_hit','sl_hit','timeout')), 0) * 100
         , 1)                                                              AS timeout_rate,
-        ROUND(AVG(o.sim_pnl_r) FILTER (WHERE o.sim_pnl_r IS NOT NULL), 4)  AS avg_sim_r
-      FROM signal_outcomes o
-      JOIN signals s ON s.id = o.signal_id
-      WHERE s.created_at > now() - make_interval(days => $1)
+        ROUND(AVG(sim_pnl_r) FILTER (WHERE sim_pnl_r IS NOT NULL), 4)     AS avg_sim_r
+      FROM base
     `;
     const result = await db.query(sql, [days]);
     return result.rows[0];
@@ -202,6 +240,7 @@ export function makeSignalRepository({ db, takerFee = 0.0006 } = {}) {
     createOutcome,
     getPendingOutcomes,
     setSimEntry,
+    recordRealFill,
     resolveOutcome,
     getSignalStats,
     getTopSymbolStats,

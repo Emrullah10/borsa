@@ -6,7 +6,9 @@ import { fetchPrice } from '@api/marketApi.js';
 import SignalCard from './SignalCard.jsx';
 import SignalFilters from './SignalFilters.jsx';
 
-const FRESH_WINDOW_MS = 15 * 60 * 1000; // 15 dakika
+// COOLDOWN_BY_TF (core/service-signal-engine) ile uyumlu: 1m→60dk, 5m→120dk.
+// Eski 15dk pencere yeni cooldown'la uyuşmuyordu — panel sürekli "taze sinyal yok" gösteriyordu.
+const FRESH_WINDOW_MS = 90 * 60 * 1000; // 90 dakika
 const PRICE_POLL_MS = 2000; // merkezi fiyat yenileme aralığı
 
 function sortSignals(list, sortBy, missedIds) {
