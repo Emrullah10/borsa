@@ -60,11 +60,11 @@ describe('SignalGrid', () => {
     });
   });
 
-  it('15 dakikadan eski sinyal render EDİLMEZ', async () => {
+  it('90 dakikadan eski sinyal render EDİLMEZ', async () => {
     const oldSignal = {
       id: '99',
       symbol: 'OLDUSDT',
-      createdAt: new Date(Date.now() - 20 * 60 * 1000).toISOString(),
+      createdAt: new Date(Date.now() - 100 * 60 * 1000).toISOString(),
     };
     const freshSignal = {
       id: '1',

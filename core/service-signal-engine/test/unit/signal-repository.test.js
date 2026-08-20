@@ -32,6 +32,22 @@ describe('signal-repository', () => {
     expect(sql).toContain('sim_entry_price');
   });
 
+  it('recordRealFill gerçek giriş/çıkış fiyatlarını signal_outcomes.real_* kolonlarına yazar (Faz 3 execution doğrulama)', async () => {
+    db.query.mockResolvedValue({ rows: [] });
+    await repo.recordRealFill('outcome-1', {
+      realEntryPrice: 1010.5,
+      realExitPrice: 1150.2,
+      realEntryAt: '2026-08-20T10:00:00.000Z',
+      notes: 'manuel giriş, 90sn gecikme',
+    });
+    expect(db.query).toHaveBeenCalledOnce();
+    const [sql, params] = db.query.mock.calls[0];
+    expect(sql).toContain('real_entry_price');
+    expect(sql).toContain('real_exit_price');
+    expect(sql).toContain('real_entry_at');
+    expect(params).toEqual([1010.5, 1150.2, '2026-08-20T10:00:00.000Z', 'manuel giriş, 90sn gecikme', 'outcome-1']);
+  });
+
   it('setSimEntry doğru SQL ve parametrelerle UPDATE çalıştırır', async () => {
     db.query.mockResolvedValue({ rows: [] });
     await repo.setSimEntry('outcome-1', 1010.5);
@@ -111,6 +127,27 @@ describe('signal-repository', () => {
     await repo.getSignalStats();
     const [sql] = db.query.mock.calls[0];
     expect(sql).toContain('tie_break');
+  });
+
+  it('getSignalStats resolved_n döner — win_rate paydası (total ile karıştırılmasın)', async () => {
+    db.query.mockResolvedValue({ rows: [{}] });
+    await repo.getSignalStats();
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toMatch(/AS resolved_n/);
+  });
+
+  it('getSignalStats win_rate_incl_timeout döner — timeout r>0 kazanç sayılır', async () => {
+    db.query.mockResolvedValue({ rows: [{}] });
+    await repo.getSignalStats();
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toMatch(/AS win_rate_incl_timeout/);
+  });
+
+  it('getSignalStats profit_factor_after_fee döner — fee düşülmüş pnl üzerinden', async () => {
+    db.query.mockResolvedValue({ rows: [{}] });
+    await repo.getSignalStats();
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toMatch(/AS profit_factor_after_fee/);
   });
 
   it('getTopSymbolStats days parametresini kabul eder', async () => {

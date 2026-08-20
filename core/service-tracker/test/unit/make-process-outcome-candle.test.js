@@ -125,6 +125,54 @@ describe('make-process-outcome-candle', () => {
     }));
   });
 
+  it('refreshPending: sim_entry_price null ve 2dk+ geçmiş outcome için backfill çağrılır', async () => {
+    const staleOutcome = {
+      ...makePendingOutcome(),
+      outcome_id: 'o-stale',
+      signal_created_at: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+    };
+    signalRepo.getPendingOutcomes.mockResolvedValue([staleOutcome]);
+    const fetchMissedCandles = vi.fn().mockResolvedValue([]);
+    const uc = makeProcessOutcomeCandle({ signalRepo, publish, log, timeoutMs: TIMEOUT_MS, fees: FEES, fetchMissedCandles });
+
+    await uc.refreshPending();
+
+    expect(fetchMissedCandles).toHaveBeenCalledWith('BTCUSDT', expect.any(Number));
+  });
+
+  it('refreshPending: taze outcome (2dk altı) için backfill çağrılmaz', async () => {
+    const freshOutcome = { ...makePendingOutcome(), signal_created_at: new Date().toISOString() };
+    signalRepo.getPendingOutcomes.mockResolvedValue([freshOutcome]);
+    const fetchMissedCandles = vi.fn().mockResolvedValue([]);
+    const uc = makeProcessOutcomeCandle({ signalRepo, publish, log, timeoutMs: TIMEOUT_MS, fees: FEES, fetchMissedCandles });
+
+    await uc.refreshPending();
+
+    expect(fetchMissedCandles).not.toHaveBeenCalled();
+  });
+
+  it('refreshPending: backfill kaçırılan mumlarda TP bulursa resolveOutcome çağırır ve pending listesinden çıkarır', async () => {
+    const staleOutcome = {
+      ...makePendingOutcome(),
+      outcome_id: 'o-stale',
+      signal_created_at: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+    };
+    signalRepo.getPendingOutcomes.mockResolvedValue([staleOutcome]);
+    const fetchMissedCandles = vi.fn().mockResolvedValue([
+      { timestamp: Date.now() - 4 * 60 * 1000, open: 1010, high: 1160, low: 1005, close: 1140 },
+    ]);
+    const uc = makeProcessOutcomeCandle({ signalRepo, publish, log, timeoutMs: TIMEOUT_MS, fees: FEES, fetchMissedCandles });
+
+    await uc.refreshPending();
+
+    expect(signalRepo.resolveOutcome).toHaveBeenCalledWith('o-stale', expect.objectContaining({ status: 'tp_hit' }));
+    expect(publish).toHaveBeenCalledWith('signals.resolved', expect.stringContaining('o-stale'));
+
+    // Sonraki bir candle mesajı bu outcome'ı tekrar çözmeye çalışmamalı
+    await uc.handleCandleMessage({ type: 'candle', symbol: 'BTCUSDT', data: { open: 1140, high: 1150, low: 1130, close: 1145 } });
+    expect(signalRepo.resolveOutcome).toHaveBeenCalledTimes(1);
+  });
+
   it('handleCandleMessage: tie-break durumunda notes ve tieBreak resolveOutcome\'a geçer', async () => {
     await useCase.refreshPending();
     await useCase.handleCandleMessage({

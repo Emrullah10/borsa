@@ -1885,3 +1885,110 @@
 |------|--------|---------|---------|--------|
 | 14:33 | Edited web-app/vite.config.js | 2→6 lines | ~38 |
 | 14:33 | Edited web-app/vite.config.js | 2→6 lines | ~38 |
+| 14:35 | Session end: 1 writes across 1 files (vite.config.js) | 1 reads | ~38 tok |
+| 14:35 | Session end: 1 writes across 1 files (vite.config.js) | 1 reads | ~38 tok |
+| 14:37 | Session end: 1 writes across 1 files (vite.config.js) | 1 reads | ~38 tok |
+| 14:37 | Session end: 1 writes across 1 files (vite.config.js) | 1 reads | ~38 tok |
+| 14:39 | Session end: 1 writes across 1 files (vite.config.js) | 1 reads | ~38 tok |
+| 14:39 | Session end: 1 writes across 1 files (vite.config.js) | 1 reads | ~38 tok |
+| 14:39 | Session end: 1 writes across 1 files (vite.config.js) | 1 reads | ~38 tok |
+| 14:39 | Session end: 1 writes across 1 files (vite.config.js) | 1 reads | ~38 tok |
+| 14:40 | Edited web-app/src/api/regimeApi.js | inline fix | ~21 |
+| 14:40 | Edited web-app/src/api/regimeApi.js | inline fix | ~21 |
+| 14:40 | Session end: 2 writes across 2 files (vite.config.js, regimeApi.js) | 2 reads | ~59 tok |
+| 14:40 | Session end: 2 writes across 2 files (vite.config.js, regimeApi.js) | 2 reads | ~59 tok |
+| 16:04 | Session end: 2 writes across 2 files (vite.config.js, regimeApi.js) | 3 reads | ~59 tok |
+| 16:04 | Session end: 2 writes across 2 files (vite.config.js, regimeApi.js) | 3 reads | ~59 tok |
+| 16:06 | Session end: 2 writes across 2 files (vite.config.js, regimeApi.js) | 3 reads | ~59 tok |
+| 16:06 | Session end: 2 writes across 2 files (vite.config.js, regimeApi.js) | 3 reads | ~59 tok |
+| 16:07 | Session end: 2 writes across 2 files (vite.config.js, regimeApi.js) | 4 reads | ~59 tok |
+| 16:07 | Session end: 2 writes across 2 files (vite.config.js, regimeApi.js) | 4 reads | ~59 tok |
+| 16:08 | Session end: 2 writes across 2 files (vite.config.js, regimeApi.js) | 5 reads | ~59 tok |
+| 16:08 | Session end: 2 writes across 2 files (vite.config.js, regimeApi.js) | 5 reads | ~59 tok |
+| 16:41 | Created ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/borsa-infra-topology.md | — | ~802 |
+| 16:41 | Created ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/borsa-infra-topology.md | — | ~802 |
+| 16:42 | Created ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/borsa-debug-session-2026-08-20.md | — | ~1012 |
+| 16:42 | Created ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/borsa-debug-session-2026-08-20.md | — | ~1012 |
+| 16:42 | Created ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/borsa-strategy-validation-plan.md | — | ~1262 |
+| 16:42 | Created ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/borsa-strategy-validation-plan.md | — | ~1262 |
+| 16:43 | Edited ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/MEMORY.md | 2→5 lines | ~178 |
+| 16:43 | Edited ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/MEMORY.md | 2→5 lines | ~178 |
+| 16:43 | Session end: 6 writes across 6 files (vite.config.js, regimeApi.js, borsa-infra-topology.md, borsa-debug-session-2026-08-20.md, borsa-strategy-validation-plan.md) | 50 reads | ~24805 tok |
+| 16:43 | Session end: 6 writes across 6 files (vite.config.js, regimeApi.js, borsa-infra-topology.md, borsa-debug-session-2026-08-20.md, borsa-strategy-validation-plan.md) | 50 reads | ~24805 tok |
+
+## Session: 2026-08-20 16:43
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-20 16:43
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-20 16:44
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-20 16:44
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 22:45 | Created ../../../.claude/plans/memory-ve-cebruma-bak-immutable-wigderson.md | — | ~3771 |
+| 22:45 | Created ../../../.claude/plans/memory-ve-cebruma-bak-immutable-wigderson.md | — | ~3771 |
+| 22:49 | Edited web-app/src/features/signals/components/SignalGrid.jsx | CSS: uyumlu | ~66 |
+| 22:49 | Edited web-app/src/features/signals/components/SignalGrid.jsx | CSS: uyumlu | ~66 |
+| 22:49 | Edited web-app/src/features/signals/components/SignalGrid.test.jsx | 6→6 lines | ~59 |
+| 22:49 | Edited web-app/src/features/signals/components/SignalGrid.test.jsx | 6→6 lines | ~59 |
+| 22:50 | Edited core/service-backtest/package.json | 4→5 lines | ~37 |
+| 22:50 | Edited core/service-backtest/package.json | 4→5 lines | ~37 |
+| 22:51 | Edited core/service-backtest/src/domain/run-strategy.js | modified runStrategyOverCandles() | ~67 |
+| 22:51 | Edited core/service-backtest/src/domain/run-strategy.js | modified runStrategyOverCandles() | ~67 |
+| 22:51 | Edited core/service-backtest/src/domain/run-strategy.js | 2→2 lines | ~33 |
+| 22:51 | Edited core/service-backtest/src/domain/run-strategy.js | 2→2 lines | ~33 |
+| 22:52 | Edited core/service-backtest/src/domain/run-strategy.js | modified SAPMA() | ~187 |
+| 22:52 | Edited core/service-backtest/src/domain/run-strategy.js | modified SAPMA() | ~187 |
+| 22:52 | Edited core/service-signal-engine/test/unit/signal-repository.test.js | expanded (+21 lines) | ~305 |
+| 22:52 | Edited core/service-signal-engine/test/unit/signal-repository.test.js | expanded (+21 lines) | ~305 |
+| 22:55 | Edited core/service-tracker/test/unit/make-process-outcome-candle.test.js | expanded (+48 lines) | ~710 |
+| 22:55 | Edited core/service-tracker/test/unit/make-process-outcome-candle.test.js | expanded (+48 lines) | ~710 |
+| 22:57 | Edited services/service-tracker/package.json | 8→9 lines | ~78 |
+| 22:57 | Edited services/service-tracker/package.json | 8→9 lines | ~78 |
+| 22:57 | Edited services/service-tracker/src/container.js | modified fetchMissedCandles() | ~422 |
+| 22:57 | Edited services/service-tracker/src/container.js | modified fetchMissedCandles() | ~422 |
+| 22:58 | Edited core/service-backtest/test/unit/walk-forward.test.js | inline fix | ~13 |
+| 22:58 | Edited core/service-backtest/test/unit/walk-forward.test.js | inline fix | ~13 |
+| 22:58 | Edited core/service-backtest/test/unit/walk-forward.test.js | toBe() → toBeCloseTo() | ~25 |
+| 22:58 | Edited core/service-backtest/test/unit/walk-forward.test.js | toBe() → toBeCloseTo() | ~25 |
+| 22:58 | Edited core/service-backtest/test/unit/walk-forward.test.js | 3→3 lines | ~56 |
+| 22:58 | Edited core/service-backtest/test/unit/walk-forward.test.js | 3→3 lines | ~56 |
+| 23:00 | Edited core/service-signal-engine/test/unit/signal-repository.test.js | expanded (+16 lines) | ~235 |
+| 23:00 | Edited core/service-signal-engine/test/unit/signal-repository.test.js | expanded (+16 lines) | ~235 |
+| 23:00 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | added nullish coalescing | ~213 |
+| 23:00 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | added nullish coalescing | ~213 |
+| 23:00 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | 2→3 lines | ~16 |
+| 23:00 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | 2→3 lines | ~16 |
+| 23:00 | Edited services/service-signal-engine/src/boot.js | 2→3 lines | ~77 |
+| 23:00 | Edited services/service-signal-engine/src/boot.js | 2→3 lines | ~77 |
+| 23:00 | Edited services/service-signal-engine/src/routes.js | added nullish coalescing | ~249 |
+| 23:00 | Edited services/service-signal-engine/src/routes.js | added nullish coalescing | ~249 |
+
+## Session: 2026-08-20 (Strateji Doğrulama Faz 0-3)
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 23:00 | 3 araştırma yerine (Sonnet subagent limiti düştü) manuel kod okuması: backtest gerçekçiliği, win rate güvenilirliği, strateji edge'i | run-strategy.js, evaluate-outcome.js, signal-repository.js, setup-builder.js, sweep.js | 7 backtest sorunu (B1-B7) + 5 istatistik sorunu (C1-C5) tespit edildi | ~40k |
+| 23:00 | 10x kaldıraç risk hesabı ($6 teminat/$60 pozisyon, gerçek fee/stop parametreleriyle) | — | başabaş WR %48.7-53.6, iddia edilen %54.7 ile marj çok ince | ~1k |
+| 23:05 | Plan onaylandı: execution doğrulama (istatistik değil), walk-forward doğrulama, önce ölçüm sonra doğrulama | .claude/plans/memory-ve-cebruma-bak-immutable-wigderson.md | 4 fazlı plan yazıldı | ~5k |
+| 23:10 | Faz 0: FRESH_WINDOW_MS 15dk→90dk (yeni cooldown ile uyumlu, bekleyen bug düzeltildi) | web-app/.../SignalGrid.jsx(.test) | 70/70 frontend PASS | ~500 |
+| 23:15 | Faz 1.1: simulator.js core-tracker'ın evaluateOutcome/evaluateSimOutcome'ını çağıracak şekilde yeniden yazıldı (fee/slippage/SL-first tie-break paritesi) | core/service-backtest/src/domain/simulator.js(.test), run-strategy.js, sweep.js | 7 test + parite testi PASS | ~3k |
+| 23:20 | Faz 1.2: getSignalStats CTE'ye çevrildi — resolved_n, win_rate_incl_timeout, profit_factor_after_fee eklendi; frontend'e Wilson CI eklendi | signal-repository.js(.test), StatsPage.jsx, wilsonInterval.js(.test) | 20 backend + 4+74 frontend PASS | ~4k |
+| 23:25 | Faz 1.3: tracker backfill — servis restart'ında kaçırılan candle penceresi geriye dönük oynatılıyor | backfill-outcome.js(.test), make-process-outcome-candle.js(.test), container.js | 33 tracker test PASS | ~3k |
+| 23:30 | Faz 2: sweep.js walk-forward train/test split + holdout sembol kontrolü | walk-forward.js(.test), sweep.js | 4 test PASS, sözdizimi doğrulandı | ~3k |
+| 23:35 | Faz 3: execution doğrulama DB temeli — additive migration + recordRealFill + POST /outcomes/:id/real-fill (panel UI formu YAZILMADI, kapsam dışı bırakıldı) | 2026-08-20-02-execution-validation.sql, signal-repository.js(.test), routes.js, boot.js | 206/206 backend PASS | ~2k |
+| 23:40 | Session end: cerebrum.md + anatomy.md güncellendi | .wolf/cerebrum.md, .wolf/anatomy.md | Decision Log + yeni dosya girdileri eklendi | ~2k |
+| 23:03 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
+| 23:03 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
+| 23:16 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
+| 23:16 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |

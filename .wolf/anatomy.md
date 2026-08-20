@@ -1,7 +1,18 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-08-20T11:33:56.138Z
-> Files: 523 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-08-20T20:00:56.253Z
+> Files: 536 tracked | Anatomy hits: 0 | Misses: 0
+
+## ../../../.claude/plans/
+
+- `memory-ve-cebruma-bak-immutable-wigderson.md` — Strateji Doğrulama Planı — "Bu bota gerçek parayla güvenebilir miyim?" (~3535 tok)
+
+## ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/
+
+- `borsa-debug-session-2026-08-20.md` — Bağlam (~978 tok)
+- `borsa-infra-topology.md` — Sunucu (~781 tok)
+- `borsa-strategy-validation-plan.md` — Bağlam (~1211 tok)
+- `MEMORY.md` — Memory Index (~171 tok)
 
 ## ./
 
@@ -64,14 +75,15 @@
 
 ## core/service-backtest/
 
-- `package.json` — Node.js package manifest (~71 tok)
+- `package.json` — Node.js package manifest (~82 tok)
 
 ## core/service-backtest/src/domain/
 
 - `aligned-buffer.js` — Backtest'te düşük-frekanslı bir mum serisini (örn. 4h/5m), yüksek-frekanslı (~172 tok)
 - `reporter.js` — Exports calcMetrics, formatTable (~617 tok)
-- `run-strategy.js` — Exports runStrategyOverCandles (~1262 tok)
-- `simulator.js` — Exports simulateTrade (~335 tok)
+- `run-strategy.js` — Parite düzeltmesi (2026-08-20): canlıdaki COOLDOWN_BY_TF['1m'] = 60dk ile eşitlendi. (~1517 tok)
+- `simulator.js` — Backtest TP/SL/timeout simülasyonu; artık @borsa-bot/core-tracker'ın evaluateOutcome/evaluateSimOutcome'ını çağırır (canlı parite: fee/slippage/SL-first tie-break) (~600 tok)
+- `walk-forward.js` — Exports splitTrainTest — trade listesini zaman damgasına göre train/test'e böler (walk-forward doğrulama) (~250 tok)
 
 ## core/service-backtest/src/infrastructure/
 
@@ -84,6 +96,7 @@
 - `reporter.test.js` — Declares sampleTrades (~474 tok)
 - `run-strategy.test.js` — Yeterince uzun, dalgalı bir seri üretir — ADX/RSI/BB gibi göstergelerin (~1577 tok)
 - `simulator.test.js` — Declares candle (~542 tok)
+- `walk-forward.test.js` — Declares trade (~432 tok)
 
 ## core/service-market-data/
 
@@ -138,7 +151,7 @@
 
 ## core/service-signal-engine/src/infrastructure/persistence/repositories/
 
-- `signal-repository.js` — Kırılım (breakdown) sorgularında sadece bu whitelist'teki grup ifadeleri kullanılabilir. (~2437 tok)
+- `signal-repository.js` — Kırılım (breakdown) sorgularında sadece bu whitelist'teki grup ifadeleri kullanılabilir. (~3010 tok)
 
 ## core/service-signal-engine/test/unit/
 
@@ -148,7 +161,7 @@
 - `liquidation-pressure.test.js` — Declares result (~764 tok)
 - `regime.test.js` — Declares makeCandles (~630 tok)
 - `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~2202 tok)
-- `signal-repository.test.js` — Declares fakeRows (~1776 tok)
+- `signal-repository.test.js` — Declares fakeRows (~2226 tok)
 
 ## core/service-tracker/
 
@@ -161,11 +174,13 @@
 ## core/service-tracker/src/domain/
 
 - `evaluate-outcome.js` — Açık bir outcome için mum OHLC'ye göre sonuç değerlendir. (~687 tok)
+- `backfill-outcome.js` — Exports backfillOutcome — servis restart'ında kaçırılan candle'ları geriye dönük oynatır (C4 düzeltmesi) (~350 tok)
 
 ## core/service-tracker/test/unit/
 
 - `evaluate-outcome.test.js` — Helper: candle oluştur (~1498 tok)
-- `make-process-outcome-candle.test.js` — Declares TIMEOUT_MS (~1558 tok)
+- `make-process-outcome-candle.test.js` — Declares TIMEOUT_MS (~2238 tok)
+- `backfill-outcome.test.js` — backfillOutcome testleri — kaçırılan mumlarda TP/SL/tie-break/boş liste senaryoları (~400 tok)
 
 ## db-schemas/
 
@@ -177,6 +192,8 @@
 
 - `2026-07-08-01-paper-regime-tiebreak.sql` — Additive, idempotent migration: paper-trading, backtest regime parity, tie-break logging. (~185 tok)
 - `2026-07-13-01-signal-quality-params.sql` — Additive/idempotent: sinyal kalitesi iyileştirme parametreleri. (~223 tok)
+- `2026-08-20-01-strategy-tuning.sql` — confluence_threshold/atr_stop_mult/rr_min tuning (~90 tok)
+- `2026-08-20-02-execution-validation.sql` — Faz 3 execution doğrulama: signal_outcomes.real_entry_price/real_exit_price/real_entry_at/real_notes (~90 tok)
 
 ## docs/
 
@@ -798,6 +815,33 @@
 - `docs.py` — get_swagger_ui_html, get_redoc_html, get_swagger_ui_oauth2_redirect_html (~2959 tok)
 - `models.py` — Pydantic: BaseModelWithConfig (158 fields) (~4400 tok)
 
+## services/service-signal-engine/src/
+
+- `boot.js` — Exports boot (~784 tok)
+- `routes.js` — API routes: GET, POST (6 endpoints) (~789 tok)
+
+## services/service-tracker/
+
+- `package.json` — Node.js package manifest (~130 tok)
+
+## services/service-tracker/src/
+
+- `container.js` — C4 (2026-08-20): sinyalin oluşturulduğu andan şimdiye kadar Bitget REST'ten (~422 tok)
+
 ## web-app/
 
 - `vite.config.js` — Declares __dirname (~257 tok)
+
+## web-app/src/api/
+
+- `regimeApi.js` — Exports fetchRegime (~82 tok)
+
+## web-app/src/features/signals/components/
+
+- `SignalGrid.jsx` — COOLDOWN_BY_TF (core/service-signal-engine) ile uyumlu: 1m→60dk, 5m→120dk. (~1926 tok)
+- `SignalGrid.test.jsx` — mkSignal (~1752 tok)
+
+## web-app/src/features/stats/utils/
+
+- `wilsonInterval.js` — Exports wilsonInterval — win rate için %95 Wilson güven aralığı hesaplar (küçük örneklem belirsizliğini gösterir) (~250 tok)
+- `wilsonInterval.test.js` — wilsonInterval testleri (~200 tok)

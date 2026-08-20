@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@borsa-bot/core-signal-engine": "*",
+    "@borsa-bot/core-tracker": "*",
     "bitget-api": "^2.0.0"
   }
 }

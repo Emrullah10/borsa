@@ -2101,6 +2101,150 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-13T14:13:19.198Z"
+    },
+    {
+      "id": "bug-130",
+      "timestamp": "2026-08-20T11:40:14.115Z",
+      "error_message": "Wrong reference: VITE_SIGNAL_ENGINE_URL should be VITE_SIGNAL_URL",
+      "file": "web-app/src/api/regimeApi.js",
+      "root_cause": "Used \"VITE_SIGNAL_ENGINE_URL\" instead of \"VITE_SIGNAL_URL\"",
+      "fix": "Changed VITE_SIGNAL_ENGINE_URL → VITE_SIGNAL_URL",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-20T11:40:14.115Z"
+    },
+    {
+      "id": "bug-131",
+      "timestamp": "2026-08-20T19:49:59.858Z",
+      "error_message": "CSS fix: createdAt",
+      "file": "web-app/src/features/signals/components/SignalGrid.test.jsx",
+      "root_cause": "createdAt: new Date(Date.now() - 20 * 60 * 1000).toISOString(), → new Date(Date.now() - 100 * 60 * 1000).toISOString(),",
+      "fix": "Changed createdAt: new Date(Date.now() - 20 * 60 * 1000).toISOString(), → new Date(Date.now() - 100 * 60 * 1000).toISOString(),",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-20T19:49:59.858Z"
+    },
+    {
+      "id": "bug-132",
+      "timestamp": "2026-08-20T19:55:37.379Z",
+      "error_message": "Missing await",
+      "file": "core/service-tracker/test/unit/make-process-outcome-candle.test.js",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-20T19:55:37.379Z"
+    },
+    {
+      "id": "bug-133",
+      "timestamp": "2026-08-20T19:57:15.252Z",
+      "error_message": "Missing await",
+      "file": "services/service-tracker/src/container.js",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-20T19:57:15.252Z"
+    },
+    {
+      "id": "bug-134",
+      "timestamp": "2026-08-20T19:58:11.137Z",
+      "error_message": "Wrong reference: toBe should be toBeCloseTo",
+      "file": "core/service-backtest/test/unit/walk-forward.test.js",
+      "root_cause": "Used \"toBe\" instead of \"toBeCloseTo\"",
+      "fix": "Changed toBe → toBeCloseTo",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-08-20T19:58:14.884Z"
+    },
+    {
+      "id": "bug-135",
+      "timestamp": "2026-08-20T20:00:13.936Z",
+      "error_message": "Missing await",
+      "file": "core/service-signal-engine/test/unit/signal-repository.test.js",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-20T20:00:13.936Z"
+    },
+    {
+      "id": "bug-136",
+      "timestamp": "2026-08-20T20:00:24.295Z",
+      "error_message": "Null/undefined access in ",
+      "file": "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-20T20:00:24.295Z"
+    },
+    {
+      "id": "bug-137",
+      "timestamp": "2026-08-20T20:00:28.597Z",
+      "error_message": "Wrong reference: resolveOutcome should be recordRealFill",
+      "file": "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "root_cause": "Used \"resolveOutcome\" instead of \"recordRealFill\"",
+      "fix": "Changed resolveOutcome → recordRealFill",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-20T20:00:28.597Z"
+    },
+    {
+      "id": "bug-138",
+      "timestamp": "2026-08-20T20:00:56.265Z",
+      "error_message": "Null/undefined access in ",
+      "file": "services/service-signal-engine/src/routes.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-20T20:00:56.265Z"
     }
   ]
 }

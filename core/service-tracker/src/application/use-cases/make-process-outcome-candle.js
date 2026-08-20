@@ -1,18 +1,67 @@
 import { evaluateOutcome, evaluateSimOutcome } from '../../domain/evaluate-outcome.js';
+import { backfillOutcome } from '../../domain/backfill-outcome.js';
 
-export function makeProcessOutcomeCandle({ signalRepo, publish, log, timeoutMs, fees }) {
+// C4 düzeltmesi (2026-08-20): servis restart'ı gibi durumlarda tracker'ın candle
+// akışını kaçırdığı outcome'lar sessizce timeout'a düşüyordu. sim_entry_price
+// hâlâ null VE sinyal bu kadar eskiyse, kaçırılan pencereyi backfillOutcome ile
+// geriye doğru oynat. fetchMissedCandles opsiyonel — verilmezse eski davranış
+// (backfill yok) korunur, mevcut testler/entegrasyonlar bozulmaz.
+const BACKFILL_MIN_AGE_MS = 2 * 60 * 1000;
+
+export function makeProcessOutcomeCandle({ signalRepo, publish, log, timeoutMs, fees, fetchMissedCandles }) {
   const { takerFee, slippagePct } = fees ?? { takerFee: 0.0006, slippagePct: 0.0003 };
   // pendingBySymbol: { BTCUSDT: [ outcome, ... ] }
   let pendingBySymbol = {};
   // Çözümlenen outcome_id'leri tut — refresh sırasında tekrar yüklenmesini önler
   const resolvedIds = new Set();
 
+  async function backfillRow(row, now) {
+    try {
+      const fromTs = new Date(row.signal_created_at).getTime();
+      const candles = await fetchMissedCandles(row.symbol, fromTs);
+      if (!candles?.length) return;
+
+      const { simEntry, resolved } = backfillOutcome(row, candles, now, timeoutMs, { takerFee, slippagePct });
+
+      if (simEntry != null && row.sim_entry_price == null) {
+        row.sim_entry_price = simEntry;
+        await signalRepo.setSimEntry(row.outcome_id, simEntry);
+      }
+
+      if (resolved) {
+        resolvedIds.add(row.outcome_id);
+        const notes = resolved.tieBreak ? 'tie-break: SL-first (backfill)' : 'backfill';
+        await signalRepo.resolveOutcome(row.outcome_id, { ...resolved, notes });
+        log.info(
+          `📊 BACKFILL OUTCOME: ${row.symbol} ${row.direction.toUpperCase()}` +
+          ` → ${resolved.status.toUpperCase()} (kaçırılan pencere telafi edildi)`,
+        );
+        await publish(
+          'signals.resolved',
+          JSON.stringify({ outcomeId: row.outcome_id, signalId: row.signal_id, symbol: row.symbol, ...resolved }),
+        );
+      }
+    } catch (err) {
+      log.error(`Tracker backfill error (${row.symbol}):`, err.message);
+    }
+  }
+
   async function refreshPending() {
     try {
       const rows = await signalRepo.getPendingOutcomes();
       pendingBySymbol = {};
+      const now = Date.now();
       for (const row of rows) {
         if (resolvedIds.has(row.outcome_id)) continue; // zaten çözümlendi, atla
+
+        if (fetchMissedCandles && row.sim_entry_price == null) {
+          const age = now - new Date(row.signal_created_at).getTime();
+          if (age >= BACKFILL_MIN_AGE_MS) {
+            await backfillRow(row, now);
+            if (resolvedIds.has(row.outcome_id)) continue; // backfill sırasında resolve oldu
+          }
+        }
+
         if (!pendingBySymbol[row.symbol]) pendingBySymbol[row.symbol] = [];
         pendingBySymbol[row.symbol].push(row);
       }

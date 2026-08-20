@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Box, Typography, CircularProgress, Divider, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { fetchStats, fetchBreakdown } from '@api/statsApi.js';
 import { COLORS } from '@styles/theme.js';
+import { wilsonInterval } from '@features/stats/utils/wilsonInterval.js';
 
 const DAY_OPTIONS = [7, 14, 30];
 const BREAKDOWN_OPTIONS = [
@@ -95,7 +96,11 @@ export default function StatsPage() {
 
   const { stats: s, topSymbols } = data;
   const pf = s.profit_factor != null ? parseFloat(s.profit_factor) : null;
+  const pfAfterFee = s.profit_factor_after_fee != null ? parseFloat(s.profit_factor_after_fee) : null;
   const wr = s.win_rate != null ? parseFloat(s.win_rate) : null;
+  const wrInclTimeout = s.win_rate_incl_timeout != null ? parseFloat(s.win_rate_incl_timeout) : null;
+  const resolvedN = s.resolved_n != null ? parseInt(s.resolved_n, 10) : 0;
+  const wrCI = resolvedN > 0 && wr != null ? wilsonInterval(Math.round((wr / 100) * resolvedN), resolvedN) : null;
   const avgR = s.avg_r != null ? parseFloat(s.avg_r) : null;
   const avgRFee = s.avg_r_after_fee != null ? parseFloat(s.avg_r_after_fee) : null;
   const avgSimR = s.avg_sim_r != null ? parseFloat(s.avg_sim_r) : null;
@@ -131,11 +136,27 @@ export default function StatsPage() {
         <StatBox label="Bekleyen" value={s.pending} color="#58a6ff" />
       </Box>
 
-      <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', mb: 2 }}>
-        <StatBox label="Win Rate" value={wr != null ? `%${wr}` : '—'} color={wrColor(wr)} />
+      <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', mb: 0.5 }}>
+        <StatBox
+          label={`Win Rate (n=${resolvedN})`}
+          value={wr != null ? `%${wr}` : '—'}
+          color={wrColor(wr)}
+        />
+        <StatBox
+          label="Win Rate (timeout dahil)"
+          value={wrInclTimeout != null ? `%${wrInclTimeout}` : '—'}
+          color={wrColor(wrInclTimeout)}
+        />
         <StatBox label="Profit Factor" value={pf != null ? pf.toFixed(2) : '—'} color={pfColor(pf)} />
+        <StatBox label="Profit Factor (fee dahil)" value={pfAfterFee != null ? pfAfterFee.toFixed(2) : '—'} color={pfColor(pfAfterFee)} />
         <StatBox label="Ort. Confluence" value={s.avg_confluence != null ? `%${s.avg_confluence}` : '—'} />
       </Box>
+      {wrCI && (
+        <Typography sx={{ color: '#8b949e', fontSize: '0.72rem', mb: 2 }}>
+          %95 güven aralığı: %{wrCI.low.toFixed(1)} – %{wrCI.high.toFixed(1)}
+          {resolvedN < 100 ? ' — örneklem küçük, aralık geniş, dikkatli yorumlayın' : ''}
+        </Typography>
+      )}
 
       <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', mb: 2 }}>
         <StatBox
