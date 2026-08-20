@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-13T14:16:12.724Z
-> Files: 522 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-08-20T11:33:56.138Z
+> Files: 523 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -797,3 +797,7 @@
 - `constants.py` (~44 tok)
 - `docs.py` — get_swagger_ui_html, get_redoc_html, get_swagger_ui_oauth2_redirect_html (~2959 tok)
 - `models.py` — Pydantic: BaseModelWithConfig (158 fields) (~4400 tok)
+
+## web-app/
+
+- `vite.config.js` — Declares __dirname (~257 tok)
