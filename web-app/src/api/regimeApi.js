@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_SIGNAL_ENGINE_URL ?? 'http://localhost:3102';
+const BASE = import.meta.env.VITE_SIGNAL_URL ?? 'http://localhost:3102';
 
 export async function fetchRegime() {
   try {
