@@ -6,8 +6,15 @@ import { COLORS } from '@styles/theme.js';
 import { analyzeSignal } from '@api/aiApi.js';
 import { fetchPrice } from '@api/marketApi.js';
 import { generateAiComment } from '@features/ai/utils/aiComment.js';
-import { getEntryValidity } from '../utils/entryValidity.js';
+import { getEntryValidity, getEntryWindow } from '../utils/entryValidity.js';
 import { useStore } from '@store/useStore.js';
+
+function formatCountdown(msLeft) {
+  const totalSec = Math.floor(msLeft / 1000);
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
 
 const FLIP_DURATION = 500; // ms
 
@@ -51,7 +58,7 @@ function pctDiff(from, to) {
   return (((to - from) / from) * 100).toFixed(2);
 }
 
-export default function SignalCard({ signal, isNew, onFlipChange }) {
+export default function SignalCard({ signal, isNew, isActive = false, onFlipChange }) {
   const [flipped, setFlipped] = useState(false);
   const [aiText, setAiText] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -83,6 +90,7 @@ export default function SignalCard({ signal, isNew, onFlipChange }) {
   }, [livePrice, signal.direction]);
 
   const validity = getEntryValidity(signal, extremePriceRef.current);
+  const { msLeft } = getEntryWindow(signal);
   useEffect(() => {
     if (validity.state === 'missed') markMissed(signal.id);
   }, [validity.state, signal.id, markMissed]);
@@ -185,8 +193,42 @@ export default function SignalCard({ signal, isNew, onFlipChange }) {
               />
             </Box>
 
-            {/* Giriş geçersizlik uyarısı */}
-            {validity.state === 'missed' && (
+            {/* Aktif sekmede: girilebilir pencere geri sayımı */}
+            {isActive && validity.state === 'fresh' && (
+              <Box
+                sx={{
+                  bgcolor: '#0d2818',
+                  border: '1px solid #1f5c3a',
+                  borderRadius: '8px',
+                  px: 1.25,
+                  py: 0.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.75,
+                }}
+              >
+                <Typography sx={{ fontSize: '0.8rem' }}>⏱</Typography>
+                <Box>
+                  <Typography
+                    sx={{
+                      color: msLeft < 120_000 ? COLORS.short : COLORS.long,
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      lineHeight: 1.2,
+                      fontFamily: 'monospace',
+                    }}
+                  >
+                    {formatCountdown(msLeft)} kaldı
+                  </Typography>
+                  <Typography sx={{ color: '#8b949e', fontSize: '0.7rem', lineHeight: 1.2 }}>
+                    Girilebilir
+                  </Typography>
+                </Box>
+              </Box>
+            )}
+
+            {/* Geçmiş sekmede: pencere kapandı — nötr bilgi, suçlama değil */}
+            {!isActive && validity.state === 'missed' && (
               <Box
                 sx={{
                   bgcolor: '#2a1f00',
@@ -202,7 +244,7 @@ export default function SignalCard({ signal, isNew, onFlipChange }) {
                 <Typography sx={{ fontSize: '0.8rem' }}>⚠️</Typography>
                 <Box>
                   <Typography sx={{ color: '#f0b429', fontSize: '0.75rem', fontWeight: 700, lineHeight: 1.2 }}>
-                    GİRİŞ KAÇTI
+                    PENCERE KAPANDI
                   </Typography>
                   <Typography sx={{ color: '#8b7430', fontSize: '0.7rem', lineHeight: 1.2 }}>
                     {validity.reason === 'time' ? 'Süre doldu' : 'Fiyat uzaklaştı'}

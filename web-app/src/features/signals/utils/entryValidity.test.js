@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getEntryValidity } from './entryValidity.js';
+import { getEntryValidity, getEntryWindow } from './entryValidity.js';
 
 const base = {
   triggerTimeframe: '1m',
@@ -74,5 +74,24 @@ describe('getEntryValidity', () => {
   it('extremePrice null → sadece zamana bakar', () => {
     const r = getEntryValidity(base, null, NOW + 30_000);
     expect(r.state).toBe('fresh');
+  });
+});
+
+describe('getEntryWindow', () => {
+  it('1m sinyal, 30sn geçmiş → 90sn kaldı (2dk penceresi)', () => {
+    const r = getEntryWindow(base, NOW + 30_000);
+    expect(r.msLeft).toBe(90_000);
+    expect(r.deadline).toBe(1_000_000 + 120_000);
+  });
+
+  it('5m sinyal, 6dk geçmiş (10dk penceresi) → 4dk kaldı', () => {
+    const sig = { ...base, triggerTimeframe: '5m' };
+    const r = getEntryWindow(sig, NOW + 360_000);
+    expect(r.msLeft).toBe(240_000);
+  });
+
+  it('süre dolmuşsa msLeft negatif değil, 0', () => {
+    const r = getEntryWindow(base, NOW + 999_000);
+    expect(r.msLeft).toBe(0);
   });
 });
