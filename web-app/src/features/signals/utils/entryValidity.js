@@ -30,3 +30,17 @@ export function getEntryValidity(signal, extremePrice, now = Date.now()) {
 
   return { state: 'fresh', reason: null };
 }
+
+/**
+ * Sinyalin giriş penceresi ne zaman kapanıyor (deadline) ve ne kadar süre kaldı.
+ * getEntryValidity'nin zaman mantığıyla aynı sabitleri kullanır — tek kaynak.
+ *
+ * @param {object} signal - { triggerTimeframe, createdAt }
+ * @param {number} now - Date.now() (test edilebilirlik için parametre)
+ * @returns {{ deadline: number, msLeft: number }}
+ */
+export function getEntryWindow(signal, now = Date.now()) {
+  const tfMs = TF_MS[signal.triggerTimeframe] ?? TF_MS['5m'];
+  const deadline = new Date(signal.createdAt).getTime() + tfMs * WINDOW_CANDLES;
+  return { deadline, msLeft: Math.max(0, deadline - now) };
+}

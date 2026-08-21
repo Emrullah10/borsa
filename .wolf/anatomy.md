@@ -1,10 +1,11 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-08-21T18:01:23.539Z
-> Files: 544 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-08-21T20:31:37.879Z
+> Files: 549 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
+- `ben-ne-yapaca-m-anlamland-ram-yorum-delightful-muffin.md` — Panel'i "ne yapacağımı bilmiyorum" halinden çıkarmak (~1966 tok)
 - `memory-ve-cebruma-bak-immutable-wigderson.md` — Strateji Doğrulama Planı — "Bu bota gerçek parayla güvenebilir miyim?" (~3535 tok)
 
 ## ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/
@@ -842,8 +843,14 @@
 
 ## web-app/src/features/signals/components/
 
-- `SignalGrid.jsx` — COOLDOWN_BY_TF (core/service-signal-engine) ile uyumlu: 1m→60dk, 5m→120dk. (~1926 tok)
-- `SignalGrid.test.jsx` — mkSignal (~1752 tok)
+- `SignalCard.jsx` — formatCountdown; isActive prop ile AKTİF sekmede yeşil geri sayım banner'ı, GEÇMİŞ sekmede nötr "PENCERE KAPANDI" banner'ı gösterir (~5300 tok)
+- `SignalGrid.jsx` — AKTİF/GEÇMİŞ sekmeli (Tabs). AKTİF = getEntryWindow(s).msLeft>0 && !missedIds.has(id); GEÇMİŞ = HISTORY_WINDOW_MS (90dk) içindeki geri kalanlar. 1sn tick ile aktif sekme geri sayımları yenilenir. (~2400 tok)
+- `SignalGrid.test.jsx` — mkSignal; AKTİF/GEÇMİŞ sekme render testleri (~2100 tok)
+
+## web-app/src/features/signals/utils/
+
+- `entryValidity.js` — getEntryValidity (fresh/missed + reason), getEntryWindow (deadline/msLeft — TF_MS/WINDOW_CANDLES aynı sabitleri paylaşır, tek kaynak) (~450 tok)
+- `entryValidity.test.js` — getEntryValidity + getEntryWindow testleri (~700 tok)
 
 ## web-app/src/features/stats/utils/
 

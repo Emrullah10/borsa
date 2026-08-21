@@ -23,6 +23,24 @@
 
 <!-- Significant technical decisions with rationale. Why X was chosen over Y. -->
 
+**[2026-08-21] Panel "GİRİŞ KAÇTI" krizi — bildirim eklemek yerine önce paneli dürüstleştirmeyi seçtik:**
+Kullanıcı 12+ kartın hepsi "GİRİŞ KAÇTI/Süre doldu" derken "nasıl işlem açacağım" diye sordu.
+Kök neden: 5m sinyal 10dk geçerli (`entryValidity.js` `WINDOW_CANDLES=2`), panel 90dk gösteriyordu
+(`SignalGrid.jsx` eski `FRESH_WINDOW_MS`) — ekranın en az %89'u tanım gereği süresi dolmuş kart,
+bu normal durum, arıza değil. İlk yanıtta yanlışlıkla "doğru sinyalleri kaçırıyorsun" imasında
+bulunuldu — bu KANITLANMAMIŞTI, kullanıcı haklı olarak itiraz etti. Düzeltme: panelin yanıltıcı
+olduğu kanıtlanabilir, sinyal KALİTESİ ayrı ve şu an bilinmeyen bir soru (mum kirliliği fix'i
+[2026-08-21] dünkü, DB'deki geçmiş win-rate artık var olmayan bir sistemi ölçüyor).
+**Karar: bildirim (Telegram vb.) EKLENMEDİ.** Kanıtlanmamış kaliteli sinyallere daha hızlı
+girmeyi sağlamak yanlış şeyi optimize eder. Önce panel AKTİF/GEÇMİŞ sekmelerine bölündü
+(`getEntryWindow` yeni fonksiyon, `entryValidity.js`), AKTİF sekmede canlı geri sayım eklendi,
+AKTİF boşken "bir şey bozuk değil, günde 4-5 sinyal" mesajı gösteriliyor.
+**How to apply:** Kullanıcı "sinyal/panel doğru mu" türünde bir belirsizlik ifade ederse,
+önce mevcut veri/kod neyi KANITLIYOR neyi KANITLAMIYOR ayrımını netleştir — hız/bildirim
+çözümüne atlamadan önce "temeldeki veri güvenilir mi" sorusunu cevapla. Bu proje zaten
+Wilson interval + backtest/canlı parite altyapısına sahip — kaliteyi ölçmek için kullan,
+tahmin etme.
+
 **[2026-08-21] Kapanmamış mum kirliliği bug'ı — göstergeler ara tick'lerle bozuluyordu:**
 Sunucu backtest:sweep sırasında termal limite çarpıp kapandı; tekrar açılınca CPU/RAM yükü araştırılırken önce YANLIŞ bir hipotez kuruldu ("gösterge hesabı CPU'yu yiyor" — ölçülüp çürütüldü, calcAllIndicators tek çağrı 0.135ms, %1 CPU'nun altında). Ama araştırma sırasında GERÇEK ve daha ciddi bir bug bulundu: Bitget WS `candle1m`/`candle5m` kanalı mum kapanmadan (her tick'te) güncelleme gönderiyor, kodda hiçbir yerde (`bitget-ws.js` handleUpdate, `make-process-candle.js` buffer push) bu ayrım yapılmıyordu — her ara tick koşulsuz buffer'a push ediliyordu. Canlı ölçümle doğrulandı (`redis-cli psubscribe`, aynı ts 4-5 kez tekrar etti). Simülasyonla etkisi ölçüldü: kirli pencerede ADX %62, RSI %15, ATR %12 sapıyor.
 **Düzeltilen yanlış bir iddia da var:** İlk aşamada "ADX≥25 hard gate'i tersine çevirip kazanan sinyalleri kaçırtıyor" denmişti — bu YANLIŞTI, kodda öyle bir alt-sınır gate yok (sadece adxMax=65 üst sınır var), DB'de min_adx=14.27 olan gerçek sinyal bulunması bunu kanıtladı. Doğru çerçeve: "veri kalitesi bug'ı," hangi sinyalin nasıl etkilendiği belirsiz.

@@ -1,17 +1,18 @@
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Tabs, Tab } from '@mui/material';
 import { useStore } from '@store/useStore.js';
 import { fetchSignals, connectSignalWS } from '@api/signalApi.js';
 import { fetchPrice } from '@api/marketApi.js';
+import { getEntryWindow } from '../utils/entryValidity.js';
 import SignalCard from './SignalCard.jsx';
 import SignalFilters from './SignalFilters.jsx';
 
 // COOLDOWN_BY_TF (core/service-signal-engine) ile uyumlu: 1m→60dk, 5m→120dk.
-// Eski 15dk pencere yeni cooldown'la uyuşmuyordu — panel sürekli "taze sinyal yok" gösteriyordu.
-const FRESH_WINDOW_MS = 90 * 60 * 1000; // 90 dakika
+// Geçmiş sekmesinin kapsamı — aktif sekmeyi belirlemez (bkz. getEntryWindow).
+const HISTORY_WINDOW_MS = 90 * 60 * 1000; // 90 dakika
 const PRICE_POLL_MS = 2000; // merkezi fiyat yenileme aralığı
 
-function sortSignals(list, sortBy, missedIds) {
+function sortSignals(list, sortBy) {
   const arr = [...list];
   if (sortBy === 'confidence') {
     arr.sort((a, b) => b.confluenceScore - a.confluenceScore);
@@ -20,12 +21,6 @@ function sortSignals(list, sortBy, missedIds) {
   } else {
     arr.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   }
-  // "missed" olanları sona taşı
-  arr.sort((a, b) => {
-    const aMissed = missedIds.has(a.id) ? 1 : 0;
-    const bMissed = missedIds.has(b.id) ? 1 : 0;
-    return aMissed - bMissed;
-  });
   return arr;
 }
 
@@ -39,6 +34,9 @@ export default function SignalGrid() {
   // Bir kart çevrili iken görünen sıralamayı dondurur — bkz. handleCardFlip
   const [flippedIds, setFlippedIds] = useState(new Set());
   const frozenOrderRef = useRef(null);
+  const [tab, setTab] = useState('active');
+  // Aktif sekmedeki geri sayımların yenilenmesi için 1sn'de bir tetikleyici
+  const [, forceTick] = useState(0);
 
   const handleCardFlip = useCallback((id, isFlipped) => {
     setFlippedIds((prev) => {
@@ -94,24 +92,45 @@ export default function SignalGrid() {
     return () => { active = false; clearInterval(t); };
   }, [signals, setPrice]);
 
-  const freshSignals = useMemo(
+  // Aktif sekmedeki geri sayımların ekranda güncel kalması için 1sn tick
+  useEffect(() => {
+    const t = setInterval(() => forceTick((n) => n + 1), 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  // AKTİF: giriş penceresi hâlâ açık ve fiyat mesafesiyle "kaçmamış" sinyaller.
+  // Çoğu zaman boş olacak — günde 4-5 sinyal, her biri ~10dk geçerli. Bu doğru bir yansıma.
+  const activeSignals = useMemo(
     () =>
       signals.filter(
-        (s) => Date.now() - new Date(s.createdAt) < FRESH_WINDOW_MS,
+        (s) => getEntryWindow(s).msLeft > 0 && !missedIds.has(s.id),
       ),
-    [signals],
+    [signals, missedIds],
   );
+
+  // GEÇMİŞ: son 90dk içindeki, artık aktif olmayan sinyaller — sonucuyla birlikte.
+  const historySignals = useMemo(
+    () =>
+      signals.filter(
+        (s) =>
+          Date.now() - new Date(s.createdAt) < HISTORY_WINDOW_MS &&
+          !(getEntryWindow(s).msLeft > 0 && !missedIds.has(s.id)),
+      ),
+    [signals, missedIds],
+  );
+
+  const baseList = tab === 'active' ? activeSignals : historySignals;
 
   const visibleSignals = useMemo(() => {
     const q = search.trim().toUpperCase();
-    const filtered = freshSignals.filter((s) => {
+    const filtered = baseList.filter((s) => {
       if (direction !== 'all' && s.direction !== direction) return false;
       if (s.confluenceScore * 100 < minConfidence) return false;
       if (s.rrRatio < minRR) return false;
       if (q && !s.symbol.toUpperCase().includes(q)) return false;
       return true;
     });
-    const sorted = sortSignals(filtered, sortBy, missedIds);
+    const sorted = sortSignals(filtered, sortBy);
 
     // Kullanıcı bir kartı incelerken (çevrilmişken) canlı sinyal akışının
     // sıralamayı sürekli değiştirip kartların ekranda kaymasını önle:
@@ -128,7 +147,7 @@ export default function SignalGrid() {
 
     frozenOrderRef.current = sorted;
     return sorted;
-  }, [freshSignals, direction, minConfidence, minRR, search, sortBy, missedIds, flippedIds]);
+  }, [baseList, direction, minConfidence, minRR, search, sortBy, flippedIds]);
 
   const filters = (
     <SignalFilters
@@ -145,8 +164,8 @@ export default function SignalGrid() {
     />
   );
 
-  // Hiç taze sinyal yokken filtre çubuğunu gizle, sade mesaj göster
-  if (freshSignals.length === 0) {
+  // Hiç sinyal yokken (ne aktif ne geçmiş) sade mesaj göster
+  if (activeSignals.length === 0 && historySignals.length === 0) {
     return (
       <Box
         sx={{
@@ -157,7 +176,7 @@ export default function SignalGrid() {
         }}
       >
         <Typography color="#8b949e">
-          Henüz taze sinyal yok — sinyaller üretilince burada görünecek
+          Henüz sinyal yok — sinyaller üretilince burada görünecek
         </Typography>
       </Box>
     );
@@ -165,8 +184,41 @@ export default function SignalGrid() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Tabs
+        value={tab}
+        onChange={(_e, v) => setTab(v)}
+        sx={{
+          minHeight: 0,
+          borderBottom: '1px solid #21262d',
+          '& .MuiTab-root': {
+            color: '#8b949e',
+            fontSize: '0.85rem',
+            textTransform: 'none',
+            minHeight: 44,
+          },
+          '& .Mui-selected': { color: '#e6edf3 !important' },
+        }}
+      >
+        <Tab value="active" label={`AKTİF (${activeSignals.length})`} />
+        <Tab value="history" label={`GEÇMİŞ (${historySignals.length})`} />
+      </Tabs>
       {filters}
-      {visibleSignals.length === 0 ? (
+      {tab === 'active' && activeSignals.length === 0 ? (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flex: 1,
+            p: 3,
+          }}
+        >
+          <Typography color="#8b949e" sx={{ textAlign: 'center', maxWidth: 420 }}>
+            Şu an girilebilir sinyal yok — günde ortalama 4-5 sinyal üretiliyor,
+            her biri ~10 dakika geçerli. Bir şey bozuk değil.
+          </Typography>
+        </Box>
+      ) : visibleSignals.length === 0 ? (
         <Box
           sx={{
             display: 'flex',
@@ -196,6 +248,7 @@ export default function SignalGrid() {
               key={sig.id}
               signal={sig}
               isNew={newIds.has(sig.id)}
+              isActive={tab === 'active'}
               onFlipChange={(isFlipped) => handleCardFlip(sig.id, isFlipped)}
             />
           ))}

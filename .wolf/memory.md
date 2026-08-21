@@ -2073,3 +2073,53 @@
 | 21:30 | cerebrum.md + anatomy.md güncellendi | .wolf/cerebrum.md, .wolf/anatomy.md | Decision Log + yeni dosya girdileri, test metodolojisi dersi eklendi | ~2k |
 | 21:02 | Session end: 1 writes across 1 files (make-process-candle.js) | 6 reads | ~6059 tok |
 | 21:02 | Session end: 1 writes across 1 files (make-process-candle.js) | 6 reads | ~6059 tok |
+| 21:07 | Session end: 1 writes across 1 files (make-process-candle.js) | 6 reads | ~6059 tok |
+| 21:07 | Session end: 1 writes across 1 files (make-process-candle.js) | 6 reads | ~6059 tok |
+| 21:09 | Session end: 1 writes across 1 files (make-process-candle.js) | 6 reads | ~6059 tok |
+| 21:09 | Session end: 1 writes across 1 files (make-process-candle.js) | 6 reads | ~6059 tok |
+| 21:09 | Session end: 1 writes across 1 files (make-process-candle.js) | 6 reads | ~6059 tok |
+| 21:09 | Session end: 1 writes across 1 files (make-process-candle.js) | 6 reads | ~6059 tok |
+
+## Session: 2026-08-21 21:16
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-21 21:16
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-21 23:22
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-21 23:22
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 23:29 | Created ../../../.claude/plans/ben-ne-yapaca-m-anlamland-ram-yorum-delightful-muffin.md | — | ~2097 |
+| 23:29 | Created ../../../.claude/plans/ben-ne-yapaca-m-anlamland-ram-yorum-delightful-muffin.md | — | ~2097 |
+| 23:31 | Edited web-app/src/features/signals/components/SignalCard.jsx | modified formatCountdown() | ~92 |
+| 23:31 | Edited web-app/src/features/signals/components/SignalCard.jsx | modified formatCountdown() | ~92 |
+| 23:31 | Edited web-app/src/features/signals/components/SignalCard.jsx | inline fix | ~25 |
+| 23:31 | Edited web-app/src/features/signals/components/SignalCard.jsx | inline fix | ~25 |
+| 23:31 | Edited web-app/src/features/signals/components/SignalCard.jsx | 4→5 lines | ~69 |
+| 23:31 | Edited web-app/src/features/signals/components/SignalCard.jsx | 4→5 lines | ~69 |
+| 23:31 | Edited web-app/src/features/signals/components/SignalCard.jsx | expanded (+34 lines) | ~646 |
+| 23:31 | Edited web-app/src/features/signals/components/SignalCard.jsx | expanded (+34 lines) | ~646 |
+
+## Session: 2026-08-21 23:2x (Panel dürüstlük düzeltmesi — Faz 1)
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 23:20 | Kullanıcı "nasıl işlem açacağım" dedi — panel 12+ kart "GİRİŞ KAÇTI" gösteriyordu. Kod incelendi: 5m sinyal 10dk geçerli (entryValidity.js WINDOW_CANDLES=2), panel 90dk gösteriyordu (FRESH_WINDOW_MS) — ekranın en az %89'u tanım gereği süresi dolmuş | entryValidity.js, SignalGrid.jsx | Kök neden teşhis edildi: panel yanıltıcı, sinyal kalitesi ayrı/bilinmeyen soru | ~8k |
+| 23:22 | Plan modu: kullanıcı bildirim hızlandırma önerisine haklı olarak itiraz etti ("doğru sinyalleri kaçırıyorsun" iması kanıtlanmamıştı) — düzeltme yapıldı, plan bildirim EKLEMEDEN sadece panel dürüstlüğüne odaklandı (Faz 1), sinyal kalitesi ölçümü ayrı faza bırakıldı (Faz 2) | plan dosyası | Kullanıcı onayladı | ~3k |
+| 23:25 | getEntryWindow(signal, now) eklendi — deadline/msLeft, mevcut getEntryValidity ile aynı TF_MS/WINDOW_CANDLES sabitlerini paylaşıyor (tek kaynak) | entryValidity.js, entryValidity.test.js | 13/13 test PASS | ~2k |
+| 23:28 | SignalGrid AKTİF/GEÇMİŞ sekmeli hale getirildi (MUI Tabs). AKTİF = msLeft>0 && !missed; GEÇMİŞ = 90dk pencere. 1sn tick ile geri sayımlar yenileniyor. AKTİF boşken "bir şey bozuk değil, günde 4-5 sinyal" mesajı | SignalGrid.jsx | — | ~4k |
+| 23:30 | SignalCard'a isActive prop + formatCountdown — aktif sekmede yeşil/kırmızı geri sayım banner'ı, geçmiş sekmede "PENCERE KAPANDI" (nötr, "GİRİŞ KAÇTI" suçlamasından değiştirildi) | SignalCard.jsx | — | ~3k |
+| 23:32 | Mevcut testler yeni sekme davranışına göre güncellendi (App.test.jsx, SignalGrid.test.jsx) | App.test.jsx, SignalGrid.test.jsx | 78/78 frontend test PASS, vite build başarılı | ~3k |
+| 23:33 | Distance-bug (extremePriceRef mount öncesi kör) — backend outcome alanı frontend'e expose edilmediği için Faz 1'de düzeltilmedi, Faz 2/backend değişikliği gerektiriyor, cerebrum'a not düşüldü | — | Bilinçli olarak kapsam dışı bırakıldı | ~1k |
+| 23:33 | Session end: 5 writes across 2 files (ben-ne-yapaca-m-anlamland-ram-yorum-delightful-muffin.md, SignalCard.jsx) | 3 reads | ~9809 tok |
+| 23:33 | Session end: 5 writes across 2 files (ben-ne-yapaca-m-anlamland-ram-yorum-delightful-muffin.md, SignalCard.jsx) | 3 reads | ~9809 tok |

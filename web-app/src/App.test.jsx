@@ -13,7 +13,7 @@ describe('App', () => {
   it('TopBar ve AppDrawer ve SignalGrid render eder', () => {
     render(<App />);
     expect(screen.getByText(/Scalp Asistanı/)).toBeInTheDocument();
-    // SignalGrid renders "Henüz taze sinyal yok" when no signals
-    expect(screen.getByText(/Henüz taze sinyal yok/)).toBeInTheDocument();
+    // SignalGrid renders "Henüz sinyal yok" when no signals
+    expect(screen.getByText(/Henüz sinyal yok/)).toBeInTheDocument();
   });
 });

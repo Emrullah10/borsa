@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-05-31T10:59:47.960Z",
   "lifetime": {
-    "total_tokens_estimated": 3219626,
-    "total_reads": 2933,
-    "total_writes": 4534,
-    "total_sessions": 51,
-    "anatomy_hits": 1781,
-    "anatomy_misses": 1110,
-    "repeated_reads_blocked": 1437,
-    "estimated_savings_vs_bare_cli": 1479065
+    "total_tokens_estimated": 3247612,
+    "total_reads": 2954,
+    "total_writes": 4542,
+    "total_sessions": 53,
+    "anatomy_hits": 1795,
+    "anatomy_misses": 1117,
+    "repeated_reads_blocked": 1438,
+    "estimated_savings_vs_bare_cli": 1486670
   },
   "sessions": [
     {
@@ -43396,6 +43396,240 @@
         "writes_count": 1,
         "repeated_reads_blocked": 0,
         "anatomy_lookups": 4
+      }
+    },
+    {
+      "id": "session-2026-08-21-2005",
+      "started": "2026-08-21T17:05:00.945Z",
+      "ended": "2026-08-21T18:07:38.168Z",
+      "reads": [
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/bitget-ws.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+          "tokens_estimated": 2391,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/domain/indicators.js",
+          "tokens_estimated": 1587,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/subscriber.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/src/application/use-cases/make-publisher.js",
+          "tokens_estimated": 301,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/indicators.test.js",
+          "tokens_estimated": 1726,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+          "tokens_estimated": 54,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 6005,
+        "output_tokens_estimated": 54,
+        "reads_count": 6,
+        "writes_count": 1,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 4
+      }
+    },
+    {
+      "id": "session-2026-08-21-2005",
+      "started": "2026-08-21T17:05:00.945Z",
+      "ended": "2026-08-21T18:09:15.476Z",
+      "reads": [
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/bitget-ws.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+          "tokens_estimated": 2391,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/domain/indicators.js",
+          "tokens_estimated": 1587,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/subscriber.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/src/application/use-cases/make-publisher.js",
+          "tokens_estimated": 301,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/indicators.test.js",
+          "tokens_estimated": 1726,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+          "tokens_estimated": 54,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 6005,
+        "output_tokens_estimated": 54,
+        "reads_count": 6,
+        "writes_count": 1,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 4
+      }
+    },
+    {
+      "id": "session-2026-08-21-2005",
+      "started": "2026-08-21T17:05:00.945Z",
+      "ended": "2026-08-21T18:09:41.868Z",
+      "reads": [
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/src/bitget-ws.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+          "tokens_estimated": 2391,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/domain/indicators.js",
+          "tokens_estimated": 1587,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/subscriber.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-market-data/src/application/use-cases/make-publisher.js",
+          "tokens_estimated": 301,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/indicators.test.js",
+          "tokens_estimated": 1726,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+          "tokens_estimated": 54,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 6005,
+        "output_tokens_estimated": 54,
+        "reads_count": 6,
+        "writes_count": 1,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 4
+      }
+    },
+    {
+      "id": "session-2026-08-21-2322",
+      "started": "2026-08-21T20:22:42.744Z",
+      "ended": "2026-08-21T20:33:48.556Z",
+      "reads": [
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/utils/entryValidity.js",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalGrid.jsx",
+          "tokens_estimated": 1926,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 4805,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/emrullah/.claude/plans/ben-ne-yapaca-m-anlamland-ram-yorum-delightful-muffin.md",
+          "tokens_estimated": 2246,
+          "action": "create"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 92,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 25,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 69,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+          "tokens_estimated": 646,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 6731,
+        "output_tokens_estimated": 3078,
+        "reads_count": 3,
+        "writes_count": 5,
+        "repeated_reads_blocked": 1,
+        "anatomy_lookups": 2
       }
     }
   ],

@@ -2245,6 +2245,38 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-08-20T20:00:56.265Z"
+    },
+    {
+      "id": "bug-139",
+      "timestamp": "2026-08-21T20:31:05.983Z",
+      "error_message": "Wrong reference: onFlipChange should be isActive",
+      "file": "web-app/src/features/signals/components/SignalCard.jsx",
+      "root_cause": "Used \"onFlipChange\" instead of \"isActive\"",
+      "fix": "Changed onFlipChange → isActive",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-21T20:31:05.983Z"
+    },
+    {
+      "id": "bug-140",
+      "timestamp": "2026-08-21T20:31:37.891Z",
+      "error_message": "Significant refactor of ",
+      "file": "web-app/src/features/signals/components/SignalCard.jsx",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 25→59 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-21T20:31:37.891Z"
     }
   ]
 }

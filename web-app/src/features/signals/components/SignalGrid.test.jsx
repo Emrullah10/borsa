@@ -60,15 +60,17 @@ describe('SignalGrid', () => {
     });
   });
 
-  it('90 dakikadan eski sinyal render EDİLMEZ', async () => {
+  it('giriş penceresi kapanmış sinyal AKTİF sekmesinde render EDİLMEZ', async () => {
     const oldSignal = {
       id: '99',
       symbol: 'OLDUSDT',
+      triggerTimeframe: '5m',
       createdAt: new Date(Date.now() - 100 * 60 * 1000).toISOString(),
     };
     const freshSignal = {
       id: '1',
       symbol: 'BTCUSDT',
+      triggerTimeframe: '5m',
       createdAt: new Date().toISOString(),
     };
     fetchSignals.mockResolvedValue([oldSignal, freshSignal]);
@@ -83,13 +85,31 @@ describe('SignalGrid', () => {
     expect(screen.queryByText('OLDUSDT')).toBeNull();
   });
 
+  it('giriş penceresi kapanmış sinyal GEÇMİŞ sekmesinde render EDİLİR', async () => {
+    const oldSignal = {
+      id: '99',
+      symbol: 'OLDUSDT',
+      triggerTimeframe: '5m',
+      createdAt: new Date(Date.now() - 20 * 60 * 1000).toISOString(),
+    };
+    fetchSignals.mockResolvedValue([oldSignal]);
+
+    render(<SignalGrid />);
+
+    fireEvent.click(await screen.findByRole('tab', { name: /GEÇMİŞ/ }));
+
+    await waitFor(() => {
+      expect(screen.getByText('OLDUSDT')).toBeInTheDocument();
+    });
+  });
+
   it('boş durum mesajı gösterilir (sinyal yokken)', async () => {
     fetchSignals.mockResolvedValue([]);
     render(<SignalGrid />);
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Henüz taze sinyal yok/),
+        screen.getByText(/Henüz sinyal yok/),
       ).toBeInTheDocument();
     });
   });
