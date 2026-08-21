@@ -5,6 +5,15 @@ import { COLORS } from '@styles/theme.js';
 import { wilsonInterval } from '@features/stats/utils/wilsonInterval.js';
 
 const DAY_OPTIONS = [7, 14, 30];
+
+// Mum kapanışı kirliliği bug'ı (bkz. cerebrum.md 2026-08-21) bu tarihten önce
+// üretilen tüm göstergeleri (ADX/RSI/ATR) kirletiyordu. O tarihten önceki
+// istatistikler artık var olmayan bir sistemi anlatıyor — güvenilmez.
+const CLEAN_DATA_SINCE = new Date('2026-08-21T21:25:00');
+
+function daysSinceCleanFix() {
+  return Math.max(0, Math.floor((Date.now() - CLEAN_DATA_SINCE.getTime()) / 86_400_000));
+}
 const BREAKDOWN_OPTIONS = [
   { value: 'regime', label: 'Rejim' },
   { value: 'tf', label: 'TF' },
@@ -127,6 +136,14 @@ export default function StatsPage() {
           ))}
         </ToggleButtonGroup>
       </Box>
+
+      {days > daysSinceCleanFix() && (
+        <Typography sx={{ color: '#f0b429', fontSize: '0.72rem', mb: 1.5, bgcolor: '#2a1f00', border: '1px solid #6e4b00', borderRadius: '8px', px: 1.5, py: 1 }}>
+          ⚠️ Bu pencere, mum kapanışı kirliliği düzeltmesinden ({CLEAN_DATA_SINCE.toLocaleDateString('tr-TR')}) önceki veriyi de içeriyor —
+          o tarihten önce ADX/RSI/ATR sapıyordu, o dönemin win-rate'i güncel sistemi yansıtmaz.
+          Sadece son {daysSinceCleanFix()} güne bakmak daha güvenilir.
+        </Typography>
+      )}
 
       {/* Ana metrikler */}
       <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', mb: 2 }}>

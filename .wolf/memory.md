@@ -2123,3 +2123,25 @@
 | 23:33 | Distance-bug (extremePriceRef mount öncesi kör) — backend outcome alanı frontend'e expose edilmediği için Faz 1'de düzeltilmedi, Faz 2/backend değişikliği gerektiriyor, cerebrum'a not düşüldü | — | Bilinçli olarak kapsam dışı bırakıldı | ~1k |
 | 23:33 | Session end: 5 writes across 2 files (ben-ne-yapaca-m-anlamland-ram-yorum-delightful-muffin.md, SignalCard.jsx) | 3 reads | ~9809 tok |
 | 23:33 | Session end: 5 writes across 2 files (ben-ne-yapaca-m-anlamland-ram-yorum-delightful-muffin.md, SignalCard.jsx) | 3 reads | ~9809 tok |
+
+## Session: 2026-08-21 23:35
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-21 23:35
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 23:36 | Edited web-app/src/pages/StatsPage.jsx | CSS: 2026-08-21T21, 25 | ~126 |
+| 23:36 | Edited web-app/src/pages/StatsPage.jsx | CSS: 2026-08-21T21, 25 | ~126 |
+| 23:36 | Edited web-app/src/pages/StatsPage.jsx | expanded (+8 lines) | ~175 |
+| 23:36 | Edited web-app/src/pages/StatsPage.jsx | expanded (+8 lines) | ~175 |
+
+## Session: 2026-08-21 23:3x (Faz 2 — StatsPage kesim tarihi uyarısı)
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 23:35 | StatsPage'e CLEAN_DATA_SINCE (2026-08-21T21:25 — candle-buffer fix deploy zamanı) sabiti eklendi. Seçilen gün penceresi fix-öncesini de kapsıyorsa sarı uyarı: "bu pencere kirli veri içeriyor, sadece son N güne bak" | StatsPage.jsx | 78/78 test PASS, build başarılı | ~2k |
+| 23:37 | Session end: 2 writes across 1 files (StatsPage.jsx) | 1 reads | ~4140 tok |
+| 23:37 | Session end: 2 writes across 1 files (StatsPage.jsx) | 1 reads | ~4140 tok |

@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-08-21T20:31:37.879Z
-> Files: 549 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-08-21T20:36:37.632Z
+> Files: 552 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -856,3 +856,7 @@
 
 - `wilsonInterval.js` — Exports wilsonInterval — win rate için %95 Wilson güven aralığı hesaplar (küçük örneklem belirsizliğini gösterir) (~250 tok)
 - `wilsonInterval.test.js` — wilsonInterval testleri (~200 tok)
+
+## web-app/src/pages/
+
+- `StatsPage.jsx` — DAY_OPTIONS (~3994 tok)
