@@ -1992,3 +1992,84 @@
 | 23:03 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
 | 23:16 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
 | 23:16 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
+| 23:22 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
+| 23:22 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
+| 23:25 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
+| 23:25 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
+| 23:26 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
+| 23:26 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
+| 23:26 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
+| 23:26 | Session end: 20 writes across 12 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24241 tok |
+| 23:27 | Created scratch-diagnose-db.sh | — | ~192 |
+| 23:27 | Created scratch-diagnose-db.sh | — | ~192 |
+| 23:28 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 23:28 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 23:28 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 23:28 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 23:29 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 23:29 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 23:29 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 23:29 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 23:29 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 23:29 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 23:30 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 23:30 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 00:33 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+| 00:33 | Session end: 21 writes across 13 files (memory-ve-cebruma-bak-immutable-wigderson.md, SignalGrid.jsx, SignalGrid.test.jsx, package.json, run-strategy.js) | 39 reads | ~24447 tok |
+
+## Session: 2026-08-21 19:55
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-21 19:55
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-21 19:55
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-21 19:55
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-21 19:56
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-21 19:56
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-21 20:05
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-21 20:05
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 21:01 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | 2→2 lines | ~54 |
+| 21:01 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | 2→2 lines | ~54 |
+
+## Session: 2026-08-21 (Kapanmamış Mum Kirliliği Düzeltmesi)
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 20:50 | Sunucu 88°C termal limitte kapandı (backtest:sweep yüzünden), yeniden açılınca signal-engine/market-data/tracker crash-loop'ta bulundu (Redis container durmuş) | — | Redis restart edildi, unless-stopped policy eklendi, crash-loop bitti | ~5k |
+| 21:00 | CPU/RAM yükü araştırıldı — yanlış hipotez (gösterge hesabı CPU yiyor) ölçülüp çürütüldü, gerçek bug bulundu: Bitget WS mum kapanmadan tick gönderiyor, dedup yok | bitget-ws.js, make-process-candle.js | Canlı Redis ölçümüyle doğrulandı (aynı ts 4-5 kez), simülasyonla etki ölçüldü (ADX %62 sapma) | ~15k |
+| 21:05 | Önceki bir iddia ("ADX≥25 hard gate") yanlış çıktı, düzeltildi — DB'den min_adx=14.27 kanıtı | — | Kullanıcıya açıkça düzeltme yapıldı | ~2k |
+| 21:10 | Plan yazıldı ve onaylandı: candle-buffer.js (commitCandle) ile mum kapanış tespiti | .claude/plans/memory-ve-cebruma-bak-immutable-wigderson.md | Ek plan bölümü eklendi | ~3k |
+| 21:15 | TDD: candle-buffer.js + testleri yazıldı | candle-buffer.js(.test) | 5/5 test PASS | ~1k |
+| 21:20 | TDD: make-process-candle.test.js yazıldı (hiç testi yoktu) — ilk versiyon yanlışlıkla yeşil çıktı (sinyal SAYISI test edilmiş, cooldown bug'ı maskeliyordu), indicatorsSnapshot DEĞERLERİ karşılaştıracak şekilde düzeltildi, kırmızı olduğu doğrulandı (106.55 vs 97.10) | make-process-candle.test.js | Bug'ı gerçekten yakalayan test elde edildi | ~3k |
+| 21:25 | make-process-candle.js'e commitCandle entegre edildi — gösterge/sinyal zinciri artık sadece closedCandle olduğunda çalışıyor | make-process-candle.js | 9/9 yeni test + 215/215 backend + 74/74 frontend PASS | ~2k |
+| 21:30 | cerebrum.md + anatomy.md güncellendi | .wolf/cerebrum.md, .wolf/anatomy.md | Decision Log + yeni dosya girdileri, test metodolojisi dersi eklendi | ~2k |
+| 21:02 | Session end: 1 writes across 1 files (make-process-candle.js) | 6 reads | ~6059 tok |
+| 21:02 | Session end: 1 writes across 1 files (make-process-candle.js) | 6 reads | ~6059 tok |

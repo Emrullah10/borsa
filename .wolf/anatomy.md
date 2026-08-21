@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-08-20T20:00:56.253Z
-> Files: 536 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-08-21T18:01:23.539Z
+> Files: 544 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -21,6 +21,7 @@
 - `docker-compose.yml` — Docker Compose services (~169 tok)
 - `package-lock.json` — npm lock file (~30299 tok)
 - `package.json` — Node.js package manifest (~354 tok)
+- `scratch-diagnose-db.sh` (~192 tok)
 - `vitest.config.js` — /*.test.js', 'services/**/*.test.js', 'packages/**/*.test.js'], (~67 tok)
 
 ## .claude/
@@ -138,10 +139,11 @@
 
 ## core/service-signal-engine/src/application/use-cases/
 
-- `make-process-candle.js` — Exports makeProcessCandle (~2391 tok)
+- `make-process-candle.js` — Exports makeProcessCandle (~2672 tok)
 
 ## core/service-signal-engine/src/domain/
 
+- `candle-buffer.js` — Exports commitCandle — Bitget WS mum kapanmadan önceki ara tick'leri buffer'a karıştırmadan ayırt eder (kapanmamış mum kirliliği düzeltmesi) (~350 tok)
 - `confluence.js` — Exports adaptiveThreshold, calcConfluence (~1522 tok)
 - `entry-filters.js` — Saf fonksiyon — DB/Redis bağımlılığı yok. (~427 tok)
 - `indicators.js` — Exports calcEMA, calcRSI, calcBollingerBands, calcATR + 6 more (~1587 tok)
@@ -155,10 +157,12 @@
 
 ## core/service-signal-engine/test/unit/
 
+- `candle-buffer.test.js` — commitCandle testleri — forming/closed geçişleri, aynı-ts tekrarları, maxSize kırpma (~450 tok)
 - `confluence.test.js` — ADX >= 25 ile güçlü trend fixture'ları (~1730 tok)
 - `entry-filters.test.js` — Declares baseParams (~1098 tok)
 - `indicators.test.js` — Declares closes20 (~1726 tok)
 - `liquidation-pressure.test.js` — Declares result (~764 tok)
+- `make-process-candle.test.js` — noisy vs clean mum akışı ile indicatorsSnapshot değerlerini karşılaştırır (kapanmamış mum kirliliği düzeltmesinin regresyon testi) (~1200 tok)
 - `regime.test.js` — Declares makeCandles (~630 tok)
 - `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~2202 tok)
 - `signal-repository.test.js` — Declares fakeRows (~2226 tok)
@@ -173,14 +177,14 @@
 
 ## core/service-tracker/src/domain/
 
-- `evaluate-outcome.js` — Açık bir outcome için mum OHLC'ye göre sonuç değerlendir. (~687 tok)
 - `backfill-outcome.js` — Exports backfillOutcome — servis restart'ında kaçırılan candle'ları geriye dönük oynatır (C4 düzeltmesi) (~350 tok)
+- `evaluate-outcome.js` — Açık bir outcome için mum OHLC'ye göre sonuç değerlendir. (~687 tok)
 
 ## core/service-tracker/test/unit/
 
+- `backfill-outcome.test.js` — backfillOutcome testleri — kaçırılan mumlarda TP/SL/tie-break/boş liste senaryoları (~400 tok)
 - `evaluate-outcome.test.js` — Helper: candle oluştur (~1498 tok)
 - `make-process-outcome-candle.test.js` — Declares TIMEOUT_MS (~2238 tok)
-- `backfill-outcome.test.js` — backfillOutcome testleri — kaçırılan mumlarda TP/SL/tie-break/boş liste senaryoları (~400 tok)
 
 ## db-schemas/
 
