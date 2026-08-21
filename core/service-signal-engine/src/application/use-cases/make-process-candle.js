@@ -1,4 +1,5 @@
 import { calcAllIndicators } from '../../domain/indicators.js';
+import { commitCandle } from '../../domain/candle-buffer.js';
 import { calcLiquidationPressure } from '../../domain/liquidation-pressure.js';
 import { calcConfluence } from '../../domain/confluence.js';
 import { calcRegime, calcHigherTfTrend } from '../../domain/regime.js';
@@ -19,7 +20,8 @@ export function makeProcessCandle({
   signalRepo, publish, log, confluenceThreshold, filterParams,
   requireSrCap = false, atrStopMult, targetRR,
 }) {
-  const candleBuffers = {};   // { 'BTCUSDT.1m': Candle[] }
+  const candleBuffers = {};   // { 'BTCUSDT.1m': Candle[] } — sadece KAPANMIŞ mumlar
+  const formingCandles = {};  // { 'BTCUSDT.1m': Candle } — hâlâ oluşan (henüz kapanmamış) mum
   const marketState = {};     // { 'BTCUSDT': { funding, oi, lsr } }
   const lastSignalTs = {};    // cooldown tracking
   const signalLocks = {};     // per-symbol async lock (race condition önlemi)
@@ -32,9 +34,14 @@ export function makeProcessCandle({
   // Sadece buffer'ı güncelle, sinyal üretme (15m için)
   function updateBufferOnly(symbol, tf, data) {
     const bufKey = `${symbol}.${tf}`;
-    if (!candleBuffers[bufKey]) candleBuffers[bufKey] = [];
-    candleBuffers[bufKey].push(data);
-    if (candleBuffers[bufKey].length > CANDLE_BUFFER_SIZE) candleBuffers[bufKey].shift();
+    const { buffer, forming } = commitCandle({
+      buffer: candleBuffers[bufKey] ?? [],
+      forming: formingCandles[bufKey] ?? null,
+      incoming: data,
+      maxSize: CANDLE_BUFFER_SIZE,
+    });
+    candleBuffers[bufKey] = buffer;
+    formingCandles[bufKey] = forming;
   }
 
   // Bir sembol için market state'i yoksa oluştur (lazy)
@@ -79,20 +86,29 @@ export function makeProcessCandle({
     // 15m ve 4h sadece teyit/rejim için kullanılır, sinyal üretmez
     if (tf === '15m' || tf === '4h') { updateBufferOnly(symbol, tf, data); return; }
     const bufKey = `${symbol}.${tf}`;
-    if (!candleBuffers[bufKey]) candleBuffers[bufKey] = [];
-
-    candleBuffers[bufKey].push(data);
-    if (candleBuffers[bufKey].length > CANDLE_BUFFER_SIZE) candleBuffers[bufKey].shift();
+    // Bitget WS mum henüz kapanmadan da (her tick'te) güncelleme gönderir —
+    // gösterge/sinyal zincirini SADECE mum gerçekten kapandığında çalıştır.
+    // Aksi halde ATR/RSI/ADX gibi seri-bağımlı göstergeler ara tick'lerle
+    // kirlenir (bkz. core/service-signal-engine/src/domain/candle-buffer.js).
+    const { buffer, forming, closedCandle } = commitCandle({
+      buffer: candleBuffers[bufKey] ?? [],
+      forming: formingCandles[bufKey] ?? null,
+      incoming: data,
+      maxSize: CANDLE_BUFFER_SIZE,
+    });
+    candleBuffers[bufKey] = buffer;
+    formingCandles[bufKey] = forming;
+    if (!closedCandle) return; // hâlâ oluşuyor, henüz değerlendirme yok
 
     const candles = candleBuffers[bufKey];
     if (candles.length < 50) return; // ADX güvenilir hesaplamak için yeterli mum
 
     const indicators = calcAllIndicators(candles);
-    indicators.currentPrice = data.close;
+    indicators.currentPrice = closedCandle.close;
 
     const state = ensureState(symbol);
-    const prevClose = candles.length > 1 ? candles[candles.length - 2].close : data.close;
-    const priceChange = prevClose > 0 ? (data.close - prevClose) / prevClose : 0;
+    const prevClose = candles.length > 1 ? candles[candles.length - 2].close : closedCandle.close;
+    const priceChange = prevClose > 0 ? (closedCandle.close - prevClose) / prevClose : 0;
 
     const liqPressure = calcLiquidationPressure({
       fundingRate:  state.funding?.rate ?? 0,
@@ -130,7 +146,7 @@ export function makeProcessCandle({
     // Takılan sinyal cooldown başlatmasın; volatilite artınca aynı coin tekrar denenebilsin
     const setup = buildSetup({
       direction: confluence.direction,
-      currentPrice: data.close,
+      currentPrice: closedCandle.close,
       atr: indicators.atr,
       supportLevel: indicators.supportLevel,
       resistanceLevel: indicators.resistanceLevel,
