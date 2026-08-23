@@ -3,6 +3,7 @@ import { Box, Typography, CircularProgress, Divider, ToggleButton, ToggleButtonG
 import { fetchStats, fetchBreakdown } from '@api/statsApi.js';
 import { COLORS } from '@styles/theme.js';
 import { wilsonInterval } from '@features/stats/utils/wilsonInterval.js';
+import { avgRInterval } from '@features/stats/utils/avgRInterval.js';
 
 const DAY_OPTIONS = [7, 14, 30];
 
@@ -114,6 +115,14 @@ export default function StatsPage() {
   const avgRFee = s.avg_r_after_fee != null ? parseFloat(s.avg_r_after_fee) : null;
   const avgSimR = s.avg_sim_r != null ? parseFloat(s.avg_sim_r) : null;
   const timeoutRate = s.timeout_rate != null ? parseFloat(s.timeout_rate) : null;
+  // Kârı belirleyen asıl metrik: gerçekçi giriş (kayma) + fee dahil ortalama R.
+  // Win rate tanımlayıcıdır, karar metriği DEĞİLDİR.
+  const simRCI = avgRInterval({
+    avgR: avgSimR,
+    tpHit: parseInt(s.tp_hit ?? 0, 10),
+    slHit: parseInt(s.sl_hit ?? 0, 10),
+    timeout: parseInt(s.timeout ?? 0, 10),
+  });
   const longWr = s.total_long > 0 ? ((s.long_tp / (s.long_tp + s.long_sl)) * 100).toFixed(1) : null;
   const shortWr = s.total_short > 0 ? ((s.short_tp / (s.short_tp + s.short_sl)) * 100).toFixed(1) : null;
 
@@ -143,6 +152,31 @@ export default function StatsPage() {
           o tarihten önce ADX/RSI/ATR sapıyordu, o dönemin win-rate'i güncel sistemi yansıtmaz.
           Sadece son {daysSinceCleanFix()} güne bakmak daha güvenilir.
         </Typography>
+      )}
+
+      {/* KARAR METRİĞİ — gerçekçi giriş + fee + çıkış kayması dahil işlem başına R.
+          Win rate değil BU sayı kârlılığı belirler; alt sınır > 0 olmadan edge kanıtlanmış sayılmaz. */}
+      {simRCI && (
+        <Box sx={{
+          mb: 2, px: 2, py: 1.5, borderRadius: '10px',
+          bgcolor: simRCI.provenPositive ? '#0d2818' : '#1c1a08',
+          border: `1px solid ${simRCI.provenPositive ? '#2ea043' : '#6e4b00'}`,
+        }}>
+          <Typography sx={{ fontSize: '0.72rem', color: '#8b949e', mb: 0.5 }}>
+            İşlem başına gerçekçi kâr (giriş/çıkış kayması + fee dahil)
+          </Typography>
+          <Typography sx={{ fontWeight: 700, fontSize: '1.4rem', color: avgSimR > 0 ? COLORS.long : COLORS.short }}>
+            {avgSimR > 0 ? '+' : ''}{avgSimR?.toFixed(4)} R
+            <Typography component="span" sx={{ fontSize: '0.8rem', color: '#8b949e', ml: 1 }}>
+              (%95: {simRCI.low > 0 ? '+' : ''}{simRCI.low.toFixed(4)} → {simRCI.high > 0 ? '+' : ''}{simRCI.high.toFixed(4)})
+            </Typography>
+          </Typography>
+          <Typography sx={{ fontSize: '0.72rem', color: simRCI.provenPositive ? '#3fb950' : '#f0b429', mt: 0.5 }}>
+            {simRCI.provenPositive
+              ? `✓ Edge istatistiksel olarak kanıtlandı (n=${simRCI.n}) — alt sınır sıfırın üstünde.`
+              : `⚠ Edge HENÜZ kanıtlanmadı (n=${simRCI.n}) — güven aralığı sıfırı kapsıyor, yani bu kâr şansa da bağlı olabilir. Daha çok işlem gerekiyor.`}
+          </Typography>
+        </Box>
       )}
 
       {/* Ana metrikler */}
@@ -241,12 +275,21 @@ export default function StatsPage() {
       {topSymbols && topSymbols.length > 0 && (
         <>
           <Divider sx={{ borderColor: '#21262d', my: 2 }} />
-          <Typography sx={{ color: '#8b949e', fontSize: '0.8rem', mb: 1 }}>
+          <Typography sx={{ color: '#8b949e', fontSize: '0.8rem', mb: 0.5 }}>
             En İyi Coinler (min. 3 sonuç)
+          </Typography>
+          {/* Bu liste kendi verisi üzerinde sıralanıp seçiliyor (win_rate DESC, min n=3).
+              n=3'te %100 görmek istatistiksel bir bulgu değil, seçim yanlılığının
+              kaçınılmaz sonucu. Az örneklemli satırlar soluk gösteriliyor. */}
+          <Typography sx={{ color: '#6e7681', fontSize: '0.68rem', mb: 1, fontStyle: 'italic' }}>
+            ⚠ Bu sıralama kendi verisiyle seçildiği için yanlıdır — n&lt;20 olan satırlar
+            (soluk gösterilenler) şansa bağlıdır, coin seçimi için kullanmayın.
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
             {topSymbols.map((sym) => {
               const symWr = parseFloat(sym.win_rate);
+              const symN = parseInt(sym.total ?? 0, 10);
+              const noisy = symN < 20;
               return (
                 <Box
                   key={sym.symbol}
@@ -259,14 +302,15 @@ export default function StatsPage() {
                     borderRadius: '8px',
                     px: 1.5,
                     py: 0.75,
+                    opacity: noisy ? 0.45 : 1,
                   }}
                 >
                   <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>{sym.symbol}</Typography>
                   <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
                     <Typography sx={{ color: '#8b949e', fontSize: '0.75rem' }}>
-                      {sym.tp_hit}✓ {sym.sl_hit}✗
+                      {sym.tp_hit}✓ {sym.sl_hit}✗ {noisy && <span style={{ color: '#6e7681' }}>(n={symN})</span>}
                     </Typography>
-                    <Typography sx={{ color: wrColor(symWr), fontSize: '0.85rem', fontWeight: 700 }}>
+                    <Typography sx={{ color: noisy ? '#6e7681' : wrColor(symWr), fontSize: '0.85rem', fontWeight: 700 }}>
                       %{symWr}
                     </Typography>
                   </Box>

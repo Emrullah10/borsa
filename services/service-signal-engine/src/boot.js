@@ -31,7 +31,8 @@ export async function boot() {
   const { rows: configRows } = await datasources.postgres.query(
     `SELECT key, value FROM bot_config WHERE key IN (
       'confluence_threshold','rr_min','taker_fee','atr_stop_mult','target_rr',
-      'require_sr_cap','adx_max','max_pb_long','min_pb_short','rsi_max_long','rsi_min_short'
+      'require_sr_cap','adx_max','max_pb_long','min_pb_short','rsi_max_long','rsi_min_short',
+      'slippage_pct','exit_slippage_pct'
     )`
   );
   const cfg = Object.fromEntries(configRows.map(r => [r.key, r.value]));
@@ -40,6 +41,13 @@ export async function boot() {
   const atrStopMult = cfg.atr_stop_mult != null ? parseFloat(cfg.atr_stop_mult) : undefined;
   const targetRR = cfg.target_rr != null ? parseFloat(cfg.target_rr) : undefined;
   const requireSrCap = cfg.require_sr_cap === true || cfg.require_sr_cap === 'true';
+
+  // Giriş kapısı (meetsFeeFloor) ile muhasebe (evaluateSimOutcome) AYNI maliyeti
+  // görsün. Eskiden kapı 0.0008 hardcoded kullanıyordu, muhasebe ~0.0018 → kapı
+  // muhasebeden ~2× gevşekti ve zarar yazacak setup'ları geçiriyordu.
+  const slippagePct = parseFloat(cfg.slippage_pct ?? 0.0003);
+  const exitSlippagePct = parseFloat(cfg.exit_slippage_pct ?? 0.0003);
+  const feeRoundtrip = 2 * takerFee + slippagePct + exitSlippagePct;
   const filterParams = {
     adxMax: parseFloat(cfg.adx_max ?? 65),
     maxPbLong: parseFloat(cfg.max_pb_long ?? 0.85),
@@ -49,7 +57,7 @@ export async function boot() {
   };
 
   const container = await buildContainer({
-    confluenceThreshold, takerFee, filterParams, requireSrCap, atrStopMult, targetRR,
+    confluenceThreshold, takerFee, filterParams, requireSrCap, atrStopMult, targetRR, feeRoundtrip,
   });
 
   const wsServer = createWsServer();

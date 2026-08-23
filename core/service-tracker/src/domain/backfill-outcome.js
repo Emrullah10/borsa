@@ -12,7 +12,7 @@ import { evaluateOutcome, evaluateSimOutcome } from './evaluate-outcome.js';
  *   1m mumlar, kronolojik sırada (signal_created_at sonrası)
  * @param {number} now
  * @param {number} timeoutMs
- * @param {{takerFee:number, slippagePct:number}} fees
+ * @param {{takerFee:number, slippagePct:number, exitSlippagePct?:number}} fees
  * @returns {{ simEntry: number|null, resolved: null | object }}
  */
 export function backfillOutcome(outcome, candles, now, timeoutMs, fees) {
@@ -35,6 +35,7 @@ export function backfillOutcome(outcome, candles, now, timeoutMs, fees) {
       status: result.status,
       exitPrice: result.exitPrice,
       takerFee: fees.takerFee,
+      exitSlippagePct: fees.exitSlippagePct,
     });
 
     return { simEntry, resolved: { ...result, simPnlR } };

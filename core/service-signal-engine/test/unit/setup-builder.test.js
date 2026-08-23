@@ -117,6 +117,38 @@ describe('buildSetup', () => {
     expect(setup.meetsFeeFloor).toBe(true);
   });
 
+  // --- Fee sabiti tutarlılığı (Faz 0.2) ---
+  // Eski hal: FEE_ROUNDTRIP = 0.0008 hardcoded ve "maker" diye etiketliydi,
+  // ama tüm dolumlar TAKER. Muhasebe tarafı (evaluateSimOutcome / getSignalStats)
+  // 2*0.0006 = 0.0012 + kayma kullanıyordu → giriş kapısı muhasebeden ~%50 GEVŞEK,
+  // yani kapının geçirdiği bazı setup'lar muhasebede zarar yazıyordu.
+  describe('fee tutarlılığı', () => {
+    it('feeRoundtrip parametre olarak geçirilebilir', () => {
+      const ucuz = buildSetup({ direction: 'long', currentPrice: 1000, atr: 6, feeRoundtrip: 0.0008 });
+      const pahali = buildSetup({ direction: 'long', currentPrice: 1000, atr: 6, feeRoundtrip: 0.0018 });
+      expect(pahali.feeR).toBeGreaterThan(ucuz.feeR);
+    });
+
+    it('feeR = feeRoundtrip / stopPct', () => {
+      const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2, feeRoundtrip: 0.0018 });
+      expect(setup.feeR).toBeCloseTo(0.0018 / setup.stopPct, 6);
+    });
+
+    it('gerçekçi fee ile kapı daha SIKI: sınırdaki setup elenir', () => {
+      // rrRatio - feeR >= 1.0 eşiğinde: yüksek fee feeR'yi büyütür → kapı kapanır
+      const args = { direction: 'long', currentPrice: 1000, atr: 10, targetRR: 1.05 };
+      const gevsek = buildSetup({ ...args, feeRoundtrip: 0.0008 });
+      const gercek = buildSetup({ ...args, feeRoundtrip: 0.0018 });
+      expect(gevsek.meetsFeeFloor).toBe(true);
+      expect(gercek.meetsFeeFloor).toBe(false);
+    });
+
+    it('feeRoundtrip verilmezse eski davranış korunur (geriye uyumlu)', () => {
+      const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2 });
+      expect(setup.feeR).toBeCloseTo(0.0008 / setup.stopPct, 6);
+    });
+  });
+
   it('minStopPct override: 1m daha sıkı eşik', () => {
     const setup5m = buildSetup({ direction: 'long', currentPrice: 100, atr: 2, minStopPct: 0.012 });
     const setup1m = buildSetup({ direction: 'long', currentPrice: 100, atr: 2, minStopPct: 0.014 });
