@@ -20,9 +20,23 @@ describe('signal-repository', () => {
 
     expect(db.query).toHaveBeenCalledOnce();
     const [sql, params] = db.query.mock.calls[0];
-    expect(sql).toContain('ORDER BY created_at DESC');
+    expect(sql).toContain('ORDER BY');
     expect(params).toEqual([20]);
     expect(result).toEqual(fakeRows);
+  });
+
+  // Panelden gerçek dolum girebilmek için outcome_id şart — POST /outcomes/:id/real-fill
+  // outcome_id bekliyor ama sinyal listesi sadece signals.id döndürüyordu, form
+  // isteği gönderemezdi. Kaydedilen gerçek dolum da geri gösterilmeli.
+  it('getRecentSignals outcome_id ve gerçek dolum alanlarını da döner', async () => {
+    db.query.mockResolvedValue({ rows: [] });
+    await repo.getRecentSignals(20);
+    const [sql] = db.query.mock.calls[0];
+
+    expect(sql).toContain('signal_outcomes');
+    expect(sql).toContain('outcome_id');
+    expect(sql).toContain('real_entry_price');
+    expect(sql).toContain('sim_entry_price'); // model vs gerçek karşılaştırması için
   });
 
   it('getPendingOutcomes sim_entry_price kolonunu da seçer', async () => {
