@@ -145,3 +145,8 @@ Front yüz `position: absolute` iken içerik 280px'i aşınca kartlar üst üste
 - [2026-06-01] Bitget SDK metodları: `getHistoricCandlesV2` değil → `getFuturesHistoricCandles`, `getHistoricFundRate` değil → `getFuturesHistoricFundingRates`, `getOpenInterest` değil → `getFuturesOpenInterest`. OI alanı `openInterest` değil → `size`.
 - [2026-07-08] STALE (superseded 2026-07-08 monorepo migration): "Backend kök dizinde değil, borsa/backend/ altında" artık YANLIŞ. Backend içeriği kök dizine taşındı (packages/, services/, db-schemas/, core/), frontend/ → web-app/ oldu. Kod ararken backend/ veya frontend/ ile başlayan yol arama.
 - [2026-06-27] SignalCard'da `position: absolute` front yüz + sabit `minHeight` kombinasyonu: içerik büyüyünce kartlar bozulur (üst üste biner). Front yüzü `relative` yap, back yüzü `absolute` + `height: 100%` bırak. Bir daha `minHeight` sabiti koyma.
+
+[2026-08-23] `/stats` endpoint'inin döndürdüğü tüm sayılar STRING (Postgres COUNT/SUM text
+olarak gelir). Bunları `+` ile toplamadan önce MUTLAKA `parseFloat`/`parseInt` yap — aksi halde
+JS string birleştirir ("52"+"37"="5237"), oran hesabı saçmalar (%1.0 gibi). Bu proje boyunca
+`s.xxx` alanlarına dokunan her yeni hesap için bu kontrolü yap.

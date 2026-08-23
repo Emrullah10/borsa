@@ -2320,3 +2320,18 @@
 | 15:16 | Faz 1.2: Telegram formatter + sender (TDD, bağımlılık yok, global fetch) | core/service-notifier/src/domain/telegram-formatter.js, src/infrastructure/telegram-sender.js | 19/19 PASS | ~3k |
 | 15:17 | Faz 1.2: notifier boot'a Telegram bağlandı, app-config'e env eklendi | services/service-notifier/src/boot.js, configs/app-config.js | 236/236 + 100/100 PASS | ~1k |
 | 15:19 | BUG: local DB'de real_* kolonları yok (migration hiç uygulanmamış) → /signals 500 | db-schemas/migrations/2026-08-20-02 | migration uygulandı, uçtan uca curl ile doğrulandı | ~2k |
+| 15:20 | Session end: 58 writes across 30 files (okey-last-session-we-lucky-bumblebee.md, evaluate-outcome.test.js, evaluate-outcome.js, backfill-outcome.js, make-process-outcome-candle.js) | 20 reads | ~38147 tok |
+| 15:20 | Session end: 58 writes across 30 files (okey-last-session-we-lucky-bumblebee.md, evaluate-outcome.test.js, evaluate-outcome.js, backfill-outcome.js, make-process-outcome-candle.js) | 20 reads | ~38147 tok |
+| 15:44 | Session end: 58 writes across 30 files (okey-last-session-we-lucky-bumblebee.md, evaluate-outcome.test.js, evaluate-outcome.js, backfill-outcome.js, make-process-outcome-candle.js) | 20 reads | ~38147 tok |
+| 15:44 | Session end: 58 writes across 30 files (okey-last-session-we-lucky-bumblebee.md, evaluate-outcome.test.js, evaluate-outcome.js, backfill-outcome.js, make-process-outcome-candle.js) | 20 reads | ~38147 tok |
+
+## Session: 2026-08-23 19:51
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-23 19:51
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 20:10 | BUG (kullanıcı bildirdi, ekran görüntüsü): LONG/SHORT %1.0 gösteriyordu | StatsPage.jsx, directionalWinRate.js + test | string-concat hatası, 5/5 test PASS, 105/105 toplam PASS | ~1.5k |

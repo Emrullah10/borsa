@@ -2559,6 +2559,24 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-08-23T15:19:00Z"
+    },
+    {
+      "id": "bug-158",
+      "timestamp": "2026-08-23T20:10:00Z",
+      "error_message": "Panelde LONG/SHORT 'kazanma' kutulari %1.0 gosteriyordu (kullanici ekran goruntusuyle bildirdi, 52 kazanan/89 toplam iken %58.4 olmasi gerekiyordu)",
+      "file": "web-app/src/pages/StatsPage.jsx",
+      "root_cause": "/stats endpoint'i tum sayilari STRING doner (Postgres COUNT/SUM text olarak gelir). longWr hesaplanirken s.long_tp/(s.long_tp+s.long_sl) yaziliyordu — parseFloat yapilmadan '+' isareti JS'de STRING BIRLESTIRME yapiyor: '52'+'37'='5237', 52/5237=0.0099 -> %1.0. Bu Faz 0/1'de degistirdigim bir satir degildi, onceden beri boyleydi; kullanici canli paneli acinca fark edildi.",
+      "fix": "directionalWinRate(tp, sl) saf fonksiyonu eklendi (parseFloat once yapiliyor), StatsPage'deki longWr/shortWr hesaplarina baglandi. TDD: string girdiyle bug'i reprodukte eden test once yazildi.",
+      "tags": [
+        "type-coercion",
+        "string-concat",
+        "stats-page",
+        "postgres-string-numeric",
+        "frontend"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T20:10:00Z"
     }
   ]
 }

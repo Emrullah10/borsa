@@ -4,6 +4,7 @@ import { fetchStats, fetchBreakdown } from '@api/statsApi.js';
 import { COLORS } from '@styles/theme.js';
 import { wilsonInterval } from '@features/stats/utils/wilsonInterval.js';
 import { avgRInterval } from '@features/stats/utils/avgRInterval.js';
+import { directionalWinRate } from '@features/stats/utils/directionalWinRate.js';
 
 const DAY_OPTIONS = [7, 14, 30];
 
@@ -123,8 +124,8 @@ export default function StatsPage() {
     slHit: parseInt(s.sl_hit ?? 0, 10),
     timeout: parseInt(s.timeout ?? 0, 10),
   });
-  const longWr = s.total_long > 0 ? ((s.long_tp / (s.long_tp + s.long_sl)) * 100).toFixed(1) : null;
-  const shortWr = s.total_short > 0 ? ((s.short_tp / (s.short_tp + s.short_sl)) * 100).toFixed(1) : null;
+  const longWr = directionalWinRate(s.long_tp, s.long_sl);
+  const shortWr = directionalWinRate(s.short_tp, s.short_sl);
 
   return (
     <Box sx={{ p: 2, height: '100%', overflowY: 'auto', color: '#e6edf3' }}>
