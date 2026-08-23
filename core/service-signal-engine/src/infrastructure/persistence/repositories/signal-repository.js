@@ -224,11 +224,17 @@ export function makeSignalRepository({ db, takerFee = 0.0006 } = {}) {
   }
 
   async function getRecentSignals(limit = 20) {
+    // outcome_id panelden gerçek dolum girebilmek için şart (POST /outcomes/:id/real-fill).
+    // sim_entry_price + real_entry_price birlikte dönüyor ki panel "model ne dedi,
+    // gerçekte ne oldu" karşılaştırmasını gösterebilsin (Faz 1 — kayma doğrulaması).
     const sql = `
-      SELECT id, symbol, direction, trigger_timeframe, entry_price, stop_price, target_price,
-             rr_ratio, confluence_score, indicators_snapshot, created_at
-      FROM signals
-      ORDER BY created_at DESC
+      SELECT s.id, s.symbol, s.direction, s.trigger_timeframe, s.entry_price, s.stop_price,
+             s.target_price, s.rr_ratio, s.confluence_score, s.indicators_snapshot, s.created_at,
+             o.id AS outcome_id, o.status, o.sim_entry_price,
+             o.real_entry_price, o.real_exit_price, o.real_entry_at
+      FROM signals s
+      LEFT JOIN signal_outcomes o ON o.signal_id = s.id
+      ORDER BY s.created_at DESC
       LIMIT $1
     `;
     const result = await db.query(sql, [limit]);

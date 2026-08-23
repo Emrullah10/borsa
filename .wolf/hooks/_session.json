@@ -76,6 +76,31 @@
       "count": 2,
       "tokens": 4539,
       "first_read": "2026-08-23T11:57:41.280Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/routes.js": {
+      "count": 1,
+      "tokens": 789,
+      "first_read": "2026-08-23T12:12:02.317Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/api/signalApi.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-08-23T12:12:17.523Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx": {
+      "count": 3,
+      "tokens": 5300,
+      "first_read": "2026-08-23T12:13:46.990Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/boot.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-08-23T12:15:09.253Z"
+    },
+    "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/configs/app-config.js": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-08-23T12:16:37.842Z"
     }
   },
   "files_written": [
@@ -300,6 +325,132 @@
       "action": "edit",
       "tokens": 224,
       "at": "2026-08-23T11:58:52.427Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/signal-repository.test.js",
+      "action": "edit",
+      "tokens": 228,
+      "at": "2026-08-23T12:11:34.225Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "action": "edit",
+      "tokens": 210,
+      "at": "2026-08-23T12:11:50.447Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-signal-engine/src/routes.js",
+      "action": "edit",
+      "tokens": 150,
+      "at": "2026-08-23T12:12:07.509Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/api/realFillApi.test.js",
+      "action": "create",
+      "tokens": 566,
+      "at": "2026-08-23T12:12:34.147Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/api/realFillApi.js",
+      "action": "create",
+      "tokens": 646,
+      "at": "2026-08-23T12:13:09.519Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/api/realFillApi.test.js",
+      "action": "edit",
+      "tokens": 20,
+      "at": "2026-08-23T12:13:13.874Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/api/realFillApi.test.js",
+      "action": "edit",
+      "tokens": 20,
+      "at": "2026-08-23T12:13:13.874Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/api/realFillApi.test.js",
+      "action": "edit",
+      "tokens": 317,
+      "at": "2026-08-23T12:13:23.205Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/RealFillForm.jsx",
+      "action": "create",
+      "tokens": 1304,
+      "at": "2026-08-23T12:14:16.772Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+      "action": "edit",
+      "tokens": 70,
+      "at": "2026-08-23T12:14:26.211Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/SignalCard.jsx",
+      "action": "edit",
+      "tokens": 32,
+      "at": "2026-08-23T12:14:32.603Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/web-app/src/features/signals/components/RealFillForm.test.jsx",
+      "action": "create",
+      "tokens": 690,
+      "at": "2026-08-23T12:14:49.960Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/test/unit/telegram-formatter.test.js",
+      "action": "create",
+      "tokens": 468,
+      "at": "2026-08-23T12:15:25.137Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/src/domain/telegram-formatter.js",
+      "action": "create",
+      "tokens": 486,
+      "at": "2026-08-23T12:15:53.050Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/test/unit/telegram-sender.test.js",
+      "action": "create",
+      "tokens": 615,
+      "at": "2026-08-23T12:16:16.117Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-notifier/src/infrastructure/telegram-sender.js",
+      "action": "create",
+      "tokens": 340,
+      "at": "2026-08-23T12:16:29.541Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/configs/app-config.js",
+      "action": "edit",
+      "tokens": 53,
+      "at": "2026-08-23T12:16:44.239Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/boot.js",
+      "action": "edit",
+      "tokens": 187,
+      "at": "2026-08-23T12:16:57.509Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/boot.js",
+      "action": "edit",
+      "tokens": 46,
+      "at": "2026-08-23T12:17:04.859Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/boot.js",
+      "action": "edit",
+      "tokens": 87,
+      "at": "2026-08-23T12:17:09.732Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-notifier/src/boot.js",
+      "action": "edit",
+      "tokens": 87,
+      "at": "2026-08-23T12:17:09.733Z"
     }
   ],
   "edit_counts": {
@@ -320,11 +471,25 @@
     "core/service-backtest/src/domain/run-strategy.js": 2,
     "web-app/src/features/stats/utils/avgRInterval.test.js": 1,
     "web-app/src/features/stats/utils/avgRInterval.js": 1,
-    "web-app/src/pages/StatsPage.jsx": 5
+    "web-app/src/pages/StatsPage.jsx": 5,
+    "core/service-signal-engine/test/unit/signal-repository.test.js": 1,
+    "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js": 1,
+    "services/service-signal-engine/src/routes.js": 1,
+    "web-app/src/api/realFillApi.test.js": 4,
+    "web-app/src/api/realFillApi.js": 1,
+    "web-app/src/features/signals/components/RealFillForm.jsx": 1,
+    "web-app/src/features/signals/components/SignalCard.jsx": 2,
+    "web-app/src/features/signals/components/RealFillForm.test.jsx": 1,
+    "core/service-notifier/test/unit/telegram-formatter.test.js": 1,
+    "core/service-notifier/src/domain/telegram-formatter.js": 1,
+    "core/service-notifier/test/unit/telegram-sender.test.js": 1,
+    "core/service-notifier/src/infrastructure/telegram-sender.js": 1,
+    "services/service-notifier/configs/app-config.js": 1,
+    "services/service-notifier/src/boot.js": 4
   },
-  "anatomy_hits": 9,
-  "anatomy_misses": 6,
-  "repeated_reads_warned": 1,
+  "anatomy_hits": 11,
+  "anatomy_misses": 9,
+  "repeated_reads_warned": 3,
   "cerebrum_warnings": 0,
-  "stop_count": 1
+  "stop_count": 4
 }

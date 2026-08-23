@@ -7,4 +7,6 @@ export default {
   gmailUser:         { env: 'GMAIL_USER', default: '' },
   gmailAppPassword:  { env: 'GMAIL_APP_PASSWORD', default: '' },
   emailTo:           { env: 'EMAIL_TO', default: '' },
+  telegramBotToken:  { env: 'TELEGRAM_BOT_TOKEN', default: '' },
+  telegramChatId:    { env: 'TELEGRAM_CHAT_ID', default: '' },
 };

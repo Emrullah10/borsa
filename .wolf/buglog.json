@@ -2493,6 +2493,72 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-08-23T14:52:00Z"
+    },
+    {
+      "id": "bug-154",
+      "timestamp": "2026-08-23T12:11:34.226Z",
+      "error_message": "Missing await",
+      "file": "core/service-signal-engine/test/unit/signal-repository.test.js",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T12:11:34.226Z"
+    },
+    {
+      "id": "bug-155",
+      "timestamp": "2026-08-23T12:11:50.448Z",
+      "error_message": "Significant refactor of ",
+      "file": "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "root_cause": "4 lines replaced/restructured",
+      "fix": "Rewrote 7→13 lines (4 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T12:11:50.448Z"
+    },
+    {
+      "id": "bug-156",
+      "timestamp": "2026-08-23T12:12:07.510Z",
+      "error_message": "Null/undefined access in ",
+      "file": "services/service-signal-engine/src/routes.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T12:12:07.510Z"
+    },
+    {
+      "id": "bug-157",
+      "timestamp": "2026-08-23T15:19:00Z",
+      "error_message": "column o.real_entry_price does not exist — GET /signals 500 donuyordu",
+      "file": "db-schemas/migrations/2026-08-20-02-execution-validation.sql",
+      "root_cause": "Migration 2026-08-20-02 (real_entry_price/real_exit_price/real_entry_at/real_notes kolonlari) yazilmis ama LOCAL DB'ye hic uygulanmamisti. getRecentSignals'a bu kolonlar eklenince sorgu patladi. Unit testler db.query'yi MOCK'ladigi icin yakalayamadi — SQL'in gercek semaya karsi calistigi hic dogrulanmiyordu.",
+      "fix": "psql -f ile 2026-08-20-02 ve 2026-08-23-01 migration'lari local DB'ye uygulandi. Ayrica servis gercekten boot edilip GET /signals + POST /outcomes/:id/real-fill ucdan uca curl ile dogrulandi (kayit yazildi, geri okundu, test verisi temizlendi).",
+      "tags": [
+        "migration",
+        "schema-drift",
+        "sql",
+        "mock-blind-spot",
+        "faz-1"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T15:19:00Z"
     }
   ]
 }

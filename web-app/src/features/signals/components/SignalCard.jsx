@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, Typography, Button, Chip, IconButton, CircularProgress } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AiComment from '@features/ai/components/AiComment.jsx';
+import RealFillForm from './RealFillForm.jsx';
 import { COLORS } from '@styles/theme.js';
 import { analyzeSignal } from '@api/aiApi.js';
 import { fetchPrice } from '@api/marketApi.js';
@@ -449,6 +450,9 @@ export default function SignalCard({ signal, isNew, isActive = false, onFlipChan
                   )}
                 </Box>
               )}
+
+              {/* Faz 1 — gerçek dolum kaydı: modelin kayma varsayımını doğrulamak için */}
+              <RealFillForm signal={signal} />
             </Box>
 
             {/* Back button — altta sabit */}

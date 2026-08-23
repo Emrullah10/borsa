@@ -17,6 +17,16 @@
 <!-- Mistakes made and corrected. Each entry prevents the same mistake recurring. -->
 <!-- Format: [YYYY-MM-DD] Description of what went wrong and what to do instead. -->
 
+[2026-08-23] Repository SQL'i değiştirdikten sonra SADECE unit testlere güvenme — bu projede
+repository testleri `db.query`'yi mock'luyor, yani sorgunun gerçek şemaya karşı çalışıp
+çalışmadığını HİÇ doğrulamıyor. `getRecentSignals`'a `real_entry_price` eklendiğinde 236/236
+test yeşil geçti ama endpoint canlıda `column o.real_entry_price does not exist` ile 500
+dönüyordu — çünkü `2026-08-20-02` migration'ı yazılmış ama local DB'ye hiç uygulanmamıştı.
+**Yapılacak:** SQL değiştiren her işten sonra (1) bekleyen migration'ları `psql -f` ile uygula,
+(2) servisi gerçekten boot et, (3) endpoint'i `curl` ile çağır. Migration dosyasının repoda
+var olması uygulandığı anlamına GELMEZ — `db:migrate:up` script'i idempotent ama otomatik
+çalışmıyor, ayrıca schema_migrations tablosu yok, yani neyin uygulandığı takip edilmiyor.
+
 [2026-06-01] Birim testlerde producer fonksiyonun çıktısını ELLE uydurma. setup-builder testleri `{direction:'long', ...}` objesini manuel kurduğu için buildSetup'ın `direction` alanını döndürmediği gözden kaçtı; simulateTrade her zaman short dalına düştü → backtest PF negatif. Tüketici testleri (simulateTrade) gerçek üretici (buildSetup) çıktısıyla beslenmeli ya da producer'ın sözleşmesi ayrıca test edilmeli. Birim testler geçerken entegrasyon kopabilir.
 
 ## Decision Log

@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-08-23T11:58:52.418Z
-> Files: 559 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-08-23T12:17:09.724Z
+> Files: 569 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -125,15 +125,19 @@
 ## core/service-notifier/src/domain/
 
 - `formatter.js` — Exports formatEmailSubject, formatEmailHtml (~817 tok)
+- `telegram-formatter.js` — Telegram sinyal mesajı — saf fonksiyon, I/O yok. (~486 tok)
 
 ## core/service-notifier/src/infrastructure/
 
 - `mailer.js` — Exports makeMailer (~129 tok)
+- `telegram-sender.js` — Telegram Bot API gönderici. Ek bağımlılık yok — Node 20+ global fetch yeterli. (~340 tok)
 
 ## core/service-notifier/test/unit/
 
 - `formatter.test.js` — Declares longSignal (~458 tok)
 - `mailer.test.js` (~348 tok)
+- `telegram-formatter.test.js` — Declares signal (~468 tok)
+- `telegram-sender.test.js` — Declares log (~615 tok)
 
 ## core/service-signal-engine/
 
@@ -155,7 +159,7 @@
 
 ## core/service-signal-engine/src/infrastructure/persistence/repositories/
 
-- `signal-repository.js` — Kırılım (breakdown) sorgularında sadece bu whitelist'teki grup ifadeleri kullanılabilir. (~3010 tok)
+- `signal-repository.js` — Kırılım (breakdown) sorgularında sadece bu whitelist'teki grup ifadeleri kullanılabilir. (~3146 tok)
 
 ## core/service-signal-engine/test/unit/
 
@@ -167,7 +171,7 @@
 - `make-process-candle.test.js` — noisy vs clean mum akışı ile indicatorsSnapshot değerlerini karşılaştırır (kapanmamış mum kirliliği düzeltmesinin regresyon testi) (~1200 tok)
 - `regime.test.js` — Declares makeCandles (~630 tok)
 - `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~2688 tok)
-- `signal-repository.test.js` — Declares fakeRows (~2226 tok)
+- `signal-repository.test.js` — Declares fakeRows (~2416 tok)
 
 ## core/service-tracker/
 
@@ -826,11 +830,19 @@
 
 - `sweep.js` — 2026-07-13: BTC/ETH/SOL/BNB/XRP gibi büyük-cap coinlerle test edilmişti, ama (~2598 tok)
 
+## services/service-notifier/configs/
+
+- `app-config.js` (~216 tok)
+
+## services/service-notifier/src/
+
+- `boot.js` — Exports boot (~909 tok)
+
 ## services/service-signal-engine/src/
 
 - `boot.js` — Exports boot (~924 tok)
 - `container.js` — Exports buildContainer (~252 tok)
-- `routes.js` — API routes: GET, POST (6 endpoints) (~789 tok)
+- `routes.js` — API routes: GET, POST (6 endpoints) (~911 tok)
 
 ## services/service-tracker/
 
@@ -847,11 +859,15 @@
 
 ## web-app/src/api/
 
+- `realFillApi.js` — Gerçek dolum fiyatını kaydeder (Faz 1 — kayma doğrulaması). (~646 tok)
+- `realFillApi.test.js` — Declares body (~827 tok)
 - `regimeApi.js` — Exports fetchRegime (~82 tok)
 
 ## web-app/src/features/signals/components/
 
-- `SignalCard.jsx` — formatCountdown; isActive prop ile AKTİF sekmede yeşil geri sayım banner'ı, GEÇMİŞ sekmede nötr "PENCERE KAPANDI" banner'ı gösterir (~5300 tok)
+- `RealFillForm.jsx` — Gerçek dolum kaydı formu (Faz 1 — kayma doğrulaması). (~1304 tok)
+- `RealFillForm.test.jsx` — base (~690 tok)
+- `SignalCard.jsx` — formatCountdown (~5222 tok)
 - `SignalGrid.jsx` — AKTİF/GEÇMİŞ sekmeli (Tabs). AKTİF = getEntryWindow(s).msLeft>0 && !missedIds.has(id); GEÇMİŞ = HISTORY_WINDOW_MS (90dk) içindeki geri kalanlar. 1sn tick ile aktif sekme geri sayımları yenilenir. (~2400 tok)
 - `SignalGrid.test.jsx` — mkSignal; AKTİF/GEÇMİŞ sekme render testleri (~2100 tok)
 

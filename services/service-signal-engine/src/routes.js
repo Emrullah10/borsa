@@ -48,6 +48,12 @@ export function registerRoutes(app, { signalRepo, processCandle }) {
         confluenceScore: parseFloat(r.confluence_score),
         indicatorsSnapshot: r.indicators_snapshot,
         createdAt: r.created_at,
+        // Faz 1 — gerçek dolum kaydı: panel formu outcomeId olmadan istek atamaz.
+        outcomeId: r.outcome_id ?? null,
+        status: r.status ?? null,
+        simEntryPrice: r.sim_entry_price != null ? parseFloat(r.sim_entry_price) : null,
+        realEntryPrice: r.real_entry_price != null ? parseFloat(r.real_entry_price) : null,
+        realExitPrice: r.real_exit_price != null ? parseFloat(r.real_exit_price) : null,
       }));
       res.json({ signals });
     } catch (err) {

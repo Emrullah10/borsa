@@ -2270,3 +2270,53 @@
 | 14:58 | Faz 0.4: StatsPage karar metriği paneli + topSymbols gürültü uyarısı | StatsPage.jsx | 84/84 PASS, build OK | ~2k |
 | 14:59 | Migration: exit_slippage_pct bot_config anahtarı | db-schemas/migrations/2026-08-23-01-exit-slippage.sql | — | ~300 |
 | 15:00 | Sonuç: n=110'da CI=[-0.161,+0.235] → edge HENÜZ KANITLANMADI (~3160 işlem gerekli) | — | dürüst ölçüm | ~500 |
+| 15:01 | Session end: 37 writes across 17 files (okey-last-session-we-lucky-bumblebee.md, evaluate-outcome.test.js, evaluate-outcome.js, backfill-outcome.js, make-process-outcome-candle.js) | 15 reads | ~25436 tok |
+| 15:01 | Session end: 37 writes across 17 files (okey-last-session-we-lucky-bumblebee.md, evaluate-outcome.test.js, evaluate-outcome.js, backfill-outcome.js, make-process-outcome-candle.js) | 15 reads | ~25436 tok |
+| 15:03 | Session end: 37 writes across 17 files (okey-last-session-we-lucky-bumblebee.md, evaluate-outcome.test.js, evaluate-outcome.js, backfill-outcome.js, make-process-outcome-candle.js) | 15 reads | ~25436 tok |
+| 15:03 | Session end: 37 writes across 17 files (okey-last-session-we-lucky-bumblebee.md, evaluate-outcome.test.js, evaluate-outcome.js, backfill-outcome.js, make-process-outcome-candle.js) | 15 reads | ~25436 tok |
+| 15:07 | Session end: 37 writes across 17 files (okey-last-session-we-lucky-bumblebee.md, evaluate-outcome.test.js, evaluate-outcome.js, backfill-outcome.js, make-process-outcome-candle.js) | 15 reads | ~25436 tok |
+| 15:07 | Session end: 37 writes across 17 files (okey-last-session-we-lucky-bumblebee.md, evaluate-outcome.test.js, evaluate-outcome.js, backfill-outcome.js, make-process-outcome-candle.js) | 15 reads | ~25436 tok |
+| 15:11 | Edited core/service-signal-engine/test/unit/signal-repository.test.js | expanded (+14 lines) | ~228 |
+| 15:11 | Edited core/service-signal-engine/test/unit/signal-repository.test.js | expanded (+14 lines) | ~228 |
+| 15:11 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | expanded (+6 lines) | ~210 |
+| 15:11 | Edited core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js | expanded (+6 lines) | ~210 |
+| 15:12 | Edited services/service-signal-engine/src/routes.js | added nullish coalescing | ~150 |
+| 15:12 | Edited services/service-signal-engine/src/routes.js | added nullish coalescing | ~150 |
+| 15:12 | Created web-app/src/api/realFillApi.test.js | — | ~566 |
+| 15:12 | Created web-app/src/api/realFillApi.test.js | — | ~566 |
+| 15:13 | Created web-app/src/api/realFillApi.js | — | ~646 |
+| 15:13 | Created web-app/src/api/realFillApi.js | — | ~646 |
+| 15:13 | Edited web-app/src/api/realFillApi.test.js | inline fix | ~20 |
+| 15:13 | Edited web-app/src/api/realFillApi.test.js | inline fix | ~20 |
+| 15:13 | Edited web-app/src/api/realFillApi.test.js | expanded (+22 lines) | ~317 |
+| 15:13 | Edited web-app/src/api/realFillApi.test.js | expanded (+22 lines) | ~317 |
+| 15:14 | Created web-app/src/features/signals/components/RealFillForm.jsx | — | ~1304 |
+| 15:14 | Created web-app/src/features/signals/components/RealFillForm.jsx | — | ~1304 |
+| 15:14 | Edited web-app/src/features/signals/components/SignalCard.jsx | 5→8 lines | ~70 |
+| 15:14 | Edited web-app/src/features/signals/components/SignalCard.jsx | 5→8 lines | ~70 |
+| 15:14 | Edited web-app/src/features/signals/components/SignalCard.jsx | added 1 import(s) | ~32 |
+| 15:14 | Edited web-app/src/features/signals/components/SignalCard.jsx | added 1 import(s) | ~32 |
+| 15:14 | Created web-app/src/features/signals/components/RealFillForm.test.jsx | — | ~690 |
+| 15:14 | Created web-app/src/features/signals/components/RealFillForm.test.jsx | — | ~690 |
+| 15:15 | Created core/service-notifier/test/unit/telegram-formatter.test.js | — | ~468 |
+| 15:15 | Created core/service-notifier/test/unit/telegram-formatter.test.js | — | ~468 |
+| 15:15 | Created core/service-notifier/src/domain/telegram-formatter.js | — | ~486 |
+| 15:15 | Created core/service-notifier/src/domain/telegram-formatter.js | — | ~486 |
+| 15:16 | Created core/service-notifier/test/unit/telegram-sender.test.js | — | ~615 |
+| 15:16 | Created core/service-notifier/test/unit/telegram-sender.test.js | — | ~615 |
+| 15:16 | Created core/service-notifier/src/infrastructure/telegram-sender.js | — | ~340 |
+| 15:16 | Created core/service-notifier/src/infrastructure/telegram-sender.js | — | ~340 |
+| 15:16 | Edited services/service-notifier/configs/app-config.js | 2→4 lines | ~53 |
+| 15:16 | Edited services/service-notifier/configs/app-config.js | 2→4 lines | ~53 |
+| 15:16 | Edited services/service-notifier/src/boot.js | added 1 condition(s) | ~187 |
+| 15:16 | Edited services/service-notifier/src/boot.js | added 1 condition(s) | ~187 |
+| 15:17 | Edited services/service-notifier/src/boot.js | 2→4 lines | ~46 |
+| 15:17 | Edited services/service-notifier/src/boot.js | 2→4 lines | ~46 |
+| 15:17 | Edited services/service-notifier/src/boot.js | added 2 import(s) | ~87 |
+| 15:17 | Edited services/service-notifier/src/boot.js | added 2 import(s) | ~87 |
+| 15:12 | Faz 1.1: getRecentSignals'a outcome_id + real/sim fill alanları (LEFT JOIN) | signal-repository.js, routes.js | 129/129 PASS | ~2k |
+| 15:13 | Faz 1.1: realFillApi + calcSlippageDiff (TDD) | web-app/src/api/realFillApi.js + test | 10/10 PASS | ~2k |
+| 15:15 | Faz 1.1: RealFillForm bileşeni, SignalCard arka yüzüne eklendi | RealFillForm.jsx + test, SignalCard.jsx | 6/6 PASS | ~3k |
+| 15:16 | Faz 1.2: Telegram formatter + sender (TDD, bağımlılık yok, global fetch) | core/service-notifier/src/domain/telegram-formatter.js, src/infrastructure/telegram-sender.js | 19/19 PASS | ~3k |
+| 15:17 | Faz 1.2: notifier boot'a Telegram bağlandı, app-config'e env eklendi | services/service-notifier/src/boot.js, configs/app-config.js | 236/236 + 100/100 PASS | ~1k |
+| 15:19 | BUG: local DB'de real_* kolonları yok (migration hiç uygulanmamış) → /signals 500 | db-schemas/migrations/2026-08-20-02 | migration uygulandı, uçtan uca curl ile doğrulandı | ~2k |
