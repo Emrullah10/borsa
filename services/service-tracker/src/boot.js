@@ -22,12 +22,14 @@ export async function boot() {
   const timeoutMs = config.timeoutHours * 60 * 60 * 1000;
 
   const { rows: configRows } = await datasources.postgres.query(
-    "SELECT key, value FROM bot_config WHERE key IN ('taker_fee','slippage_pct')"
+    "SELECT key, value FROM bot_config WHERE key IN ('taker_fee','slippage_pct','exit_slippage_pct')"
   );
   const cfg = Object.fromEntries(configRows.map(r => [r.key, r.value]));
   const fees = {
     takerFee: parseFloat(cfg.taker_fee ?? 0.0006),
     slippagePct: parseFloat(cfg.slippage_pct ?? 0.0003),
+    // Çıkış kayması: stop-through gerçeği. Modellenmezse ölçülen edge yukarı sapar.
+    exitSlippagePct: parseFloat(cfg.exit_slippage_pct ?? 0.0003),
   };
 
   const { processOutcomeCandle } = buildContainer({ timeoutMs, fees });

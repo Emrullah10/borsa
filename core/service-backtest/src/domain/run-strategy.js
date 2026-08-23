@@ -30,6 +30,12 @@ export function runStrategyOverCandles({
 }) {
   if (candles.length < window) return [];
 
+  // Kapı/muhasebe tutarlılığı — canlı boot.js ile AYNI formül (Faz 0.2).
+  // fees verilmezse buildSetup kendi varsayılanını kullanır (geriye uyumlu).
+  const feeRoundtrip = fees
+    ? 2 * (fees.takerFee ?? 0.0006) + (fees.slippagePct ?? 0.0003) + (fees.exitSlippagePct ?? 0.0003)
+    : undefined;
+
   const trades = [];
   const cooldowns = new Map();
 
@@ -88,6 +94,7 @@ export function runStrategyOverCandles({
       requireSrCap,
       ...(atrStopMult != null ? { atrStopMult } : {}),
       ...(targetRR != null ? { targetRR } : {}),
+      ...(feeRoundtrip != null ? { feeRoundtrip } : {}),
     });
 
     // Canlı make-process-candle.js'nin meetsMinTarget/meetsMinRR/meetsFeeFloor/

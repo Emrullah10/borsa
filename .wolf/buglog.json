@@ -2277,6 +2277,222 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-08-21T20:31:37.891Z"
+    },
+    {
+      "id": "bug-141",
+      "timestamp": "2026-08-23T11:50:00.830Z",
+      "error_message": "Significant refactor of ",
+      "file": "../../../.claude/plans/okey-last-session-we-lucky-bumblebee.md",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 3→7 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T11:50:00.830Z"
+    },
+    {
+      "id": "bug-142",
+      "timestamp": "2026-08-23T11:53:20.146Z",
+      "error_message": "Significant refactor of ",
+      "file": "core/service-tracker/src/domain/evaluate-outcome.js",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 20→39 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T11:53:20.146Z"
+    },
+    {
+      "id": "bug-143",
+      "timestamp": "2026-08-23T11:53:32.632Z",
+      "error_message": "Wrong reference: fees should be exitSlippagePct",
+      "file": "core/service-tracker/src/domain/backfill-outcome.js",
+      "root_cause": "Used \"fees\" instead of \"exitSlippagePct\"",
+      "fix": "Changed fees → exitSlippagePct",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T11:53:32.632Z"
+    },
+    {
+      "id": "bug-144",
+      "timestamp": "2026-08-23T11:54:00.071Z",
+      "error_message": "Wrong reference: fees should be exitSlippagePct",
+      "file": "core/service-backtest/src/domain/simulator.js",
+      "root_cause": "Used \"fees\" instead of \"exitSlippagePct\"",
+      "fix": "Changed fees → exitSlippagePct",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T11:54:00.071Z"
+    },
+    {
+      "id": "bug-145",
+      "timestamp": "2026-08-23T11:55:22.101Z",
+      "error_message": "Wrong reference: FEE_ROUNDTRIP should be feeRoundtrip",
+      "file": "core/service-signal-engine/src/domain/setup-builder.js",
+      "root_cause": "Used \"FEE_ROUNDTRIP\" instead of \"feeRoundtrip\"",
+      "fix": "Changed FEE_ROUNDTRIP → feeRoundtrip",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T11:55:22.101Z"
+    },
+    {
+      "id": "bug-146",
+      "timestamp": "2026-08-23T11:56:04.492Z",
+      "error_message": "Null/undefined access in ",
+      "file": "services/service-signal-engine/src/boot.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T11:56:04.492Z"
+    },
+    {
+      "id": "bug-147",
+      "timestamp": "2026-08-23T11:56:39.891Z",
+      "error_message": "Null/undefined access in ",
+      "file": "core/service-backtest/src/domain/run-strategy.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T11:56:39.891Z"
+    },
+    {
+      "id": "bug-148",
+      "timestamp": "2026-08-23T11:57:49.635Z",
+      "error_message": "Null/undefined access in ",
+      "file": "web-app/src/pages/StatsPage.jsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check) | Also: {/* KARAR METRİĞİ — gerçekçi giriş + fee + çıkış kayması dah; Win rate değil BU sayı kârlılığı belirler; alt sınır > 0 olm | Also: <Typography sx={{ color: '#8b949e', fontSize: '0.8rem', mb: ; {/* Bu liste kendi verisi üzerinde sıralanıp seçiliyor (win_",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 3,
+      "last_seen": "2026-08-23T11:58:40.625Z"
+    },
+    {
+      "id": "bug-149",
+      "timestamp": "2026-08-23T11:58:52.428Z",
+      "error_message": "CSS fix: color",
+      "file": "web-app/src/pages/StatsPage.jsx",
+      "root_cause": "color: wrColor(symWr), fontSize: '0.85rem', fontWeight: 700 → noisy ? '#6e7681' : wrColor(symWr), fontSize: '0.85rem', fontWeight: 700",
+      "fix": "Changed color: wrColor(symWr), fontSize: '0.85rem', fontWeight: 700 → noisy ? '#6e7681' : wrColor(symWr), fontSize: '0.85rem', fontWeight: 700",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T11:58:52.428Z"
+    },
+    {
+      "id": "bug-150",
+      "timestamp": "2026-08-23T14:55:00Z",
+      "error_message": "Olculen edge sistematik olarak yukari sapiyor — cikis kaymasi (exit slippage) hic modellenmemis",
+      "file": "core/service-tracker/src/domain/evaluate-outcome.js",
+      "root_cause": "evaluateSimOutcome cikisi HER ZAMAN tam stop/target fiyatindan dolduruyordu. Gercekte stop tetiklenince fiyat seviyeden GECER (stop-through), market emriyle daha kotu dolar. Kayma sadece KAYBEDEN tarafa vurdugu icin hata tek yonlu: olculen avg_sim_r gercekten yuksek cikiyordu.",
+      "fix": "applyExitSlippage() eklendi — sl_hit ve timeout'ta aleyhe kayma uygulanir, tp_hit'te (limit emir) uygulanmaz. exitSlippagePct bot_config'ten gelir (migration 2026-08-23-01). Backtest simulator ayni fonksiyonu import ettigi icin parite otomatik korundu. Olculen etki: avg_sim_r +0.0370 -> +0.0324 R (edge pozitif kaliyor).",
+      "tags": [
+        "slippage",
+        "measurement-bias",
+        "tracker",
+        "backtest-parity",
+        "faz-0"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T14:55:00Z"
+    },
+    {
+      "id": "bug-151",
+      "timestamp": "2026-08-23T14:56:00Z",
+      "error_message": "Giris kapisi (meetsFeeFloor) muhasebeden ~2x gevsek — zarar yazacak setup'lari geciriyordu",
+      "file": "core/service-signal-engine/src/domain/setup-builder.js",
+      "root_cause": "FEE_ROUNDTRIP = 0.0008 hardcoded ve 'maker gidis-donus' diye etiketliydi, ama tum dolumlar TAKER. Muhasebe tarafi (evaluateSimOutcome/getSignalStats) 2*0.0006 + kayma = ~0.0018 kullaniyordu. Yani kapinin gecirdigi bazi setup'lar muhasebede zarar yaziyordu; kapi ile olcum ayni maliyeti gormuyordu.",
+      "fix": "buildSetup'a feeRoundtrip parametresi eklendi (varsayilan 0.0008 = geriye uyumlu). boot.js artik 2*takerFee + slippagePct + exitSlippagePct formuluyle bot_config'ten hesaplayip geciriyor; run-strategy.js backtest tarafinda AYNI formulu kullaniyor (parite). Yaniltici 'maker' yorumu duzeltildi.",
+      "tags": [
+        "fee-model",
+        "gate-consistency",
+        "setup-builder",
+        "backtest-parity",
+        "faz-0"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T14:56:00Z"
+    },
+    {
+      "id": "bug-152",
+      "timestamp": "2026-08-23T14:58:00Z",
+      "error_message": "Karar metriginin (avg_sim_r) hicbir yerde hata payi yoktu — Wilson SADECE win_rate'e uygulaniyordu",
+      "file": "web-app/src/features/stats/utils/avgRInterval.js",
+      "root_cause": "Karliligi win_rate degil islem basina ortalama R belirler, ama belirsizlik gosterimi sadece win_rate'e eklenmisti. +0.037R gibi ince bir edge n=110'da sifirdan ayirt edilemez; panel bunu gostermedigi icin 'sistem karli' izlenimi veriyordu.",
+      "fix": "avgRInterval() eklendi (iki-noktali R dagiliminin kapali-form standart hatasi; ham islem listesi gerekmiyor cunku /stats sadece ozet donuyor). StatsPage'e karar metrigi paneli eklendi: provenPositive=false iken sari uyari 'edge HENUZ kanitlanmadi'. Olculen: n=110'da CI=[-0.161,+0.235] -> kanitlanmadi; kanit icin ~3160 islem (~63 gun) gerekiyor.",
+      "tags": [
+        "statistics",
+        "confidence-interval",
+        "stats-page",
+        "decision-metric",
+        "faz-0"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T14:58:00Z"
+    },
+    {
+      "id": "bug-153",
+      "timestamp": "2026-08-23T14:52:00Z",
+      "error_message": "$6 teminat / 10x kaldirac ~%20 iflas riski tasiyor — bu hesap onceki oturumda 'yapilmali' denip hic yapilmamisti",
+      "file": ".claude/plans/okey-last-session-we-lucky-bumblebee.md",
+      "root_cause": "Stop %2.5 -> kayip teminatin %25'i -> 4 ardisik kayip hesabi sifirliyor. WR %57.6'da 4 ardisik kayip olasiligi %3.2 ama 100 islemde en az bir kez gorme sansi ~%96. Monte Carlo (20k tur): iflas orani ~%20, medyan +$44 ama %5 senaryo $0. Ayrica $6/10x karari mum-kirliligi bulgusundan ONCE alinmisti, dayandigi win-rate tahminleri artik gecersiz.",
+      "fix": "HENUZ UYGULANMADI — plana yazildi. Kaldirac taramasi: iflas riski sermayeden degil KALDIRACtan geliyor (10x her hesap boyutunda ~%20, 3x'te %0.3). Oneri 10x -> 3x. Faz 3 karar kapisina 'pozisyon boyutu iflas riski <%2' maddesi eklendi.",
+      "tags": [
+        "risk-management",
+        "leverage",
+        "position-sizing",
+        "monte-carlo",
+        "faz-3"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-23T14:52:00Z"
     }
   ]
 }

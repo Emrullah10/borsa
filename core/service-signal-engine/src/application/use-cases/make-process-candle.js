@@ -18,7 +18,7 @@ const MIN_STOP_PCT_BY_TF = { '1m': 0.025, '5m': 0.025 };
 
 export function makeProcessCandle({
   signalRepo, publish, log, confluenceThreshold, filterParams,
-  requireSrCap = false, atrStopMult, targetRR,
+  requireSrCap = false, atrStopMult, targetRR, feeRoundtrip,
 }) {
   const candleBuffers = {};   // { 'BTCUSDT.1m': Candle[] } — sadece KAPANMIŞ mumlar
   const formingCandles = {};  // { 'BTCUSDT.1m': Candle } — hâlâ oluşan (henüz kapanmamış) mum
@@ -154,6 +154,7 @@ export function makeProcessCandle({
       requireSrCap,
       ...(atrStopMult != null ? { atrStopMult } : {}),
       ...(targetRR != null ? { targetRR } : {}),
+      ...(feeRoundtrip != null ? { feeRoundtrip } : {}),
     });
     if (!setup.meetsMinTarget) {
       log.debug(`Min target not met: ${symbol} targetPct=${(setup.targetPct * 100).toFixed(3)}%`);

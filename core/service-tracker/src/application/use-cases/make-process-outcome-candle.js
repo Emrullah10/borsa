@@ -9,7 +9,8 @@ import { backfillOutcome } from '../../domain/backfill-outcome.js';
 const BACKFILL_MIN_AGE_MS = 2 * 60 * 1000;
 
 export function makeProcessOutcomeCandle({ signalRepo, publish, log, timeoutMs, fees, fetchMissedCandles }) {
-  const { takerFee, slippagePct } = fees ?? { takerFee: 0.0006, slippagePct: 0.0003 };
+  const { takerFee, slippagePct, exitSlippagePct } = fees
+    ?? { takerFee: 0.0006, slippagePct: 0.0003, exitSlippagePct: 0.0003 };
   // pendingBySymbol: { BTCUSDT: [ outcome, ... ] }
   let pendingBySymbol = {};
   // Çözümlenen outcome_id'leri tut — refresh sırasında tekrar yüklenmesini önler
@@ -113,6 +114,7 @@ export function makeProcessOutcomeCandle({ signalRepo, publish, log, timeoutMs, 
         status: result.status,
         exitPrice: result.exitPrice,
         takerFee,
+        exitSlippagePct,
       });
 
       const notes = result.tieBreak ? 'tie-break: SL-first' : null;

@@ -23,6 +23,42 @@
 
 <!-- Significant technical decisions with rationale. Why X was chosen over Y. -->
 
+**[2026-08-23] Faz 0 (ölçüm dürüstlüğü) uygulandı; otomatik trade'den önce "giriş kayması" darboğazı seçildi:**
+Kullanıcı "projenin benim yerime scalp trade yapmasını istiyorum" dedi ve doğruluk oranını sordu.
+Canlı veri çekildi (temiz veri, `CLEAN_DATA_SINCE=2026-08-21T21:25` sonrası, n=99):
+win_rate %57.6 iyi görünüyordu **ama `avg_sim_r` sadece +0.0370R** — yani gerçekçi giriş
+fiyatıyla işlem başına ~5 sent. `avg_sim_r / avg_r_after_fee = 0.20` → **edge'in ~%80'i giriş
+kaymasında buharlaşıyor.** Kullanıcıya 4 seçenek sunuldu, "önce giriş kaymasını çöz" seçildi.
+**Üç ölçüm hatası bulundu ve düzeltildi (bkz. buglog bug-150/151/152):** (1) çıkış kayması hiç
+modellenmemişti — `exitPrice` her zaman tam stop/target, kayma sadece kaybeden tarafa vurduğu
+için hata TEK YÖNLÜ ve edge'i yukarı sapıtıyordu; (2) `setup-builder.js` giriş kapısı
+`FEE_ROUNDTRIP=0.0008` hardcoded + yanlışlıkla "maker" etiketli kullanıyordu oysa muhasebe
+~0.0018 kullanıyor → kapı muhasebeden ~2× gevşekti; (3) karar metriğinin (avg_sim_r) hiçbir
+yerde hata payı yoktu, Wilson sadece win_rate'e uygulanıyordu.
+**Sonuç: yeni `avgRInterval` ile n=110'da CI=[-0.161, +0.235] → edge HENÜZ KANITLANMADI.**
+Kanıt için ~3160 işlem (~63 gün) gerekiyor. Panel artık bunu sarı uyarıyla dürüstçe söylüyor.
+**İYİ HABER:** çıkış kayması 3 senaryoda test edildi (sadece SL / tüm çıkışlar / 3× altcoin
+stop-through), üçünde de `avg_sim_r` pozitif kaldı (+0.032/+0.025/+0.023) — geniş %2.5 stop
+kararı edge'i kayma varsayımlarına dayanıklı kılmış.
+**How to apply:** Bu projede bir metrik iyileştirmesi önerirken önce "bu sayı hangi popülasyonu
+ölçüyor ve hata payı ne" diye sor. `win_rate` tanımlayıcıdır, KARAR METRİĞİ `avg_sim_r`'dir
+(tek gerçekçi giriş + fee + çıkış kayması içeren sayı). Yeni bir maliyet/gate eklerken
+**giriş kapısı ile muhasebenin AYNI sayıyı görmesi** şart — ayrıştıklarında kapı zarar
+yazacak setup'ları geçirir.
+
+**[2026-08-23] $6/10x pozisyon boyutu reddedildi — iflas riski %20 (KRİTİK, henüz uygulanmadı):**
+Önceki oturumların "10x kaldıraçlı risk hesabı yapılmalı" notu hiç yapılmamıştı; bu oturumda
+yapıldı. Stop %2.5 → kayıp teminatın %25'i → **4 ardışık kayıp hesabı sıfırlıyor**, 100 işlemde
+görme şansı ~%96. Monte Carlo (20k tur, avg_sim_r=+0.037): **iflas oranı ~%20**, medyan +$44
+ama %5'lik senaryo $0. Kaldıraç taraması gösterdi ki **iflas riski sermayeden değil kaldıraçtan
+geliyor** — 10x her hesap boyutunda (~$6/$20/$50/$100) ~%20, 3x'te %0.3.
+**Karar: 10x yerine 3x öner.** Ayrıca $6/10x kararı mum-kirliliği bulgusundan ÖNCE alınmıştı,
+dayandığı win-rate tahminleri artık geçersiz. Faz 3 karar kapısına "pozisyon boyutu iflas
+riski <%2" maddesi eklendi; Faz 4 güvenlik sınırlarına "kaldıraç ≤3x" 0. madde olarak yazıldı.
+**How to apply:** Bu projede pozisyon boyutu/kaldıraç konuşulurken beklenen değere (medyan kâr)
+bakmak YETMEZ — ardışık kayıp serisi + iflas olasılığı hesaplanmalı. Edge ince olduğu için
+hayatta kalmak kâr hızından önemli.
+
 **[2026-08-21] Panel "GİRİŞ KAÇTI" krizi — bildirim eklemek yerine önce paneli dürüstleştirmeyi seçtik:**
 Kullanıcı 12+ kartın hepsi "GİRİŞ KAÇTI/Süre doldu" derken "nasıl işlem açacağım" diye sordu.
 Kök neden: 5m sinyal 10dk geçerli (`entryValidity.js` `WINDOW_CANDLES=2`), panel 90dk gösteriyordu

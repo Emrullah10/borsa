@@ -2145,3 +2145,128 @@
 | 23:35 | StatsPage'e CLEAN_DATA_SINCE (2026-08-21T21:25 — candle-buffer fix deploy zamanı) sabiti eklendi. Seçilen gün penceresi fix-öncesini de kapsıyorsa sarı uyarı: "bu pencere kirli veri içeriyor, sadece son N güne bak" | StatsPage.jsx | 78/78 test PASS, build başarılı | ~2k |
 | 23:37 | Session end: 2 writes across 1 files (StatsPage.jsx) | 1 reads | ~4140 tok |
 | 23:37 | Session end: 2 writes across 1 files (StatsPage.jsx) | 1 reads | ~4140 tok |
+| 23:40 | Session end: 2 writes across 1 files (StatsPage.jsx) | 2 reads | ~4140 tok |
+| 23:40 | Session end: 2 writes across 1 files (StatsPage.jsx) | 2 reads | ~4140 tok |
+| 01:19 | Session end: 2 writes across 1 files (StatsPage.jsx) | 2 reads | ~4140 tok |
+| 01:19 | Session end: 2 writes across 1 files (StatsPage.jsx) | 2 reads | ~4140 tok |
+
+## Session: 2026-08-22 23:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-22 23:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 23:32 | Edited ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/borsa-strategy-validation-plan.md | modified ncelleme() | ~1024 |
+| 23:32 | Edited ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/borsa-strategy-validation-plan.md | modified ncelleme() | ~1024 |
+| 23:32 | Edited ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/MEMORY.md | bekliyor() → fix() | ~121 |
+| 23:32 | Edited ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/MEMORY.md | bekliyor() → fix() | ~121 |
+| 23:33 | Session end: 2 writes across 2 files (borsa-strategy-validation-plan.md, MEMORY.md) | 2 reads | ~1227 tok |
+| 23:33 | Session end: 2 writes across 2 files (borsa-strategy-validation-plan.md, MEMORY.md) | 2 reads | ~1227 tok |
+
+## Session: 2026-08-23 14:35
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-23 14:35
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-23 14:37
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-23 14:37
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 14:49 | Created ../../../.claude/plans/okey-last-session-we-lucky-bumblebee.md | — | ~2836 |
+| 14:49 | Created ../../../.claude/plans/okey-last-session-we-lucky-bumblebee.md | — | ~2836 |
+| 14:49 | Edited ../../../.claude/plans/okey-last-session-we-lucky-bumblebee.md | modified Carlo() | ~392 |
+| 14:49 | Edited ../../../.claude/plans/okey-last-session-we-lucky-bumblebee.md | modified Carlo() | ~392 |
+| 14:49 | Edited ../../../.claude/plans/okey-last-session-we-lucky-bumblebee.md | 1→4 lines | ~79 |
+| 14:49 | Edited ../../../.claude/plans/okey-last-session-we-lucky-bumblebee.md | 1→4 lines | ~79 |
+| 14:50 | Edited ../../../.claude/plans/okey-last-session-we-lucky-bumblebee.md | 3→7 lines | ~130 |
+| 14:50 | Edited ../../../.claude/plans/okey-last-session-we-lucky-bumblebee.md | 3→7 lines | ~130 |
+| 14:50 | Edited ../../../.claude/plans/okey-last-session-we-lucky-bumblebee.md | expanded (+8 lines) | ~198 |
+| 14:50 | Edited ../../../.claude/plans/okey-last-session-we-lucky-bumblebee.md | expanded (+8 lines) | ~198 |
+| 14:52 | Edited core/service-tracker/test/unit/evaluate-outcome.test.js | expanded (+93 lines) | ~948 |
+| 14:52 | Edited core/service-tracker/test/unit/evaluate-outcome.test.js | expanded (+93 lines) | ~948 |
+| 14:53 | Edited core/service-tracker/src/domain/evaluate-outcome.js | added 1 condition(s) | ~482 |
+| 14:53 | Edited core/service-tracker/src/domain/evaluate-outcome.js | added 1 condition(s) | ~482 |
+| 14:53 | Edited core/service-tracker/src/domain/backfill-outcome.js | inline fix | ~23 |
+| 14:53 | Edited core/service-tracker/src/domain/backfill-outcome.js | inline fix | ~23 |
+| 14:53 | Edited core/service-tracker/src/domain/backfill-outcome.js | 3→4 lines | ~34 |
+| 14:53 | Edited core/service-tracker/src/domain/backfill-outcome.js | 3→4 lines | ~34 |
+| 14:53 | Edited core/service-tracker/src/application/use-cases/make-process-outcome-candle.js | 1→2 lines | ~38 |
+| 14:53 | Edited core/service-tracker/src/application/use-cases/make-process-outcome-candle.js | 1→2 lines | ~38 |
+| 14:53 | Edited core/service-tracker/src/application/use-cases/make-process-outcome-candle.js | 3→4 lines | ~26 |
+| 14:53 | Edited core/service-tracker/src/application/use-cases/make-process-outcome-candle.js | 3→4 lines | ~26 |
+| 14:53 | Edited services/service-tracker/src/boot.js | 7→9 lines | ~132 |
+| 14:53 | Edited services/service-tracker/src/boot.js | 7→9 lines | ~132 |
+| 14:54 | Edited core/service-backtest/src/domain/simulator.js | inline fix | ~25 |
+| 14:54 | Edited core/service-backtest/src/domain/simulator.js | inline fix | ~25 |
+| 14:54 | Edited core/service-backtest/src/domain/simulator.js | 3→4 lines | ~24 |
+| 14:54 | Edited core/service-backtest/src/domain/simulator.js | 3→4 lines | ~24 |
+| 14:54 | Created db-schemas/migrations/2026-08-23-01-exit-slippage.sql | — | ~212 |
+| 14:54 | Created db-schemas/migrations/2026-08-23-01-exit-slippage.sql | — | ~212 |
+| 14:54 | Edited services/service-backtest/src/sweep.js | inline fix | ~23 |
+| 14:54 | Edited services/service-backtest/src/sweep.js | inline fix | ~23 |
+| 14:54 | Edited core/service-signal-engine/test/unit/setup-builder.test.js | expanded (+32 lines) | ~498 |
+| 14:54 | Edited core/service-signal-engine/test/unit/setup-builder.test.js | expanded (+32 lines) | ~498 |
+| 14:55 | Edited core/service-signal-engine/src/domain/setup-builder.js | 3→4 lines | ~31 |
+| 14:55 | Edited core/service-signal-engine/src/domain/setup-builder.js | 3→4 lines | ~31 |
+| 14:55 | Edited core/service-signal-engine/src/domain/setup-builder.js | inline fix | ~18 |
+| 14:55 | Edited core/service-signal-engine/src/domain/setup-builder.js | inline fix | ~18 |
+| 14:55 | Edited core/service-signal-engine/src/domain/setup-builder.js | 1→6 lines | ~120 |
+| 14:55 | Edited core/service-signal-engine/src/domain/setup-builder.js | 1→6 lines | ~120 |
+| 14:55 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | 2→2 lines | ~19 |
+| 14:55 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | 2→2 lines | ~19 |
+| 14:55 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | 3→4 lines | ~48 |
+| 14:55 | Edited core/service-signal-engine/src/application/use-cases/make-process-candle.js | 3→4 lines | ~48 |
+| 14:55 | Edited services/service-signal-engine/src/boot.js | 3→4 lines | ~63 |
+| 14:55 | Edited services/service-signal-engine/src/boot.js | 3→4 lines | ~63 |
+| 14:56 | Edited services/service-signal-engine/src/boot.js | added nullish coalescing | ~149 |
+| 14:56 | Edited services/service-signal-engine/src/boot.js | added nullish coalescing | ~149 |
+| 14:56 | Edited services/service-signal-engine/src/boot.js | 2→2 lines | ~30 |
+| 14:56 | Edited services/service-signal-engine/src/boot.js | 2→2 lines | ~30 |
+| 14:56 | Edited services/service-signal-engine/src/container.js | inline fix | ~40 |
+| 14:56 | Edited services/service-signal-engine/src/container.js | inline fix | ~40 |
+| 14:56 | Edited services/service-signal-engine/src/container.js | 2→3 lines | ~14 |
+| 14:56 | Edited services/service-signal-engine/src/container.js | 2→3 lines | ~14 |
+| 14:56 | Edited core/service-backtest/src/domain/run-strategy.js | added nullish coalescing | ~104 |
+| 14:56 | Edited core/service-backtest/src/domain/run-strategy.js | added nullish coalescing | ~104 |
+| 14:56 | Edited core/service-backtest/src/domain/run-strategy.js | 3→4 lines | ~48 |
+| 14:56 | Edited core/service-backtest/src/domain/run-strategy.js | 3→4 lines | ~48 |
+| 14:57 | Created web-app/src/features/stats/utils/avgRInterval.test.js | — | ~515 |
+| 14:57 | Created web-app/src/features/stats/utils/avgRInterval.test.js | — | ~515 |
+| 14:57 | Created web-app/src/features/stats/utils/avgRInterval.js | — | ~518 |
+| 14:57 | Created web-app/src/features/stats/utils/avgRInterval.js | — | ~518 |
+| 14:57 | Edited web-app/src/pages/StatsPage.jsx | added nullish coalescing | ~119 |
+| 14:57 | Edited web-app/src/pages/StatsPage.jsx | added nullish coalescing | ~119 |
+| 14:57 | Edited web-app/src/pages/StatsPage.jsx | added 1 import(s) | ~41 |
+| 14:57 | Edited web-app/src/pages/StatsPage.jsx | added 1 import(s) | ~41 |
+| 14:58 | Edited web-app/src/pages/StatsPage.jsx | added optional chaining | ~464 |
+| 14:58 | Edited web-app/src/pages/StatsPage.jsx | added optional chaining | ~464 |
+| 14:58 | Edited web-app/src/pages/StatsPage.jsx | added nullish coalescing | ~280 |
+| 14:58 | Edited web-app/src/pages/StatsPage.jsx | added nullish coalescing | ~280 |
+| 14:58 | Edited web-app/src/pages/StatsPage.jsx | CSS: opacity, 45 | ~224 |
+| 14:58 | Edited web-app/src/pages/StatsPage.jsx | CSS: opacity, 45 | ~224 |
+
+## Session: 2026-08-23 (Faz 0 — ölçüm dürüstlüğü)
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 14:50 | Canlı stats analizi: avg_sim_r=+0.037 (edge'in %80'i giriş kaymasında) | /stats endpoint | darboğaz tespit edildi | ~2k |
+| 14:52 | 10x kaldıraç Monte Carlo: iflas riski %20, 3x'te %0.3 | plan dosyası | 10x reddedildi | ~1k |
+| 14:53 | Faz 0.1 TDD: çıkış kayması modeli (applyExitSlippage) | evaluate-outcome.js, backfill-outcome.js, make-process-outcome-candle.js, simulator.js, boot.js | 21/21 PASS | ~3k |
+| 14:55 | Faz 0.2 TDD: fee sabiti tutarsızlığı (feeRoundtrip param) | setup-builder.js, make-process-candle.js, boot.js, container.js, run-strategy.js | 29/29 PASS | ~3k |
+| 14:57 | Faz 0.3 TDD: avgRInterval (karar metriği güven aralığı) | web-app/src/features/stats/utils/avgRInterval.js + test | 6/6 PASS | ~2k |
+| 14:58 | Faz 0.4: StatsPage karar metriği paneli + topSymbols gürültü uyarısı | StatsPage.jsx | 84/84 PASS, build OK | ~2k |
+| 14:59 | Migration: exit_slippage_pct bot_config anahtarı | db-schemas/migrations/2026-08-23-01-exit-slippage.sql | — | ~300 |
+| 15:00 | Sonuç: n=110'da CI=[-0.161,+0.235] → edge HENÜZ KANITLANMADI (~3160 işlem gerekli) | — | dürüst ölçüm | ~500 |

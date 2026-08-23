@@ -13,7 +13,7 @@ const TIMEOUT_MS = MAX_CANDLES * CANDLE_MS;
 // Artık aynı saf fonksiyonlar çağrılıyor — parite kod düzeyinde garanti.
 export function simulateTrade(setup, candles, fees = {}) {
   const { entryPrice, stopPrice, targetPrice, direction } = setup;
-  const { takerFee = 0.0006, slippagePct = 0.0003 } = fees;
+  const { takerFee = 0.0006, slippagePct = 0.0003, exitSlippagePct = 0.0003 } = fees;
 
   const window = candles.slice(0, MAX_CANDLES);
   if (window.length === 0) {
@@ -46,6 +46,7 @@ export function simulateTrade(setup, candles, fees = {}) {
       status: result.status,
       exitPrice: result.exitPrice,
       takerFee,
+      exitSlippagePct,
     });
 
     const outcome = result.status === 'tp_hit' ? 'WIN' : result.status === 'sl_hit' ? 'LOSS' : 'TIMEOUT';

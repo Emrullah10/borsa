@@ -2,7 +2,12 @@
 const ATR_STOP_MULT_DEFAULT = 2.5;
 const MIN_TARGET_PCT = 0.01; // Hedef girişten en az %1 uzakta olmalı
 
-const FEE_ROUNDTRIP = 0.0008;       // maker gidiş-dönüş ~%0.08
+// Varsayılan geriye-uyumluluk için 0.0008'de bırakıldı, ama bu değer YANILTICI:
+// eskiden "maker" diye etiketliydi oysa tüm dolumlar TAKER. Muhasebe tarafı
+// (evaluateSimOutcome / getSignalStats) 2*takerFee + kayma kullanıyor → gerçek
+// gidiş-dönüş maliyet ~0.0018. Yani bu kapı muhasebeden ~2× GEVŞEKTİ.
+// boot.js artık bot_config'ten hesaplayıp feeRoundtrip parametresiyle geçiyor.
+const FEE_ROUNDTRIP = 0.0008;
 // Eski: %1.2 — piyasa gürültüsünden dar. %2.5 ile fee/R oranı düşer, WR artar.
 const MIN_STOP_PCT_DEFAULT = 0.025;
 
@@ -46,6 +51,7 @@ export function buildSetup({
   requireSrCap = false,
   atrStopMult = ATR_STOP_MULT_DEFAULT,
   targetRR = TARGET_RR_DEFAULT,
+  feeRoundtrip = FEE_ROUNDTRIP,
 }) {
   const stopDist = atr * atrStopMult;
 
@@ -79,7 +85,7 @@ export function buildSetup({
 
   // Fee-aware filtre: stop dar olunca fee R'nin büyük kısmını yer
   const stopPct = risk / currentPrice;
-  const feeR = stopPct > 0 ? FEE_ROUNDTRIP / stopPct : Infinity;
+  const feeR = stopPct > 0 ? feeRoundtrip / stopPct : Infinity;
   const meetsFeeFloor = stopPct >= minStopPct && (rrRatio - feeR) >= 1.0;
 
   // S/R kapaksız ("açık sahada") sinyaller canlı veride sistematik olarak kötü

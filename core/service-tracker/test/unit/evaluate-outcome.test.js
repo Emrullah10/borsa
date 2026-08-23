@@ -172,4 +172,97 @@ describe('evaluateSimOutcome', () => {
     });
     expect(r.simPnlR).toBeNull();
   });
+
+  // --- Çıkış kayması (exit slippage) ---
+  // Gerekçe: stop tetiklenince fiyat genelde seviyeden GEÇER (stop-through),
+  // gerçek dolum stop'tan kötüdür. TP ise limit emirle dolar → kayma yok.
+  // Bu modellenmediğinde ölçülen edge sistematik olarak YUKARI sapıyordu.
+  describe('çıkış kayması', () => {
+    const exitSlippagePct = 0.0003;
+
+    it('LONG sl_hit: çıkış stop seviyesinin ALTINDA dolar (aleyhe)', () => {
+      const args = {
+        direction: 'long',
+        simEntry: 1010,
+        stopPrice: 900,
+        targetPrice: 1150,
+        status: 'sl_hit',
+        exitPrice: 900,
+        takerFee,
+      };
+      const withSlip = evaluateSimOutcome({ ...args, exitSlippagePct });
+      const without = evaluateSimOutcome(args);
+
+      const simRisk = 110;
+      const realExit = 900 * (1 - exitSlippagePct); // long stop → aşağı kayar
+      const grossR = (realExit - 1010) / simRisk;
+      const feeR = (2 * takerFee * 1010) / simRisk;
+
+      expect(withSlip.simPnlR).toBeCloseTo(grossR - feeR, 4);
+      expect(withSlip.simPnlR).toBeLessThan(without.simPnlR);
+    });
+
+    it('SHORT sl_hit: çıkış stop seviyesinin ÜSTÜNDE dolar (aleyhe)', () => {
+      const withSlip = evaluateSimOutcome({
+        direction: 'short',
+        simEntry: 990,
+        stopPrice: 1100,
+        targetPrice: 850,
+        status: 'sl_hit',
+        exitPrice: 1100,
+        takerFee,
+        exitSlippagePct,
+      });
+
+      const simRisk = 110;
+      const realExit = 1100 * (1 + exitSlippagePct); // short stop → yukarı kayar
+      const grossR = -1 * (realExit - 990) / simRisk;
+      const feeR = (2 * takerFee * 990) / simRisk;
+
+      expect(withSlip.simPnlR).toBeCloseTo(grossR - feeR, 4);
+    });
+
+    it('tp_hit: limit emirle dolar, kayma UYGULANMAZ', () => {
+      const args = {
+        direction: 'long',
+        simEntry: 1010,
+        stopPrice: 900,
+        targetPrice: 1150,
+        status: 'tp_hit',
+        exitPrice: 1150,
+        takerFee,
+      };
+      expect(evaluateSimOutcome({ ...args, exitSlippagePct }).simPnlR)
+        .toBeCloseTo(evaluateSimOutcome(args).simPnlR, 6);
+    });
+
+    it('timeout: market kapanış → kayma UYGULANIR', () => {
+      const args = {
+        direction: 'long',
+        simEntry: 1000,
+        stopPrice: 900,
+        targetPrice: 1150,
+        status: 'timeout',
+        exitPrice: 1020,
+        takerFee,
+      };
+      const withSlip = evaluateSimOutcome({ ...args, exitSlippagePct });
+      expect(withSlip.simPnlR).toBeLessThan(evaluateSimOutcome(args).simPnlR);
+    });
+
+    it('exitSlippagePct verilmezse davranış değişmez (geriye uyumlu)', () => {
+      const args = {
+        direction: 'long',
+        simEntry: 1010,
+        stopPrice: 900,
+        targetPrice: 1150,
+        status: 'sl_hit',
+        exitPrice: 900,
+        takerFee,
+      };
+      const simRisk = 110;
+      const expected = (900 - 1010) / simRisk - (2 * takerFee * 1010) / simRisk;
+      expect(evaluateSimOutcome(args).simPnlR).toBeCloseTo(expected, 4);
+    });
+  });
 });

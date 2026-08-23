@@ -46,7 +46,7 @@ const TARGET_RR_OPTIONS = [1.0, 1.2, 1.5];
 // evaluateOutcome/evaluateSimOutcome'ını çağırıyor — R'ler zaten fee+slippage
 // düşülmüş geliyor (trade.r). Ayrı bir post-hoc NetR yaklaşımına gerek yok;
 // eski TAKER_FEE_RT / atrStopMult tahmini kaldırıldı (yanlış ölçek varsayıyordu).
-const FEES = { takerFee: 0.0006, slippagePct: 0.0003 };
+const FEES = { takerFee: 0.0006, slippagePct: 0.0003, exitSlippagePct: 0.0003 };
 
 function buildFilterParams() {
   return {

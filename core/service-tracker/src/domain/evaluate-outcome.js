@@ -41,21 +41,40 @@ export function evaluateOutcome(signal, candle, now = Date.now(), timeoutMs = 4 
 }
 
 /**
+ * Çıkış kayması uygula (exit slippage).
+ *
+ * Stop tetiklendiğinde fiyat genelde seviyeden GEÇER (stop-through) — market
+ * emriyle kapanır, gerçek dolum stop'tan kötüdür. Timeout da market kapanışıdır.
+ * TP ise limit emirle dolar → kayma yoktur.
+ *
+ * Bu modellenmediğinde ölçülen edge SİSTEMATİK olarak yukarı sapar; kayma
+ * sadece kaybeden tarafa vurduğu için hata tek yönlüdür.
+ */
+function applyExitSlippage(status, exitPrice, isLong, exitSlippagePct) {
+  if (!exitSlippagePct || status === 'tp_hit') return exitPrice;
+  // Aleyhe yön: long'da çıkış aşağı, short'ta yukarı kayar
+  return exitPrice * (isLong ? 1 - exitSlippagePct : 1 + exitSlippagePct);
+}
+
+/**
  * Paper-trading: gerçekçi sim giriş fiyatına göre R hesapla.
  * simEntry = sinyalden sonraki ilk 1m mumun açılışı ± slippage (tracker'da hesaplanır).
  * Stop/target mutlak fiyatlar sinyaldeki gibi kalır; risk sim girişe göre yeniden ölçülür.
  * Round-trip taker fee, R cinsine çevrilip düşülür.
  *
+ * @param {number} [exitSlippagePct] - verilmezse çıkış kayması uygulanmaz (geriye uyumlu)
  * @returns {{ simPnlR: number|null }}
  */
-export function evaluateSimOutcome({ direction, simEntry, stopPrice, targetPrice, status, exitPrice, takerFee }) {
+export function evaluateSimOutcome({ direction, simEntry, stopPrice, targetPrice, status, exitPrice, takerFee, exitSlippagePct }) {
   if (simEntry == null) return { simPnlR: null };
 
   const isLong = direction === 'long';
   const simRisk = Math.abs(simEntry - stopPrice);
   if (simRisk <= 0) return { simPnlR: null };
 
-  const grossR = ((isLong ? 1 : -1) * (exitPrice - simEntry)) / simRisk;
+  const realExit = applyExitSlippage(status, exitPrice, isLong, exitSlippagePct);
+
+  const grossR = ((isLong ? 1 : -1) * (realExit - simEntry)) / simRisk;
   const feeR = (2 * takerFee * simEntry) / simRisk;
 
   return { simPnlR: +(grossR - feeR).toFixed(4) };

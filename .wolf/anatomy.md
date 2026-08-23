@@ -1,19 +1,20 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-08-21T20:36:37.632Z
-> Files: 552 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-08-23T11:58:52.418Z
+> Files: 559 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
 - `ben-ne-yapaca-m-anlamland-ram-yorum-delightful-muffin.md` — Panel'i "ne yapacağımı bilmiyorum" halinden çıkarmak (~1966 tok)
 - `memory-ve-cebruma-bak-immutable-wigderson.md` — Strateji Doğrulama Planı — "Bu bota gerçek parayla güvenebilir miyim?" (~3535 tok)
+- `okey-last-session-we-lucky-bumblebee.md` — Scalp Bot — Giriş Kalitesi & Otomatik Trade Yol Haritası (~3249 tok)
 
 ## ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/
 
 - `borsa-debug-session-2026-08-20.md` — Bağlam (~978 tok)
 - `borsa-infra-topology.md` — Sunucu (~781 tok)
-- `borsa-strategy-validation-plan.md` — Bağlam (~1211 tok)
-- `MEMORY.md` — Memory Index (~171 tok)
+- `borsa-strategy-validation-plan.md` — Bağlam (~2595 tok)
+- `MEMORY.md` — Memory Index (~203 tok)
 
 ## ./
 
@@ -83,8 +84,8 @@
 
 - `aligned-buffer.js` — Backtest'te düşük-frekanslı bir mum serisini (örn. 4h/5m), yüksek-frekanslı (~172 tok)
 - `reporter.js` — Exports calcMetrics, formatTable (~617 tok)
-- `run-strategy.js` — Parite düzeltmesi (2026-08-20): canlıdaki COOLDOWN_BY_TF['1m'] = 60dk ile eşitlendi. (~1517 tok)
-- `simulator.js` — Backtest TP/SL/timeout simülasyonu; artık @borsa-bot/core-tracker'ın evaluateOutcome/evaluateSimOutcome'ını çağırır (canlı parite: fee/slippage/SL-first tie-break) (~600 tok)
+- `run-strategy.js` — Parite düzeltmesi (2026-08-20): canlıdaki COOLDOWN_BY_TF['1m'] = 60dk ile eşitlendi. (~1619 tok)
+- `simulator.js` — Exports simulateTrade (~657 tok)
 - `walk-forward.js` — Exports splitTrainTest — trade listesini zaman damgasına göre train/test'e böler (walk-forward doğrulama) (~250 tok)
 
 ## core/service-backtest/src/infrastructure/
@@ -140,7 +141,7 @@
 
 ## core/service-signal-engine/src/application/use-cases/
 
-- `make-process-candle.js` — Exports makeProcessCandle (~2672 tok)
+- `make-process-candle.js` — Exports makeProcessCandle (~2692 tok)
 
 ## core/service-signal-engine/src/domain/
 
@@ -150,7 +151,7 @@
 - `indicators.js` — Exports calcEMA, calcRSI, calcBollingerBands, calcATR + 6 more (~1587 tok)
 - `liquidation-pressure.js` — Exports calcLiquidationPressure (~572 tok)
 - `regime.js` — BTC trendine göre piyasa rejimini hesaplar (~601 tok)
-- `setup-builder.js` — Exports applySRCap, buildSetup (~1004 tok)
+- `setup-builder.js` — Eski: 1.5 → gürültü stopları 2dk'da tetikleniyordu. 2.5× ATR daha geniş stop = daha az noise kayıp. (~1160 tok)
 
 ## core/service-signal-engine/src/infrastructure/persistence/repositories/
 
@@ -165,7 +166,7 @@
 - `liquidation-pressure.test.js` — Declares result (~764 tok)
 - `make-process-candle.test.js` — noisy vs clean mum akışı ile indicatorsSnapshot değerlerini karşılaştırır (kapanmamış mum kirliliği düzeltmesinin regresyon testi) (~1200 tok)
 - `regime.test.js` — Declares makeCandles (~630 tok)
-- `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~2202 tok)
+- `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~2688 tok)
 - `signal-repository.test.js` — Declares fakeRows (~2226 tok)
 
 ## core/service-tracker/
@@ -174,17 +175,17 @@
 
 ## core/service-tracker/src/application/use-cases/
 
-- `make-process-outcome-candle.js` — Exports makeProcessOutcomeCandle (~971 tok)
+- `make-process-outcome-candle.js` — C4 düzeltmesi (2026-08-20): servis restart'ı gibi durumlarda tracker'ın candle (~1594 tok)
 
 ## core/service-tracker/src/domain/
 
-- `backfill-outcome.js` — Exports backfillOutcome — servis restart'ında kaçırılan candle'ları geriye dönük oynatır (C4 düzeltmesi) (~350 tok)
-- `evaluate-outcome.js` — Açık bir outcome için mum OHLC'ye göre sonuç değerlendir. (~687 tok)
+- `backfill-outcome.js` — Kaçırılmış (servis restart'ı gibi durumlarda tracker'ın canlı candle akışını (~510 tok)
+- `evaluate-outcome.js` — Açık bir outcome için mum OHLC'ye göre sonuç değerlendir. (~932 tok)
 
 ## core/service-tracker/test/unit/
 
 - `backfill-outcome.test.js` — backfillOutcome testleri — kaçırılan mumlarda TP/SL/tie-break/boş liste senaryoları (~400 tok)
-- `evaluate-outcome.test.js` — Helper: candle oluştur (~1498 tok)
+- `evaluate-outcome.test.js` — Helper: candle oluştur (~2356 tok)
 - `make-process-outcome-candle.test.js` — Declares TIMEOUT_MS (~2238 tok)
 
 ## db-schemas/
@@ -199,6 +200,7 @@
 - `2026-07-13-01-signal-quality-params.sql` — Additive/idempotent: sinyal kalitesi iyileştirme parametreleri. (~223 tok)
 - `2026-08-20-01-strategy-tuning.sql` — confluence_threshold/atr_stop_mult/rr_min tuning (~90 tok)
 - `2026-08-20-02-execution-validation.sql` — Faz 3 execution doğrulama: signal_outcomes.real_entry_price/real_exit_price/real_entry_at/real_notes (~90 tok)
+- `2026-08-23-01-exit-slippage.sql` — Faz 0.1 — Çıkış kayması (exit slippage) modeli (~212 tok)
 
 ## docs/
 
@@ -820,9 +822,14 @@
 - `docs.py` — get_swagger_ui_html, get_redoc_html, get_swagger_ui_oauth2_redirect_html (~2959 tok)
 - `models.py` — Pydantic: BaseModelWithConfig (158 fields) (~4400 tok)
 
+## services/service-backtest/src/
+
+- `sweep.js` — 2026-07-13: BTC/ETH/SOL/BNB/XRP gibi büyük-cap coinlerle test edilmişti, ama (~2598 tok)
+
 ## services/service-signal-engine/src/
 
-- `boot.js` — Exports boot (~784 tok)
+- `boot.js` — Exports boot (~924 tok)
+- `container.js` — Exports buildContainer (~252 tok)
 - `routes.js` — API routes: GET, POST (6 endpoints) (~789 tok)
 
 ## services/service-tracker/
@@ -831,6 +838,7 @@
 
 ## services/service-tracker/src/
 
+- `boot.js` — Exports boot (~651 tok)
 - `container.js` — C4 (2026-08-20): sinyalin oluşturulduğu andan şimdiye kadar Bitget REST'ten (~422 tok)
 
 ## web-app/
@@ -854,9 +862,11 @@
 
 ## web-app/src/features/stats/utils/
 
+- `avgRInterval.js` — avg_r / avg_sim_r için %95 güven aralığı. (~518 tok)
+- `avgRInterval.test.js` — Declares r (~515 tok)
 - `wilsonInterval.js` — Exports wilsonInterval — win rate için %95 Wilson güven aralığı hesaplar (küçük örneklem belirsizliğini gösterir) (~250 tok)
 - `wilsonInterval.test.js` — wilsonInterval testleri (~200 tok)
 
 ## web-app/src/pages/
 
-- `StatsPage.jsx` — DAY_OPTIONS (~3994 tok)
+- `StatsPage.jsx` — DAY_OPTIONS (~4761 tok)
