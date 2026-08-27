@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-08-23T12:17:09.724Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-08-27T07:33:55.702Z
 > Files: 569 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
@@ -13,7 +13,7 @@
 
 - `borsa-debug-session-2026-08-20.md` — Bağlam (~978 tok)
 - `borsa-infra-topology.md` — Sunucu (~781 tok)
-- `borsa-strategy-validation-plan.md` — Bağlam (~2595 tok)
+- `borsa-strategy-validation-plan.md` — Bağlam (~1683 tok)
 - `MEMORY.md` — Memory Index (~203 tok)
 
 ## ./

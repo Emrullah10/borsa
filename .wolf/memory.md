@@ -2387,3 +2387,24 @@
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
 | 10:30 | KRİTİK BUG: ~10 saat bayat veriyle sinyal üretimi (WS/Redis kopması + gap tespiti yokluğu) | staleness.js (YENİ), candle-buffer.js, make-process-candle.js + testler | 248/248 PASS, canlıda guard çalıştığı loglarla doğrulandı | ~8k |
+| 10:33 | Created ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/borsa-strategy-validation-plan.md | — | ~1795 |
+| 10:33 | Created ../../../.claude/projects/-Users-emrullah-developer-fullStack-borsa/memory/borsa-strategy-validation-plan.md | — | ~1795 |
+
+## Session özeti: 2026-08-23 → 2026-08-27
+
+**Faz 0 (ölçüm dürüstlüğü, `cbd4364`):** çıkış kayması modeli, fee sabiti tutarlılığı,
+avg_sim_r güven aralığı. 3 ölçüm hatası düzeltildi. Sonuç: edge HENÜZ kanıtlanmadı
+(n=163'te CI=[-0.1227, +0.2017]).
+
+**Faz 1 (`c5f574f`):** real-fill formu (kaymayı ölçmek) + Telegram bildirimi (@FilontBot,
+kaymayı azaltmak). getRecentSignals'a outcome_id eklendi.
+
+**Panel bug (`89615a6`):** LONG/SHORT %1.0 gösteriyordu — /stats string döndürüyor,
+"52"+"37"="5237" string birleştirme. directionalWinRate() eklendi.
+
+**KRİTİK bayat-veri bug (`e8fa207`, `08e2cec`):** ~10 saat eski fiyatlarla sinyal
+üretiliyordu. Kök neden: Bitget WS DNS kopması + commitCandle'da gap tespiti yokluğu.
+İki savunma: staleness.js + commitCandle tfMs/gap. Canlıda doğrulandı.
+
+**BEKLEYEN:** kaldıraç kararı (10x → 3x önerisi), sunucu DNS sorunu, geçmiş
+istatistiklerin ne kadarının kirli olduğu, sweep hiç çalıştırılmadı.
