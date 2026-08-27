@@ -1,5 +1,6 @@
 import { calcAllIndicators } from '../../domain/indicators.js';
 import { commitCandle } from '../../domain/candle-buffer.js';
+import { isCandleStale } from '../../domain/staleness.js';
 import { calcLiquidationPressure } from '../../domain/liquidation-pressure.js';
 import { calcConfluence } from '../../domain/confluence.js';
 import { calcRegime, calcHigherTfTrend } from '../../domain/regime.js';
@@ -99,6 +100,16 @@ export function makeProcessCandle({
     candleBuffers[bufKey] = buffer;
     formingCandles[bufKey] = forming;
     if (!closedCandle) return; // hâlâ oluşuyor, henüz değerlendirme yok
+
+    // BAYAT VERI KORUMASI (2026-08-26): WS akışı koptuğunda buffer donuyor ama
+    // servis çalışmaya devam ediyordu — ~10 saat boyunca gerçek fiyattan %13
+    // sapmış mumlarla sinyal üretildi. Göstergeler de aynı bayat seriden
+    // hesaplandığı için sinyal "kendi içinde tutarlı" görünüp fark edilmedi.
+    if (isCandleStale({ ts: closedCandle.ts, tf, now: Date.now() })) {
+      const ageMin = closedCandle.ts ? ((Date.now() - closedCandle.ts) / 60000).toFixed(1) : '?';
+      log.warn(`⏳ BAYAT VERİ: ${symbol} ${tf} mumu ${ageMin} dk eski — sinyal üretilmedi (WS akışı kopmuş olabilir)`);
+      return;
+    }
 
     const candles = candleBuffers[bufKey];
     if (candles.length < 50) return; // ADX güvenilir hesaplamak için yeterli mum

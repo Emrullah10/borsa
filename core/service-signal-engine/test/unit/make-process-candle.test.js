@@ -4,6 +4,9 @@ import { makeProcessCandle } from '../../src/application/use-cases/make-process-
 // Yeterince uzun, dalgalı bir seri — ADX/RSI/BB gibi göstergelerin non-null
 // hesaplanabilmesi için en az 50+ mum gerekir (bkz. run-strategy.test.js aynı deseni kullanır).
 function makeClosedCandles(n, seed = 100) {
+  // ts'ler ŞİMDİYE göre üretilir; son mum ~şimdi olur ki bayat-veri guard'ı
+  // (staleness.js) devreye girmesin. Sabit geçmiş timestamp kullanılamaz.
+  const baseTs = Date.now() - n * 60_000;
   const out = [];
   for (let i = 0; i < n; i++) {
     const price = seed + Math.sin(i / 5) * 8 + i * 0.05;
@@ -11,7 +14,9 @@ function makeClosedCandles(n, seed = 100) {
     const close = price + (i % 3 === 0 ? 0.5 : -0.3);
     const high = Math.max(open, close) + 0.4;
     const low = Math.min(open, close) - 0.4;
-    out.push({ ts: 1_700_000_000_000 + i * 60_000, open, high, low, close, volume: 100 + (i % 10) });
+    // ts'ler ŞİMDİYE göre üretilir — bayat-veri guard'ı (staleness.js) sabit
+    // geçmiş timestamp'leri reddeder. Son mum ~şimdi olacak şekilde geriye sayılır.
+    out.push({ ts: baseTs + i * 60_000, open, high, low, close, volume: 100 + (i % 10) });
   }
   return out;
 }
@@ -23,7 +28,7 @@ function makeDeps() {
       createOutcome: vi.fn().mockResolvedValue(undefined),
     },
     publish: vi.fn().mockResolvedValue(undefined),
-    log: { info: vi.fn(), debug: vi.fn(), error: vi.fn() },
+    log: { info: vi.fn(), debug: vi.fn(), error: vi.fn(), warn: vi.fn() },
     confluenceThreshold: 0.5, // düşük eşik: bu testte gerçek sinyal üretilip üretilmediği değil, ÇAĞRI SAYISI önemli
     filterParams: undefined,
   };
