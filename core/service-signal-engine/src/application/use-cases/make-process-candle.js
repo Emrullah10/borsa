@@ -8,6 +8,9 @@ import { applyEntryFilters } from '../../domain/entry-filters.js';
 import { buildSetup } from '../../domain/setup-builder.js';
 
 const CANDLE_BUFFER_SIZE = 60;
+// commitCandle'a boşluk (gap) tespiti için timeframe süresi — bağlantı koptuğunda
+// oluşan delikli seriyi tespit etmek için gerekli (bkz. candle-buffer.js).
+const TF_MS = { '1m': 60_000, '5m': 300_000, '15m': 900_000, '4h': 14_400_000 };
 // TF bazlı cooldown: 1m → 60dk, 5m → 120dk
 // Eski değerler (10dk/30dk) günde ~666 sinyal üretiyordu — fee yükü edge'den büyüktü.
 // Yeni değerler günde ~5-15 sinyal hedefliyor (kalite > miktar).
@@ -40,6 +43,7 @@ export function makeProcessCandle({
       forming: formingCandles[bufKey] ?? null,
       incoming: data,
       maxSize: CANDLE_BUFFER_SIZE,
+      tfMs: TF_MS[tf],
     });
     candleBuffers[bufKey] = buffer;
     formingCandles[bufKey] = forming;
@@ -96,6 +100,7 @@ export function makeProcessCandle({
       forming: formingCandles[bufKey] ?? null,
       incoming: data,
       maxSize: CANDLE_BUFFER_SIZE,
+      tfMs: TF_MS[tf],
     });
     candleBuffers[bufKey] = buffer;
     formingCandles[bufKey] = forming;
