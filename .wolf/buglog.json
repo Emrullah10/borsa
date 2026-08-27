@@ -2577,6 +2577,26 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-08-23T20:10:00Z"
+    },
+    {
+      "id": "bug-159",
+      "timestamp": "2026-08-27T10:30:00Z",
+      "error_message": "Sinyaller ~10 SAAT bayat fiyatlarla uretildi — ONGUSDT entry_price=0.09261 kaydedildi ama gercek Bitget fiyati 0.1070 idi (%13 sapma). Panelde normal gorunuyordu.",
+      "file": "core/service-signal-engine/src/domain/candle-buffer.js",
+      "root_cause": "Market-data'nin Bitget WS baglantisi DNS hatasiyla (getaddrinfo EAI_AGAIN ws.bitget.com) kopuyor, signal-engine'de de Redis reconnect oluyor. candleBuffers SADECE BELLEKTE tutuldugu icin kopma suresince donuyor. Reconnect olunca commitCandle, eski forming mum ile yeni gelen mum arasindaki SAATLERCE boslugu fark etmeden eskiyi 'kapandi' sayip buffer'a commit ediyordu -> delikli seri, bayat gostergeler, gercek piyasayla ilgisiz sinyaller. Zaman eslesmesi kanit: signal-engine Redis reconnect 2026-08-26T08:07:04.747Z, uretilen 4 bayat sinyal 08:07:04.75x (birkac ms sonra). Hicbir yerde bayatlik/gap kontrolu YOKTU, bu yuzden sessizce surdu ve olculen win-rate'i kirletti.",
+      "fix": "Iki savunma katmani (TDD): (1) YENI core/service-signal-engine/src/domain/staleness.js -> isCandleStale(), tf basina esik (1m:5dk, 5m:15dk), make-process-candle'da closedCandle bayatsa sinyal uretilmiyor + WARN loglaniyor. (2) commitCandle'a tfMs parametresi + MAX_GAP_MULTIPLIER=3 gap tespiti -> bosluk buyukse buffer sifirlanir, closedCandle null doner. Canli dogrulama: deploy sonrasi loglarda 'BAYAT VERI: VELVETUSDT 5m mumu 36.3 dk eski — sinyal uretilmedi' gorulup guard'in gercekten calistigi teyit edildi.",
+      "tags": [
+        "stale-data",
+        "websocket",
+        "reconnect",
+        "candle-buffer",
+        "silent-failure",
+        "signal-quality",
+        "dns"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-27T10:30:00Z"
     }
   ]
 }

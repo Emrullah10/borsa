@@ -150,3 +150,11 @@ Front yüz `position: absolute` iken içerik 280px'i aşınca kartlar üst üste
 olarak gelir). Bunları `+` ile toplamadan önce MUTLAKA `parseFloat`/`parseInt` yap — aksi halde
 JS string birleştirir ("52"+"37"="5237"), oran hesabı saçmalar (%1.0 gibi). Bu proje boyunca
 `s.xxx` alanlarına dokunan her yeni hesap için bu kontrolü yap.
+
+[2026-08-27] Bu projede bellekte tutulan her veri (candleBuffers, formingCandles) bağlantı
+koptuğunda SESSİZCE bayatlar. Servis ayakta kalır, log akar, panel normal görünür — ama üretilen
+sonuç gerçek piyasayla ilgisizdir. Zaman serisiyle çalışan yeni bir bileşen yazarken MUTLAKA
+"bu veri kaç dakika eski" kontrolü ekle (bkz. `staleness.js`) ve ardışık kayıtlar arasında
+beklenenden büyük boşluk varsa seriyi güvenilmez say (bkz. `commitCandle` tfMs/gap koruması).
+Sunucuda Bitget WS'e DNS hatası (`getaddrinfo EAI_AGAIN ws.bitget.com`) tekrar tekrar oluşuyor —
+kopma bu ortamda istisna değil, NORMAL kabul edilmeli.

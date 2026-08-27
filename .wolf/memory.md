@@ -2386,3 +2386,4 @@
 
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
+| 10:30 | KRİTİK BUG: ~10 saat bayat veriyle sinyal üretimi (WS/Redis kopması + gap tespiti yokluğu) | staleness.js (YENİ), candle-buffer.js, make-process-candle.js + testler | 248/248 PASS, canlıda guard çalıştığı loglarla doğrulandı | ~8k |
