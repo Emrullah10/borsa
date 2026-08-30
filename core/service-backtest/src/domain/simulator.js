@@ -40,6 +40,7 @@ export function simulateTrade(setup, candles, fees = {}) {
 
     const { simPnlR } = evaluateSimOutcome({
       direction,
+      entryPrice,
       simEntry,
       stopPrice,
       targetPrice,

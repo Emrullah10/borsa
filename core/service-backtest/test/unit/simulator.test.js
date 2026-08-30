@@ -19,10 +19,10 @@ describe('simulateTrade — LONG', () => {
     const result = simulateTrade(setup, candles, FEES);
     expect(result.outcome).toBe('WIN');
     expect(result.durationMinutes).toBe(2);
+    // Faz 0.1 (B1/B3 düzeltmesi): risk artık sabit |entryPrice-stopPrice| = 5
     // simEntry = ilk mumun açılışı × (1+slippage) = 100.03
-    // simRisk = |100.03 - 95| = 5.03, grossR = (110-100.03)/5.03 ≈ 1.982
-    // feeR = 2×0.0006×100.03/5.03 ≈ 0.0239
-    expect(result.r).toBeCloseTo(1.958, 2);
+    // grossR = (110-100.03)/5 = 1.994, feeR = 2×0.0006×100.03/5 ≈ 0.024
+    expect(result.r).toBeCloseTo(1.97, 2);
   });
 
   it('stop fiyatına ulaşınca LOSS döner', () => {
@@ -90,7 +90,7 @@ describe('simulateTrade — canlı tracker ile parite', () => {
       const r = evaluateOutcome(signal, candles[i], now, 240 * 60 * 1000);
       if (r) {
         const { simPnlR } = evaluateSimOutcome({
-          direction: 'long', simEntry,
+          direction: 'long', entryPrice: setup.entryPrice, simEntry,
           stopPrice: setup.stopPrice, targetPrice: setup.targetPrice,
           status: r.status, exitPrice: r.exitPrice, takerFee: FEES.takerFee,
         });
