@@ -2597,6 +2597,119 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-08-27T10:30:00Z"
+    },
+    {
+      "id": "bug-160",
+      "timestamp": "2026-08-29T23:00:00Z",
+      "error_message": "avg_sim_r (-0.018) panelde avg_r'den (-0.151) daha İYİ görünüyordu — sim daha gerçekçi olduğu için daha KÖTÜ olmalıydı",
+      "file": "core/service-tracker/src/domain/evaluate-outcome.js",
+      "root_cause": "evaluateSimOutcome, simRisk = Math.abs(simEntry - stopPrice) payda olarak kullanıyordu. simEntry bayat veri yüzünden (bug-159 ile aynı kök) stop'un ötesine düşünce Math.abs paydayı pozitif tutuyor ama pay işaret değiştiriyor — canlı DB'de 137 sl_hit satırı +1R KAR olarak, 126 tp_hit satırı negatif olarak yazılmıştı. Ayrıca R birimi işlemler arası 134x değişiyordu (simRisk/realRisk oranı) — bu sayıların ortalaması istatistiksel olarak anlamsızdı.",
+      "fix": "Risk birimi artık sinyalin PLANLANAN riskinden (|entryPrice-stopPrice|) hesaplanıyor, simEntry'den yeniden ölçülmüyor. simEntry stop'un ötesindeyse (fiilen doldurulamazdı) simPnlR NULL döner, reason:'unfillable'. evaluateSimOutcome imzasına entryPrice eklendi, 3 çağrı sitesi güncellendi.",
+      "tags": [
+        "measurement-integrity",
+        "sim-pnl-r",
+        "sign-error",
+        "risk-unit",
+        "faz-0"
+      ],
+      "related_bugs": [
+        "bug-159"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-08-29T23:00:00Z"
+    },
+    {
+      "id": "bug-161",
+      "timestamp": "2026-08-29T23:15:00Z",
+      "error_message": "sim_entry_price gerçek sinyal fiyatından ortalama %4.97 sapıyordu (modellenen slippage %0.03'e karşı — 165 kat)",
+      "file": "core/service-tracker/src/application/use-cases/make-process-outcome-candle.js",
+      "root_cause": "handleCandleMessage, sim_entry_price'ı yaş kontrolü olmadan Redis'ten gelen HERHANGİ bir muma göre yazıyordu. Zombi pending satırlar (bug-162) güncel mumlarla eşleşince sim-giriş gerçek fiyattan çok sapıyordu.",
+      "fix": "isSimEntryFillable() (evaluate-outcome.js) eklendi: mum sinyalden SONRA VE 'şimdi'ye göre tfMs×2'den eski değilse sim-giriş yazılır. handleCandleMessage artık msg.tf ve data.ts kullanıyor. Bayatsa sim-entry o mumda yazılmıyor, ana status/pnl_r akışı etkilenmiyor.",
+      "tags": [
+        "measurement-integrity",
+        "stale-data",
+        "sim-entry",
+        "faz-0"
+      ],
+      "related_bugs": [
+        "bug-159",
+        "bug-160"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-08-29T23:15:00Z"
+    },
+    {
+      "id": "bug-162",
+      "timestamp": "2026-08-29T23:30:00Z",
+      "error_message": "Outcome'lar ortalama 27.93 saat sonra çözülüyordu (timeout 4 saat olmasına rağmen) — Haziran'dan kalma pending satırlar Ağustos mumlarıyla eşleşiyordu",
+      "file": "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "root_cause": "getPendingOutcomes() yaş sınırı olmadan TÜM pending/active satırları döndürüyordu ('zombi pending'). Bu, bug-161'deki bayat sim-entry hatasının ana besleme kaynağıydı.",
+      "fix": "getPendingOutcomes sorgusuna \"s.created_at > now() - interval '6 hours'\" filtresi eklendi. Migration 2026-08-29-01-zombie-pending-cleanup.sql ile birikmiş eski satırlar tek seferlik 'cancelled' olarak işaretlendi.",
+      "tags": [
+        "measurement-integrity",
+        "zombie-pending",
+        "faz-0"
+      ],
+      "related_bugs": [
+        "bug-161"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-08-29T23:30:00Z"
+    },
+    {
+      "id": "bug-163",
+      "timestamp": "2026-08-29T23:45:00Z",
+      "error_message": "Panelde güven aralığı (CI) yanlış n ile hesaplanıyordu — n=6267 (tp+sl+timeout) kullanılıyordu ama avg_sim_r'nin gerçek n'i 869'du (~2.7x dar aralık, yanlışlıkla 'edge kanıtlandı' diyebilirdi)",
+      "file": "web-app/src/features/stats/utils/avgRInterval.js",
+      "root_cause": "getSignalStats SQL'i avg_sim_r'yi 'sim_pnl_r IS NOT NULL' filtresiyle (status filtresi OLMADAN) hesaplıyordu — avg_r'den TAMAMEN FARKLI, dönemsel çarpık bir satır kümesiydi. Panel bu iki farklı n'i ayırt etmiyordu.",
+      "fix": "getSignalStats/getStatsBreakdown artık avg_sim_r'yi avg_r ile AYNI status kümesinde (+ sim_pnl_r IS NOT NULL) hesaplıyor, ayrıca sim_n alanı dönüyor. avgRInterval() yeni simN parametresi alıyor, StatsPage.jsx bunu geçiriyor.",
+      "tags": [
+        "measurement-integrity",
+        "confidence-interval",
+        "sample-size",
+        "faz-0"
+      ],
+      "related_bugs": [
+        "bug-160",
+        "bug-161"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-08-29T23:45:00Z"
+    },
+    {
+      "id": "bug-164",
+      "timestamp": "2026-08-30T00:00:00Z",
+      "error_message": "fee_adj_pnl (getSignalStats) sadece 2×takerFee (0.0012) düşüyordu ama giriş kapısı (setup-builder.js meetsFeeFloor) feeRoundtrip=0.0018 kullanıyordu — kapı ile muhasebe farklı maliyet varsayıyordu",
+      "file": "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "root_cause": "makeSignalRepository sadece takerFee alıyordu, feeRoundtrip parametresi yoktu; fee_adj_pnl hesabı hardcoded 2*takerFee kullanıyordu.",
+      "fix": "makeSignalRepository'ye opsiyonel feeRoundtrip parametresi eklendi (verilmezse 2*takerFee'ye düşer, geriye uyumlu). container.js zaten hesaplanmış feeRoundtrip'i geçiriyor.",
+      "tags": [
+        "measurement-integrity",
+        "fee-consistency",
+        "faz-0"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T00:00:00Z"
+    },
+    {
+      "id": "bug-165",
+      "timestamp": "2026-08-30T00:05:00Z",
+      "error_message": "TDD sırasında keşfedildi: outcome.sim_entry_price null iken parseFloat(null) = NaN dönüyordu, simEntry==null kontrolü NaN'ı yakalamıyordu — sim-entry hiç yazılmamış satırlarda simPnlR NaN olarak resolveOutcome'a gidiyordu",
+      "file": "core/service-tracker/src/application/use-cases/make-process-outcome-candle.js",
+      "root_cause": "parseFloat(outcome.sim_entry_price) koşulsuz çağrılıyordu; JS'te parseFloat(null) NaN döner, null değil.",
+      "fix": "outcome.sim_entry_price != null ? parseFloat(...) : null şeklinde güvenli parse eklendi.",
+      "tags": [
+        "null-safety",
+        "nan",
+        "faz-0",
+        "tdd-caught"
+      ],
+      "related_bugs": [
+        "bug-161"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T00:05:00Z"
     }
   ]
 }

@@ -33,6 +33,37 @@ var olması uygulandığı anlamına GELMEZ — `db:migrate:up` script'i idempot
 
 <!-- Significant technical decisions with rationale. Why X was chosen over Y. -->
 
+**[2026-08-30] Faz 0 (ölçüm onarımı) uygulandı — kullanıcı "her şeyi silip yeniden mi başlasam"
+dedi, kod incelemesi ölçüm aletinin bozuk olduğunu gösterdi (strateji değil):**
+Kullanıcı panelde düşen `avg_sim_r`'yi görüp projeyi komple silmeyi düşündü. Üç paralel
+Explore ajanı ile kod + canlı DB incelendi (read-only). Bulgu: `avg_sim_r` (-0.018),
+`avg_r`'den (-0.151) DAHA İYİ görünüyordu — matematiksel olarak imkânsız, sim daha
+gerçekçi olduğu için daha KÖTÜ olması gerekirdi. Kök neden zinciri:
+1. `evaluateSimOutcome`'da `Math.abs(simEntry-stopPrice)` payda kullanımı, `simEntry`
+   stop'un ötesine düştüğünde (bayat sim-giriş, bkz. bug-159 deseni) pay işareti
+   değiştiriyordu ama payda pozitif kalıyordu → 137 `sl_hit` satırı canlı DB'de
+   `+1R KÂR` olarak yazılmıştı (bug-160).
+2. `sim_entry_price` yaş kontrolü olmadan yazılıyordu — zombi pending satırlar
+   (haftalarca eski, `getPendingOutcomes` yaş sınırı yoktu — bug-162) güncel mumlarla
+   eşleşince gerçek fiyattan ortalama %4.97 sapıyordu (modellenen slippage %0.03'e
+   karşı, 165 kat — bug-161).
+3. Panel CI'si (`avgRInterval`) `avg_sim_r`'nin gerçek n'i (869) yerine `avg_r`'nin
+   n'ini (6267) kullanıyordu — aralık ~2.7× dar, yanlışlıkla "edge kanıtlandı"
+   diyebilirdi (bug-163).
+Ayrıca backtest tarafında (`aligned-buffer.js`) durumlu pointer'ın 27 kombinasyon×5
+sembol arasında paylaşılması nedeniyle 26 kombinasyonun gelecek verisini gördüğü
+(lookahead sızıntısı) ve LSR verisinin hiç akmadığı (`getFuturesAccountLongShortRatio`
+bitget-api'de yok, boş `catch{}` yutuyordu) tespit edildi — bunlar Faz 1/2'ye bırakıldı.
+**Karar: proje SİLİNMEDİ.** "Strateji kötü" hükmü şu an verilemez çünkü ölçüm aleti
+bozuktu — hem geçmişteki artı hem şimdiki eksi rakamlar aynı bozuk aletten çıktı.
+Kullanıcıya net anlatıldı: $50-200 sermayede bu iş gelir üretmez (ayda $5-15 bandı,
+iyi bir edge'de bile), amaç kanıt üretmek. Plan dosyası:
+`.claude/plans/imdi-ben-art-k-gerilmeye-unified-flask.md`. Faz 0 uygulandı (TDD,
+268+109 test yeşil): risk birimi sabitlendi, bayat sim-giriş engellendi, zombi
+pending temizlendi (migration `2026-08-29-01`), CI doğru n ile hesaplanıyor,
+kapı/muhasebe fee tutarlılığı sağlandı. Faz 1+ (backtest sızıntı onarımı, kalıcı
+mum deposu, ML meta-etiketleme) henüz uygulanmadı.
+
 **[2026-08-23] Faz 0 (ölçüm dürüstlüğü) uygulandı; otomatik trade'den önce "giriş kayması" darboğazı seçildi:**
 Kullanıcı "projenin benim yerime scalp trade yapmasını istiyorum" dedi ve doğruluk oranını sordu.
 Canlı veri çekildi (temiz veri, `CLEAN_DATA_SINCE=2026-08-21T21:25` sonrası, n=99):

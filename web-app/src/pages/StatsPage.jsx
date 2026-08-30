@@ -16,6 +16,17 @@ const CLEAN_DATA_SINCE = new Date('2026-08-21T21:25:00');
 function daysSinceCleanFix() {
   return Math.max(0, Math.floor((Date.now() - CLEAN_DATA_SINCE.getTime()) / 86_400_000));
 }
+
+// Faz 0 ölçüm onarımı (B1-B13, bkz. .claude/plans/imdi-ben-art-k-gerilmeye-unified-flask.md):
+// bu tarihten önce sim_pnl_r işaret hatası (B1), bayat sim-giriş (B2), zombi pending
+// satırları (B13), yanlış CI n'i (B5) düzeltilmedi. O tarihten önceki avg_sim_r/CI
+// rakamları bozuk bir aletle ölçülmüştü — panelde 137 sl_hit satırı +1R kâr olarak
+// görünüyordu. Bu tarihten sonraki veri güvenilir ölçümdür.
+const MEASUREMENT_FIX_SINCE = new Date('2026-08-30T00:00:00');
+
+function daysSinceMeasurementFix() {
+  return Math.max(0, Math.floor((Date.now() - MEASUREMENT_FIX_SINCE.getTime()) / 86_400_000));
+}
 const BREAKDOWN_OPTIONS = [
   { value: 'regime', label: 'Rejim' },
   { value: 'tf', label: 'TF' },
@@ -118,11 +129,16 @@ export default function StatsPage() {
   const timeoutRate = s.timeout_rate != null ? parseFloat(s.timeout_rate) : null;
   // Kârı belirleyen asıl metrik: gerçekçi giriş (kayma) + fee dahil ortalama R.
   // Win rate tanımlayıcıdır, karar metriği DEĞİLDİR.
+  // Faz 0.5 (B5 düzeltmesi): simN artık repository'nin sim_n alanından geliyor —
+  // avg_sim_r'nin GERÇEK örneklem boyutu, tp_hit+sl_hit+timeout DEĞİL. Önceden bu
+  // ikisi (869 vs 6267 gibi) büyük farklıydı, CI ~2.7× dar hesaplanıyordu.
+  const simN = s.sim_n != null ? parseInt(s.sim_n, 10) : undefined;
   const simRCI = avgRInterval({
     avgR: avgSimR,
     tpHit: parseInt(s.tp_hit ?? 0, 10),
     slHit: parseInt(s.sl_hit ?? 0, 10),
     timeout: parseInt(s.timeout ?? 0, 10),
+    simN,
   });
   const longWr = directionalWinRate(s.long_tp, s.long_sl);
   const shortWr = directionalWinRate(s.short_tp, s.short_sl);
@@ -152,6 +168,15 @@ export default function StatsPage() {
           ⚠️ Bu pencere, mum kapanışı kirliliği düzeltmesinden ({CLEAN_DATA_SINCE.toLocaleDateString('tr-TR')}) önceki veriyi de içeriyor —
           o tarihten önce ADX/RSI/ATR sapıyordu, o dönemin win-rate'i güncel sistemi yansıtmaz.
           Sadece son {daysSinceCleanFix()} güne bakmak daha güvenilir.
+        </Typography>
+      )}
+
+      {days > daysSinceMeasurementFix() && (
+        <Typography sx={{ color: '#ff6b6b', fontSize: '0.72rem', mb: 1.5, bgcolor: '#2a0f0f', border: '1px solid #6e2020', borderRadius: '8px', px: 1.5, py: 1 }}>
+          🔴 Bu pencere, ölçüm onarımından ({MEASUREMENT_FIX_SINCE.toLocaleDateString('tr-TR')}) önceki veriyi de içeriyor —
+          o tarihten önce avg_sim_r bir işaret hatası yüzünden bazı zararları kâr olarak sayıyordu (bkz. Faz 0).
+          Aşağıdaki "gerçekçi kâr" ve güven aralığı bu dönem için GÜVENİLİR DEĞİLDİR.
+          Sadece son {daysSinceMeasurementFix()} güne bakmak doğru ölçümdür.
         </Typography>
       )}
 

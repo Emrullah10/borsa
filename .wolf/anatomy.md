@@ -1,11 +1,12 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-08-27T07:33:55.702Z
-> Files: 569 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-08-29T20:44:09.018Z
+> Files: 570 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
 - `ben-ne-yapaca-m-anlamland-ram-yorum-delightful-muffin.md` — Panel'i "ne yapacağımı bilmiyorum" halinden çıkarmak (~1966 tok)
+- `imdi-ben-art-k-gerilmeye-unified-flask.md` — Scalp Bot — Ölçüm Onarımı ve Önceden Taahhütlü Karar Kapısı (~4917 tok)
 - `memory-ve-cebruma-bak-immutable-wigderson.md` — Strateji Doğrulama Planı — "Bu bota gerçek parayla güvenebilir miyim?" (~3535 tok)
 - `okey-last-session-we-lucky-bumblebee.md` — Scalp Bot — Giriş Kalitesi & Otomatik Trade Yol Haritası (~3249 tok)
 
@@ -205,6 +206,7 @@
 - `2026-08-20-01-strategy-tuning.sql` — confluence_threshold/atr_stop_mult/rr_min tuning (~90 tok)
 - `2026-08-20-02-execution-validation.sql` — Faz 3 execution doğrulama: signal_outcomes.real_entry_price/real_exit_price/real_entry_at/real_notes (~90 tok)
 - `2026-08-23-01-exit-slippage.sql` — Faz 0.1 — Çıkış kayması (exit slippage) modeli (~212 tok)
+- `2026-08-29-01-zombie-pending-cleanup.sql` — Faz 0.3 — 6 saatten eski pending/active outcome'ları tek seferlik 'cancelled' işaretler (bug-162) (~220 tok)
 
 ## docs/
 

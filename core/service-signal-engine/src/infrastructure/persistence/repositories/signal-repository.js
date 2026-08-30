@@ -7,7 +7,12 @@ const BREAKDOWN_GROUP_EXPR = {
   hour: 'EXTRACT(HOUR FROM s.created_at)',
 };
 
-export function makeSignalRepository({ db, takerFee = 0.0006 } = {}) {
+export function makeSignalRepository({ db, takerFee = 0.0006, feeRoundtrip } = {}) {
+  // Faz 0.6 (kapı/muhasebe tutarlılığı): fee_adj_pnl artık, verilmişse, giriş
+  // kapısının (setup-builder.js meetsFeeFloor) kullandığı TAM roundtrip maliyeti
+  // kullanır (2*takerFee + slippage + exitSlippage), sadece 2*takerFee değil.
+  // Verilmezse eski davranış (2*takerFee) korunur — geriye uyumlu.
+  const effectiveFeeRoundtrip = feeRoundtrip ?? (2 * takerFee);
   async function saveSignal({
     symbol, direction, triggerTimeframe, entryPrice, stopPrice, targetPrice,
     rrRatio, confluenceScore, indicatorsSnapshot, liqPressureScore, liqDirection,
@@ -46,6 +51,12 @@ export function makeSignalRepository({ db, takerFee = 0.0006 } = {}) {
   }
 
   async function getPendingOutcomes() {
+    // Faz 0.3 (B13 düzeltmesi — "zombi pending"): yaş sınırı olmadan bu sorgu
+    // haftalarca eski pending/active satırları döndürüyordu. Bunlar güncel
+    // mumlarla eşleşince sim_entry_price gerçek fiyattan ortalama %4.97 sapıyordu
+    // (bkz. isSimEntryFillable, B2). Ölçülen ortalama çözülme süresi 27.93 saatti
+    // (timeout 4 saat olmasına rağmen). 6 saat, en geniş timeout'un (4h TF) makul
+    // bir üstü — bundan eski satırlar gerçek bir sonuç değil, kaçırılmış veridir.
     const sql = `
       SELECT
         o.id AS outcome_id,
@@ -62,6 +73,7 @@ export function makeSignalRepository({ db, takerFee = 0.0006 } = {}) {
       FROM signal_outcomes o
       JOIN signals s ON s.id = o.signal_id
       WHERE o.status IN ('pending', 'active')
+        AND s.created_at > now() - interval '6 hours'
       ORDER BY s.created_at DESC
     `;
     const result = await db.query(sql);
@@ -109,11 +121,13 @@ export function makeSignalRepository({ db, takerFee = 0.0006 } = {}) {
   async function getSignalStats(days = 7) {
     // fee_adj_pnl: fee/slippage düşülmüş R (avg_r_after_fee ile aynı formül,
     // profit_factor_after_fee ve win_rate_incl_timeout için de kullanılır).
+    // Faz 0.6: effectiveFeeRoundtrip artık giriş kapısıyla (setup-builder.js
+    // meetsFeeFloor) aynı maliyet varsayımını kullanır.
     const sql = `
       WITH base AS (
         SELECT
           o.*, s.direction, s.trigger_timeframe, s.confluence_score, s.created_at AS signal_created_at,
-          o.pnl_r - ((2 * ${takerFee}) / NULLIF(ABS(s.entry_price - s.stop_price) / NULLIF(s.entry_price, 0), 0)) AS fee_adj_pnl
+          o.pnl_r - ((${effectiveFeeRoundtrip}) / NULLIF(ABS(s.entry_price - s.stop_price) / NULLIF(s.entry_price, 0), 0)) AS fee_adj_pnl
         FROM signal_outcomes o
         JOIN signals s ON s.id = o.signal_id
         WHERE s.created_at > now() - make_interval(days => $1)
@@ -170,7 +184,15 @@ export function makeSignalRepository({ db, takerFee = 0.0006 } = {}) {
           COUNT(*) FILTER (WHERE status = 'timeout')::numeric
           / NULLIF(COUNT(*) FILTER (WHERE status IN ('tp_hit','sl_hit','timeout')), 0) * 100
         , 1)                                                              AS timeout_rate,
-        ROUND(AVG(sim_pnl_r) FILTER (WHERE sim_pnl_r IS NOT NULL), 4)     AS avg_sim_r
+        -- Faz 0.4/0.5 (B4/B5 düzeltmesi): avg_sim_r artık avg_r ile AYNI status
+        -- kümesinde hesaplanıyor (+ sim_pnl_r IS NOT NULL). Önceden sadece
+        -- sim_pnl_r IS NOT NULL filtresi vardı — status filtresi yoktu, bu da
+        -- avg_r'den tamamen farklı, dönemsel çarpık bir alt örneklem üretiyordu.
+        -- sim_n: bu alt örneklemin GERÇEK boyutu — CI hesabı bunu kullanmalı,
+        -- resolved_n/timeout toplamını DEĞİL (önceden panel CI'yi ~2.7× dar
+        -- hesaplıyordu).
+        ROUND(AVG(sim_pnl_r) FILTER (WHERE status IN ('tp_hit','sl_hit','timeout') AND sim_pnl_r IS NOT NULL), 4) AS avg_sim_r,
+        COUNT(*) FILTER (WHERE status IN ('tp_hit','sl_hit','timeout') AND sim_pnl_r IS NOT NULL) AS sim_n
       FROM base
     `;
     const result = await db.query(sql, [days]);
@@ -212,7 +234,9 @@ export function makeSignalRepository({ db, takerFee = 0.0006 } = {}) {
         COUNT(*) FILTER (WHERE o.status = 'timeout')                     AS timeout,
         ROUND(AVG(CASE WHEN o.status='tp_hit' THEN 1.0 WHEN o.status='sl_hit' THEN 0.0 END)*100, 1) AS win_rate,
         ROUND(AVG(o.pnl_r) FILTER (WHERE o.status IN ('tp_hit','sl_hit','timeout')), 4) AS avg_r,
-        ROUND(AVG(o.sim_pnl_r) FILTER (WHERE o.sim_pnl_r IS NOT NULL), 4)  AS avg_sim_r
+        -- Faz 0.4 düzeltmesi: getSignalStats ile aynı kohort (bkz. yukarıdaki not)
+        ROUND(AVG(o.sim_pnl_r) FILTER (WHERE o.status IN ('tp_hit','sl_hit','timeout') AND o.sim_pnl_r IS NOT NULL), 4) AS avg_sim_r,
+        COUNT(*) FILTER (WHERE o.status IN ('tp_hit','sl_hit','timeout') AND o.sim_pnl_r IS NOT NULL) AS sim_n
       FROM signal_outcomes o
       JOIN signals s ON s.id = o.signal_id
       WHERE s.created_at > now() - make_interval(days => $1)

@@ -29,6 +29,7 @@ export function backfillOutcome(outcome, candles, now, timeoutMs, fees) {
 
     const { simPnlR } = evaluateSimOutcome({
       direction: outcome.direction,
+      entryPrice: parseFloat(outcome.entry_price),
       simEntry,
       stopPrice: parseFloat(outcome.stop_price),
       targetPrice: parseFloat(outcome.target_price),

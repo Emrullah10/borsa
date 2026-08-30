@@ -2408,3 +2408,66 @@ kaymayı azaltmak). getRecentSignals'a outcome_id eklendi.
 
 **BEKLEYEN:** kaldıraç kararı (10x → 3x önerisi), sunucu DNS sorunu, geçmiş
 istatistiklerin ne kadarının kirli olduğu, sweep hiç çalıştırılmadı.
+| 10:35 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:35 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:35 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:35 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:37 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:37 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:39 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:39 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:40 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:40 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:40 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:40 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:41 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:41 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:41 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:41 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:44 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:44 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:50 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:50 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:51 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:51 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:52 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:52 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+
+## Session: 2026-08-29 22:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-29 22:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-29 22:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-29 22:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-29 23:09
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-29 23:09
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 23:44 | Created ../../../.claude/plans/imdi-ben-art-k-gerilmeye-unified-flask.md | — | ~5245 |
+| 23:44 | Created ../../../.claude/plans/imdi-ben-art-k-gerilmeye-unified-flask.md | — | ~5245 |
+| 00:10 | Faz 0.1: sim-R işaret hatası (Math.abs) düzeltildi, entryPrice sabit risk birimi | core/service-tracker/src/domain/evaluate-outcome.js + 3 çağıran | 268 test yeşil | ~8000 |
+| 00:15 | Faz 0.2: bayat sim-entry engellendi (isSimEntryFillable) | evaluate-outcome.js, make-process-outcome-candle.js | TDD, entegrasyon testleri PASS | ~4000 |
+| 00:20 | Faz 0.3: zombi pending 6 saat filtresi + migration | signal-repository.js, migrations/2026-08-29-01 | test yeşil, migration henüz DB'ye uygulanmadı | ~2500 |
+| 00:25 | Faz 0.4/0.5: avg_sim_r aynı kohort + sim_n + avgRInterval simN parametresi | signal-repository.js, avgRInterval.js, StatsPage.jsx | 27+10 test yeşil | ~5000 |
+| 00:28 | Faz 0.6: fee_adj_pnl feeRoundtrip parametrize edildi | signal-repository.js, container.js | geriye uyumlu, test yeşil | ~1500 |
+| 00:32 | Faz 0.8: MEASUREMENT_FIX_SINCE uyarı bandı eklendi | StatsPage.jsx | görsel, test etkilenmedi | ~1000 |
+| 00:35 | buglog.json'a bug-160..165 eklendi, cerebrum.md Decision Log güncellendi | .wolf/buglog.json, .wolf/cerebrum.md | 165 bug kayıtlı | ~3000 |
