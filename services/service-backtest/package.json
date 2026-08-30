@@ -5,12 +5,14 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
+    "backfill": "node --env-file=../../.env src/backfill-candles.js",
     "test": "vitest run"
   },
   "dependencies": {
     "@borsa-bot/config": "*",
     "@borsa-bot/core-backtest": "*",
     "@borsa-bot/core-signal-engine": "*",
-    "@borsa-bot/helper": "*"
+    "@borsa-bot/helper": "*",
+    "pg": "^8.11.0"
   }
 }

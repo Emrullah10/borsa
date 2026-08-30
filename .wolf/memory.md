@@ -2471,3 +2471,28 @@ istatistiklerin ne kadarının kirli olduğu, sweep hiç çalıştırılmadı.
 | 00:28 | Faz 0.6: fee_adj_pnl feeRoundtrip parametrize edildi | signal-repository.js, container.js | geriye uyumlu, test yeşil | ~1500 |
 | 00:32 | Faz 0.8: MEASUREMENT_FIX_SINCE uyarı bandı eklendi | StatsPage.jsx | görsel, test etkilenmedi | ~1000 |
 | 00:35 | buglog.json'a bug-160..165 eklendi, cerebrum.md Decision Log güncellendi | .wolf/buglog.json, .wolf/cerebrum.md | 165 bug kayıtlı | ~3000 |
+| 09:14 | Session end: 1 writes across 1 files (imdi-ben-art-k-gerilmeye-unified-flask.md) | 32 reads | ~26246 tok |
+| 09:14 | Session end: 1 writes across 1 files (imdi-ben-art-k-gerilmeye-unified-flask.md) | 32 reads | ~26246 tok |
+| 09:34 | Created core/service-backtest/test/unit/candle-store-repository.test.js | — | ~1179 |
+| 09:34 | Created core/service-backtest/test/unit/candle-store-repository.test.js | — | ~1179 |
+| 09:34 | Created core/service-backtest/src/infrastructure/persistence/repositories/candle-store-repository.js | — | ~818 |
+| 09:34 | Created core/service-backtest/src/infrastructure/persistence/repositories/candle-store-repository.js | — | ~818 |
+| 09:35 | Created services/service-backtest/src/backfill-candles.js | — | ~1094 |
+| 09:35 | Created services/service-backtest/src/backfill-candles.js | — | ~1094 |
+| 09:35 | Edited services/service-backtest/package.json | expanded (+6 lines) | ~94 |
+| 09:35 | Edited services/service-backtest/package.json | expanded (+6 lines) | ~94 |
+| 09:35 | Created services/service-backtest/package.json | — | ~125 |
+| 09:35 | Created services/service-backtest/package.json | — | ~125 |
+| 09:35 | Edited package.json | 6→7 lines | ~200 |
+| 09:35 | Edited package.json | 6→7 lines | ~200 |
+| 09:36 | Created core/service-backtest/test/unit/cached-fetcher.test.js | — | ~1090 |
+| 09:36 | Created core/service-backtest/test/unit/cached-fetcher.test.js | — | ~1090 |
+| 09:36 | Created core/service-backtest/src/infrastructure/cached-fetcher.js | — | ~644 |
+| 09:36 | Created core/service-backtest/src/infrastructure/cached-fetcher.js | — | ~644 |
+| 10:00 | Faz 1.1: aligned-buffer.js durumsuz ikili aramaya çevrildi (lookahead sızıntısı B6) | core/service-backtest/src/domain/aligned-buffer.js | 9 test yeşil | ~3000 |
+| 10:05 | Faz 1.2: timeout boundary >= yapıldı, backtest artık gerçek mark-to-market R | evaluate-outcome.js, simulator.js | 33+8 test yeşil | ~2500 |
+| 10:15 | Faz 1.3: gösterge penceresi paritesi (candles[i] dahil), priceChange 1 barlık, cooldown sırası düzeltildi | run-strategy.js | 8 test yeşil | ~4000 |
+| 10:20 | Faz 1.4: splitTrainTest sabit takvim aralığı (range parametresi) | walk-forward.js, sweep.js | 7 test yeşil | ~3000 |
+| 10:35 | Faz 1.5: candles tablosu + candle-store-repository + cached-fetcher + backfill script | db-schemas/03-candles.sql, core/service-backtest/src/infrastructure/*, services/service-backtest/src/backfill-candles.js | 13 test yeşil, DB'ye henüz backfill edilmedi | ~9000 |
+| 10:38 | Faz 1.6: sweep sonuçları backtest-results/'a JSON yazılıyor | services/service-backtest/src/sweep.js | syntax OK, çalıştırılmadı | ~1500 |
+| 10:40 | buglog.json'a bug-166..169 eklendi | .wolf/buglog.json | 169 bug kayıtlı | ~2000 |

@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-08-29T20:44:09.018Z
-> Files: 570 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-08-30T06:36:41.708Z
+> Files: 577 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -23,7 +23,7 @@
 - `CLAUDE.md` — OpenWolf (~57 tok)
 - `docker-compose.yml` — Docker Compose services (~169 tok)
 - `package-lock.json` — npm lock file (~30299 tok)
-- `package.json` — Node.js package manifest (~354 tok)
+- `package.json` — Node.js package manifest (~392 tok)
 - `scratch-diagnose-db.sh` (~192 tok)
 - `vitest.config.js` — /*.test.js', 'services/**/*.test.js', 'packages/**/*.test.js'], (~67 tok)
 
@@ -91,11 +91,18 @@
 
 ## core/service-backtest/src/infrastructure/
 
+- `cached-fetcher.js` — Faz 1.5 (kalıcı mum deposu): "önce DB, yoksa REST" katmanı. sweep.js/main.js'in (~644 tok)
 - `fetcher.js` — Exports fetchCandles, fetchFundingHistory, fetchOISnapshot, interpolateFunding (~908 tok)
+
+## core/service-backtest/src/infrastructure/persistence/repositories/
+
+- `candle-store-repository.js` — Faz 1.5 (kalıcı mum deposu): candles tablosuna (db-schemas/03-candles.sql) upsert (~818 tok)
 
 ## core/service-backtest/test/unit/
 
 - `aligned-buffer.test.js` — Declares makeCandles (~537 tok)
+- `cached-fetcher.test.js` — Faz 1.5 (kalıcı mum deposu): sweep/backtest artık her çalıştırmada Bitget (~1090 tok)
+- `candle-store-repository.test.js` — Faz 1.5 (kalıcı mum deposu): candles tablosuna upsert + okuma. Backtest/sweep (~1179 tok)
 - `fetcher.test.js` — Declares candles (~572 tok)
 - `reporter.test.js` — Declares sampleTrades (~474 tok)
 - `run-strategy.test.js` — Yeterince uzun, dalgalı bir seri üretir — ADX/RSI/BB gibi göstergelerin (~1577 tok)
@@ -207,6 +214,27 @@
 - `2026-08-20-02-execution-validation.sql` — Faz 3 execution doğrulama: signal_outcomes.real_entry_price/real_exit_price/real_entry_at/real_notes (~90 tok)
 - `2026-08-23-01-exit-slippage.sql` — Faz 0.1 — Çıkış kayması (exit slippage) modeli (~212 tok)
 - `2026-08-29-01-zombie-pending-cleanup.sql` — Faz 0.3 — 6 saatten eski pending/active outcome'ları tek seferlik 'cancelled' işaretler (bug-162) (~220 tok)
+
+## db-schemas/
+
+- `03-candles.sql` — Faz 1.5 — candles tablosu (symbol,tf,ts) PK, kalıcı OHLCV deposu (~250 tok)
+
+## core/service-backtest/src/infrastructure/
+
+- `cached-fetcher.js` — Faz 1.5 — fetchCandlesCached: DB kapsamı yeterliyse DB'den okur, yoksa REST'e düşüp DB'ye yazar (~600 tok)
+
+## core/service-backtest/src/infrastructure/persistence/repositories/
+
+- `candle-store-repository.js` — Faz 1.5 — Exports makeCandleStoreRepository (upsertCandles, getCandles, getCoverage) (~700 tok)
+
+## core/service-backtest/test/unit/ (Faz 1 ekleri)
+
+- `candle-store-repository.test.js` — upsert/okuma/coverage testleri (~800 tok)
+- `cached-fetcher.test.js` — DB-first/REST-fallback testleri (~700 tok)
+
+## services/service-backtest/src/
+
+- `backfill-candles.js` — Faz 1.5 — CLI: Bitget REST'ten geçmiş mum çekip candles tablosuna yazar (~700 tok)
 
 ## docs/
 
@@ -828,8 +856,13 @@
 - `docs.py` — get_swagger_ui_html, get_redoc_html, get_swagger_ui_oauth2_redirect_html (~2959 tok)
 - `models.py` — Pydantic: BaseModelWithConfig (158 fields) (~4400 tok)
 
+## services/service-backtest/
+
+- `package.json` — Node.js package manifest (~125 tok)
+
 ## services/service-backtest/src/
 
+- `backfill-candles.js` — Faz 1.5 (kalıcı mum deposu) — Bitget REST'ten geçmiş mum verisi çekip (~1094 tok)
 - `sweep.js` — 2026-07-13: BTC/ETH/SOL/BNB/XRP gibi büyük-cap coinlerle test edilmişti, ama (~2598 tok)
 
 ## services/service-notifier/configs/

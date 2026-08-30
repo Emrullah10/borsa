@@ -33,6 +33,25 @@ var olması uygulandığı anlamına GELMEZ — `db:migrate:up` script'i idempot
 
 <!-- Significant technical decisions with rationale. Why X was chosen over Y. -->
 
+**[2026-08-30] Faz 1 (backtest güvenilirliği) uygulandı — kullanıcı "durma bitir tüm fazları" dedi:**
+Faz 0'ın devamı olarak backtest/sweep altyapısındaki B6-B11 bulguları TDD ile
+düzeltildi: (1) `aligned-buffer.js` durumsuz ikili aramaya çevrildi — eski durumlu
+pointer 27 sweep kombinasyonunun 26'sının geleceği görmesine yol açıyordu; (2)
+`evaluate-outcome.js` timeout sınırı `>=` yapıldı, backtest artık "bedava" r:0
+yerine gerçek mark-to-market R hesaplıyor; (3) `run-strategy.js` gösterge
+penceresi canlıyla eşitlendi (candles[i] dahil, priceChange 1 barlık, cooldown
+sırası); (4) `walk-forward.js` sabit takvim aralığı desteği eklendi —
+`sweep.js` artık 27 comboyu aynı dönemde karşılaştırıyor; (5) **kalıcı mum
+deposu** (`db-schemas/03-candles.sql` + `candle-store-repository.js` +
+`cached-fetcher.js` + `backfill-candles.js`) — sweep artık DB'den okuyabiliyor,
+REST fırtınası (sunucuyu 88°C'ye çıkarıp Redis'i öldürmüştü) riski azaldı; (6)
+sweep sonuçları artık `backtest-results/`'a JSON yazılıyor. 290/290 test yeşil.
+**Henüz uygulanmadı:** `npm run db:migrate` ile `03-candles.sql`'in DB'ye
+uygulanması ve `npm run backtest:backfill-candles` ile gerçek verinin çekilmesi
+— bu adım gerçek Bitget API + DB erişimi gerektirir, agent ortamında yapılamadı.
+Faz 2 (maliyet yapısı — LSR onarımı/kaldırılması, maker giriş modeli, likidite
+filtresi) ve Faz 3 (AI meta-etiketleme) devam ediyor.
+
 **[2026-08-30] Faz 0 (ölçüm onarımı) uygulandı — kullanıcı "her şeyi silip yeniden mi başlasam"
 dedi, kod incelemesi ölçüm aletinin bozuk olduğunu gösterdi (strateji değil):**
 Kullanıcı panelde düşen `avg_sim_r`'yi görüp projeyi komple silmeyi düşündü. Üç paralel

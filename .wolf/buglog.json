@@ -2710,6 +2710,73 @@
       ],
       "occurrences": 1,
       "last_seen": "2026-08-30T00:05:00Z"
+    },
+    {
+      "id": "bug-166",
+      "timestamp": "2026-08-30T09:30:00Z",
+      "error_message": "sweep.js'te 27 parametre kombinasyonunun 26'sı geleceği görüyordu (lookahead sızıntısı) — aligned-buffer.js pointer'ı combolar/semboller arasında paylaşılıyordu",
+      "file": "core/service-backtest/src/domain/aligned-buffer.js",
+      "root_cause": "makeAlignedBuffer durumlu bir pointer kullanıyordu (monoton artan, hiç sıfırlanmayan). sweep.js aynı regimeBuffer/higherTfBuffer nesnesini 27 combo × 5 sembol arasında paylaşıyordu — combo #1'in ilk sembolünden sonra pointer diziyi tüketiyor, kalan tüm combolar dönem sonundaki (gelecekteki) mumları görüyordu. higherTfTrend confluence.js'te sert kapı olduğu için etkisi büyüktü.",
+      "fix": "makeAlignedBuffer durumsuz ikili aramaya (binary search) çevrildi — aynı buffer'a hangi sırada sorulursa sorulsun sadece geçilen timestampMs'e göre sonuç döner, paylaşılan referans artık sızıntı üretemez.",
+      "tags": [
+        "measurement-integrity",
+        "lookahead-leak",
+        "backtest",
+        "faz-1"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:30:00Z"
+    },
+    {
+      "id": "bug-167",
+      "timestamp": "2026-08-30T09:32:00Z",
+      "error_message": "Backtest'te timeout'lar hep 'bedava' r:0 dönüyordu, gerçek mark-to-market P&L hesaplanmıyordu",
+      "file": "core/service-backtest/src/domain/simulator.js",
+      "root_cause": "evaluate-outcome.js'teki 'age > timeoutMs' KESİN eşitsizliği + simulator.js'teki 'now = (i+1)*CANDLE_MS' (max = TIMEOUT_MS TAM) kombinasyonu backtest'te timeout dalının matematiksel olarak asla tetiklenmemesine yol açıyordu. Canlıda age sürekli arttığı için semptom görülmüyordu.",
+      "fix": "evaluate-outcome.js'te '>' yerine '>=' kullanıldı — süre TAM dolduğunda da timeout tetiklenir. Backtest artık gerçek mark-to-market R + fee hesaplıyor.",
+      "tags": [
+        "measurement-integrity",
+        "backtest-parity",
+        "timeout",
+        "faz-1"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:32:00Z"
+    },
+    {
+      "id": "bug-168",
+      "timestamp": "2026-08-30T09:34:00Z",
+      "error_message": "Backtest göstergeleri canlıdan 1 bar geride hesaplanıyordu — ADX/RSI/BB/S-R gibi tüm seri-bağımlı göstergeler etkileniyordu",
+      "file": "core/service-backtest/src/domain/run-strategy.js",
+      "root_cause": "canlı make-process-candle.js calcAllIndicators'ı KAPANAN mumu (closedCandle) İÇEREN buffer'la çağırıyor. Backtest'teki 'win = candles.slice(i-window, i)' candles[i]'yi (o an işlenen mum) DIŞLIYORDU. priceChange de bu yüzden 2 barlık fark hesaplıyordu (1 barlık olması gerekirken). Ayrıca cooldown, buildSetup gate'lerinden ÖNCE kontrol ediliyordu — canlıda SONRA kontrol ediliyor (reddedilen setup cooldown başlatmamalı).",
+      "fix": "win artık candles.slice(i-window+1, i+1) — candles[i] dahil. priceChange win'in son iki elemanından. Cooldown kontrolü buildSetup gate'lerinden sonraya taşındı.",
+      "tags": [
+        "measurement-integrity",
+        "backtest-parity",
+        "indicator-window",
+        "faz-1"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:34:00Z"
+    },
+    {
+      "id": "bug-169",
+      "timestamp": "2026-08-30T09:36:00Z",
+      "error_message": "sweep.js'te 27 parametre kombinasyonu 27 FARKLI takvim dönemi üzerinde karşılaştırılıyordu",
+      "file": "core/service-backtest/src/domain/walk-forward.js",
+      "root_cause": "splitTrainTest, train/test sınırını trade'lerin KENDİ min/max ts'inden türetiyordu. Farklı parametre kombinasyonları farklı trade zaman aralıkları ürettiği için her combo farklı bir test dönemi üzerinde değerlendiriliyordu — karşılaştırma anlamsızdı.",
+      "fix": "splitTrainTest'e opsiyonel range={rangeStartMs,rangeEndMs} parametresi eklendi. sweep.js artık computeFixedRange() ile gerçek çekilen veri aralığından SABİT bir takvim penceresi hesaplayıp tüm combolara aynı range'i geçiriyor.",
+      "tags": [
+        "measurement-integrity",
+        "walk-forward",
+        "faz-1"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:36:00Z"
     }
   ]
 }

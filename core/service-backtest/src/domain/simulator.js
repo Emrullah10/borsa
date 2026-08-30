@@ -11,6 +11,16 @@ const TIMEOUT_MS = MAX_CANDLES * CANDLE_MS;
 // core/service-tracker/src/domain/evaluate-outcome.js ise girişi sonraki mumun
 // açılışı±slippage alıyor, SL-first tie-break yapıyor, fee'yi R'ye çeviriyordu.
 // Artık aynı saf fonksiyonlar çağrılıyor — parite kod düzeyinde garanti.
+//
+// Faz 1.2 (B10 düzeltmesi, 2026-08-30): "bedava timeout" giderildi. Önceden
+// `age > timeoutMs` KESİN eşitsizliği + `now = (i+1)*CANDLE_MS` (max = TIMEOUT_MS
+// TAM) kombinasyonu backtest'te timeout'un evaluateOutcome içinden asla
+// tetiklenmemesine yol açıyordu — döngü sonuna düşüp aşağıdaki fallback'teki
+// r:0 kullanılıyordu (fee'siz, mark-to-market'siz). evaluate-outcome.js artık
+// `>=` kullanıyor, bu yüzden son mumda (i = window.length-1) `now` = TIMEOUT_MS
+// olduğunda evaluateOutcome kendi timeout dalına girip GERÇEK mark-to-market R +
+// fee hesaplıyor — canlıyla aynı. Alttaki `return {outcome:'TIMEOUT', r:0, ...}`
+// artık sadece window.length === 0 (hiç mum yok) durumunda devreye giriyor.
 export function simulateTrade(setup, candles, fees = {}) {
   const { entryPrice, stopPrice, targetPrice, direction } = setup;
   const { takerFee = 0.0006, slippagePct = 0.0003, exitSlippagePct = 0.0003 } = fees;
