@@ -52,6 +52,19 @@ describe('evaluateOutcome — LONG', () => {
     const r = evaluateOutcome(BASE, candle(1050, 900, 950));
     expect(r.tieBreak).toBeFalsy();
   });
+
+  it('Faz 1.2 (B10 düzeltmesi): tam timeoutMs anında (== ) da timeout tetiklenir, sadece geçtikten sonra değil', () => {
+    // Önceki `age > timeoutMs` backtest simulator.js'te MATEMATİKSEL OLARAK hiç
+    // tetiklenemiyordu: now = (i+1)*CANDLE_MS, max i = window.length-1 = MAX_CANDLES-1
+    // = 239 → max now = 240*60000 = TIMEOUT_MS TAM OLARAK, hiçbir zaman kesin BÜYÜK
+    // olamıyordu. Backtest bu yüzden hep r:0 fallback'e düşüyordu (B10 — "bedava
+    // timeout"). Canlıda age sürekli arttığı için semptom görülmüyordu ama sınır
+    // semantiği yine de yanlıştı: "süre dolunca" timeout olmalı, "geçtikten SONRA" değil.
+    const atExactly = { ...BASE, signal_created_at: new Date(Date.now() - TIMEOUT_MS).toISOString() };
+    const r = evaluateOutcome(atExactly, candle(1060, 1040, 1050), Date.now(), TIMEOUT_MS);
+    expect(r).not.toBeNull();
+    expect(r.status).toBe('timeout');
+  });
 });
 
 describe('evaluateOutcome — SHORT', () => {

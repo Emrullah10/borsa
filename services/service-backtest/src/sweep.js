@@ -1,8 +1,42 @@
+import pg from 'pg';
+import { writeFileSync, mkdirSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { fetchCandles, fetchFundingHistory } from '@borsa-bot/core-backtest/src/infrastructure/fetcher.js';
+import { fetchCandlesCached } from '@borsa-bot/core-backtest/src/infrastructure/cached-fetcher.js';
+import { makeCandleStoreRepository } from '@borsa-bot/core-backtest/src/infrastructure/persistence/repositories/candle-store-repository.js';
 import { makeAlignedBuffer } from '@borsa-bot/core-backtest/src/domain/aligned-buffer.js';
 import { runStrategyOverCandles } from '@borsa-bot/core-backtest/src/domain/run-strategy.js';
 import { calcMetrics } from '@borsa-bot/core-backtest/src/domain/reporter.js';
 import { splitTrainTest } from '@borsa-bot/core-backtest/src/domain/walk-forward.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Faz 1.5 (kalıcı mum deposu): DATABASE_URL tanımlıysa candles tablosundan
+// önce okumayı dener (backfill-candles.js ile doldurulmuş olmalı), yoksa/hata
+// olursa REST'e düşer — sweep DB'siz de çalışabilir, sadece yavaş olur.
+const { Pool } = pg;
+const candleRepo = process.env.DATABASE_URL
+  ? makeCandleStoreRepository({ db: new Pool({ connectionString: process.env.DATABASE_URL, max: 4 }) })
+  : null;
+
+// tf: DB/enum için küçük harf ('1m','5m','4h'); Bitget REST 4h için 'granularity=4H' bekliyor
+// (bkz. bitget-ws.js'teki aynı normalizasyon) — fetchFromRest'e REST'in beklediği
+// granularity'yi, cache/DB tarafına ise normalize edilmiş tf'i ayrı ayrı geçiriyoruz.
+const TF_TO_GRANULARITY = { '1m': '1m', '5m': '5m', '15m': '15m', '4h': '4H' };
+
+async function fetchCandlesForSweep(symbol, tf, days) {
+  const granularity = TF_TO_GRANULARITY[tf] ?? tf;
+  return fetchCandlesCached({
+    repo: candleRepo,
+    fetchFromRest: (sym, _tf, d) => fetchCandles(sym, granularity, d),
+    symbol, tf, days,
+  });
+}
+// Faz 1.6 (sonuçları diske yaz): önceden sweep sadece console.log basıyordu —
+// 2026-07-13 ve 2026-08-20 turlarının tam sonuçları repoda hiç kayıtlı değildi,
+// sadece migration yorumlarında özet duruyordu.
+const RESULTS_DIR = join(__dirname, '../../../backtest-results');
 
 // 2026-07-13: BTC/ETH/SOL/BNB/XRP gibi büyük-cap coinlerle test edilmişti, ama
 // canlı sistem (MARKET_DATA_SYMBOLS=TOP:50) fiilen çoğunlukla küçük-cap, yüksek
@@ -37,7 +71,10 @@ const TEST_FRACTION = 1 / 3;
 //   - Extension gate sabit ON (önceki sweep'te kanıtlandı)
 const THRESHOLDS = [0.75, 0.80, 0.85];
 const FIXED_ADX_MAX = 65;
-const FIXED_EXTENSION_GATE = true;
+// Faz 1 temizliği (B9-4): FIXED_EXTENSION_GATE kaldırıldı — hiçbir yerde
+// kullanılmıyordu (entry-filters.js'te zaten aç/kapa anahtarı yok, overextension
+// kontrolü her zaman aktif). Grid açıklaması "extension-gate" boyutunu tarıyormuş
+// gibi görünüyordu ama taranan bir şey yoktu.
 const FIXED_REQUIRE_SR_CAP = true;
 const ATR_STOP_MULT_OPTIONS = [2.0, 2.5, 3.0];
 const TARGET_RR_OPTIONS = [1.0, 1.2, 1.5];
@@ -55,11 +92,13 @@ function buildFilterParams() {
   };
 }
 
-async function fetchSymbolSet(symbols, regimeBuffer) {
+// Faz 1 temizliği (B9-5): regimeBuffer parametresi kaldırıldı — gövdede hiç
+// referans edilmiyordu (ölü parametre, çağıranları yanıltıyordu).
+async function fetchSymbolSet(symbols) {
   const perSymbol = {};
   for (const symbol of symbols) {
-    const candles = await fetchCandles(symbol, TIMEFRAME, DAYS);
-    const m5 = await fetchCandles(symbol, '5m', DAYS);
+    const candles = await fetchCandlesForSweep(symbol, TIMEFRAME, DAYS);
+    const m5 = await fetchCandlesForSweep(symbol, '5m', DAYS);
     const fundingHistory = await fetchFundingHistory(symbol);
     perSymbol[symbol] = {
       candles,
@@ -73,9 +112,9 @@ async function fetchSymbolSet(symbols, regimeBuffer) {
 
 async function fetchAllSymbolData() {
   console.log(`Veri çekiliyor: ${SYMBOLS.join(', ')} (${DAYS} gün)...`);
-  const btc4h = await fetchCandles(REGIME_SYMBOL, '4H', DAYS + REGIME_LEAD_DAYS);
+  const btc4h = await fetchCandlesForSweep(REGIME_SYMBOL, '4h', DAYS + REGIME_LEAD_DAYS);
   const regimeBuffer = makeAlignedBuffer(btc4h, 60);
-  const perSymbol = await fetchSymbolSet(SYMBOLS, regimeBuffer);
+  const perSymbol = await fetchSymbolSet(SYMBOLS);
   return { regimeBuffer, perSymbol };
 }
 
@@ -148,8 +187,26 @@ function passesDecisionRule(testMetrics) {
   return testMetrics.avgR > 0 && testMetrics.winRate * 100 >= BREAKEVEN_WR_PCT + MARGIN_PCT;
 }
 
+// Faz 1.4 (B9 düzeltmesi): tüm combolar SABİT bir takvim aralığında karşılaştırılır.
+// Önceden splitTrainTest her combo'nun kendi trade min/max ts'ini kullanıyordu —
+// farklı parametreler farklı trade zaman aralıkları ürettiği için 27 combo aslında
+// 27 farklı test dönemi üzerinde karşılaştırılıyordu. Aralık, gerçekten çekilen
+// mum verisinin kapsadığı [ilk ts, son ts] aralığıdır — DAYS'ten TAHMİN edilmiyor,
+// tüm sembollerin gerçek veri sınırlarından (en erken başlangıç, en geç bitiş) türetilir.
+function computeFixedRange(perSymbol) {
+  let rangeStartMs = Infinity, rangeEndMs = -Infinity;
+  for (const data of Object.values(perSymbol)) {
+    if (!data.candles.length) continue;
+    rangeStartMs = Math.min(rangeStartMs, data.candles[0].timestamp);
+    rangeEndMs = Math.max(rangeEndMs, data.candles[data.candles.length - 1].timestamp);
+  }
+  if (!Number.isFinite(rangeStartMs) || !Number.isFinite(rangeEndMs)) return null;
+  return { rangeStartMs, rangeEndMs };
+}
+
 async function main() {
   const { regimeBuffer, perSymbol } = await fetchAllSymbolData();
+  const range = computeFixedRange(perSymbol);
 
   const filterParams = buildFilterParams();
   const rows = [];
@@ -160,7 +217,7 @@ async function main() {
           regimeBuffer, perSymbol, threshold, filterParams,
           requireSrCap: FIXED_REQUIRE_SR_CAP, atrStopMult, targetRR, fees: FEES,
         });
-        const { trainTrades, testTrades } = splitTrainTest(trades, TEST_FRACTION);
+        const { trainTrades, testTrades } = splitTrainTest(trades, TEST_FRACTION, range);
         rows.push({
           threshold, atrStopMult, targetRR,
           trainMetrics: calcMetrics(trainTrades),
@@ -173,9 +230,9 @@ async function main() {
   // Kazanan combo TEST metriğine göre seçilir — train'e göre sıralamak curve-fit'i ödüllendirir.
   rows.sort((a, b) => b.testMetrics.avgR - a.testMetrics.avgR || b.testMetrics.winRate - a.testMetrics.winRate);
 
-  console.log('\n=== PARAMETRE SWEEP SONUÇLARI — WALK-FORWARD (train/test) ===');
+  console.log('\n=== PARAMETRE SWEEP SONUÇLARI — WALK-FORWARD (train/test, SABİT takvim aralığı) ===');
   console.log(`Semboller: ${SYMBOLS.join(', ')} | Dönem: ${DAYS} gün | Test payı: son %${(TEST_FRACTION * 100).toFixed(0)}`);
-  console.log(`Cooldown: 60dk (per-symbol) | MinStop: %2.5 | ExtGate: ON | SrCap: ON\n`);
+  console.log(`Cooldown: 60dk (per-symbol) | MinStop: %2.5 | SrCap: ON\n`);
   console.log(formatSweepTable(rows));
 
   const best = rows[0];
@@ -189,7 +246,7 @@ async function main() {
 
   console.log('\n=== HOLDOUT SEMBOLLERİNDE KAZANAN COMBO KONTROLÜ ===');
   console.log(`Semboller (grid'e hiç girmedi): ${HOLDOUT_SYMBOLS.join(', ')}`);
-  const holdoutPerSymbol = await fetchSymbolSet(HOLDOUT_SYMBOLS, regimeBuffer);
+  const holdoutPerSymbol = await fetchSymbolSet(HOLDOUT_SYMBOLS);
   const holdoutTrades = runCombo({
     regimeBuffer, perSymbol: holdoutPerSymbol, threshold: best.threshold, filterParams,
     requireSrCap: FIXED_REQUIRE_SR_CAP, atrStopMult: best.atrStopMult, targetRR: best.targetRR, fees: FEES,
@@ -197,11 +254,39 @@ async function main() {
   const holdoutMetrics = calcMetrics(holdoutTrades);
   const h = fmtMetrics(holdoutMetrics);
   console.log(`Holdout sonucu: N=${h.signals} Win%=${h.winPct} PF=${h.pf} AvgR=${h.avgR}`);
+  const holdoutVerdict = passesDecisionRule(holdoutMetrics);
   console.log(
-    passesDecisionRule(holdoutMetrics)
+    holdoutVerdict
       ? "✅ Holdout'ta da karar kuralını geçti."
       : "⚠️  Holdout'ta karar kuralını geçemedi — sembol evrenine özgü curve-fit olabilir.",
   );
+
+  // Faz 1.6 (B10 kapsamı dışı, ayrı madde): sonuçları diske yaz — önceden sweep
+  // sadece console.log basıyordu, 2026-07-13/2026-08-20 turlarının tam çıktısı
+  // hiç repoda kalmamıştı.
+  writeSweepReport({ rows, best, verdict, holdoutMetrics, holdoutVerdict, range });
+}
+
+function writeSweepReport({ rows, best, verdict, holdoutMetrics, holdoutVerdict, range }) {
+  const now = new Date();
+  const ts = now.toISOString().replace(/[:.]/g, '-').slice(0, 16);
+  const filename = `sweep-${ts}.json`;
+  const payload = {
+    generatedAt: now.toISOString(),
+    symbols: SYMBOLS,
+    holdoutSymbols: HOLDOUT_SYMBOLS,
+    days: DAYS,
+    fixedRange: range,
+    testFraction: TEST_FRACTION,
+    grid: { thresholds: THRESHOLDS, atrStopMultOptions: ATR_STOP_MULT_OPTIONS, targetRROptions: TARGET_RR_OPTIONS },
+    rows,
+    best: { threshold: best.threshold, atrStopMult: best.atrStopMult, targetRR: best.targetRR, verdict },
+    holdout: { metrics: holdoutMetrics, verdict: holdoutVerdict },
+  };
+  mkdirSync(RESULTS_DIR, { recursive: true });
+  const outPath = join(RESULTS_DIR, filename);
+  writeFileSync(outPath, JSON.stringify(payload, null, 2));
+  console.log(`\nSweep raporu kaydedildi: backtest-results/${filename}`);
 }
 
 main().catch((err) => {

@@ -40,6 +40,16 @@ describe('simulateTrade — LONG', () => {
     expect(result.durationMinutes).toBe(240);
   });
 
+  it('Faz 1.2 (B10 düzeltmesi): TIMEOUT artık GERÇEK mark-to-market R döner, bedava r:0 DEĞİL', () => {
+    // close=104 ile biten 240 mumluk düz seri — TP(110)/SL(95) hiç tetiklenmiyor.
+    // Mark-to-market: simEntry≈100.03, close=104 → grossR pozitif olmalı (fee düşülmüş).
+    const candles = Array(240).fill(candle(100, 102, 98, 104));
+    const result = simulateTrade(setup, candles, FEES);
+    expect(result.outcome).toBe('TIMEOUT');
+    expect(result.r).not.toBe(0); // eskiden hep 0'dı
+    expect(result.r).toBeGreaterThan(0); // close girişin üstünde, long → pozitif R
+  });
+
   it('aynı mumda hem TP hem SL varsa SL-first (canlı ile parite)', () => {
     // high >= target VE low <= stop aynı mumda
     const candles = [candle(100, 111, 94, 100)];

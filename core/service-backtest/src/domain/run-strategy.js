@@ -40,7 +40,12 @@ export function runStrategyOverCandles({
   const cooldowns = new Map();
 
   for (let i = window; i < candles.length; i++) {
-    const win = candles.slice(i - window, i);
+    // Faz 1.3 (B11 düzeltmesi): canlı make-process-candle.js:122'de calcAllIndicators
+    // KAPANAN mumu (closedCandle) İÇEREN buffer'la çağrılıyor (commitCandle onu buffer'a
+    // ekledikten SONRA). Eski `candles.slice(i-window, i)` candles[i]'yi (o an işlenen
+    // mum) dışlıyordu — göstergeler canlıdan 1 bar geride hesaplanıyordu ama giriş
+    // fiyatı yine de candles[i].close'du. Artık pencere candles[i]'yi İÇERİYOR.
+    const win = candles.slice(i - window + 1, i + 1);
     const current = candles[i];
 
     const indicators = calcAllIndicators(win);
@@ -55,6 +60,12 @@ export function runStrategyOverCandles({
     // liq bileşeni backtest'te her zaman nötr çıkar; canlıda ±(liq ağırlığı kadar)
     // sapabilir. Düzeltme değil, ölçülü bir kısıtlama: sweep sonuçları liq
     // bileşeninin etkisini yakalayamaz.
+    //
+    // Faz 1.3 (P2 düzeltmesi): priceChange artık win'in SON İKİ elemanından (1 barlık
+    // fark) hesaplanıyor — win artık candles[i]'yi içerdiği için win[win.length-1] ===
+    // current. Canlı make-process-candle.js:126-127 ile aynı: (closedCandle.close -
+    // candles[len-2].close). Eski kod candles[i]'yi win DIŞINDA tutup current ile
+    // win[win.length-2]'yi (candles[i-2]) karşılaştırıyordu — 2 barlık fark.
     const liqPressure = calcLiquidationPressure({
       fundingRate:  funding,
       oiDelta:      0,
@@ -75,12 +86,6 @@ export function runStrategyOverCandles({
 
     const filterResult = applyEntryFilters({ direction, indicators, params: filterParams });
     if (!filterResult.allowed) continue;
-
-    // Parite düzeltmesi: canlı per-symbol cooldown kullanıyor, backtest per-direction kullanıyordu.
-    // Per-direction → aynı coin'de hem long hem short spam yapılabiliyordu.
-    const lastSignal = cooldowns.get(symbol) ?? 0;
-    if (current.timestamp - lastSignal < COOLDOWN_MS) continue;
-    cooldowns.set(symbol, current.timestamp);
 
     if (!indicators.atr || indicators.atr === 0) continue;
 
@@ -104,6 +109,16 @@ export function runStrategyOverCandles({
     if (!setup.meetsMinTarget || !setup.meetsMinRR || !setup.meetsFeeFloor || !setup.meetsSrCapRequirement) {
       continue;
     }
+
+    // Faz 1.3 (P6 düzeltmesi): cooldown artık diğer TÜM gate'lerden SONRA kontrol
+    // ediliyor — canlı make-process-candle.js:161-199 ile aynı sıra. Eskiden backtest
+    // cooldown'u buildSetup gate'lerinden ÖNCE uyguluyordu; canlıda ise reddedilen
+    // ("takılan") bir setup cooldown BAŞLATMAZ — böylece volatilite artınca aynı coin
+    // hemen tekrar denenebilir (bkz. make-process-candle.js:161-162 yorumu). Eski sıra
+    // backtest'in canlıdan daha AZ sinyal üretmesine yol açıyordu.
+    const lastSignal = cooldowns.get(symbol) ?? 0;
+    if (current.timestamp - lastSignal < COOLDOWN_MS) continue;
+    cooldowns.set(symbol, current.timestamp);
 
     const remainingCandles = candles.slice(i + 1);
     const result = simulateTrade(setup, remainingCandles, fees);

@@ -32,7 +32,11 @@ export function evaluateOutcome(signal, candle, now = Date.now(), timeoutMs = 4 
   }
 
   const age = now - new Date(signal_created_at).getTime();
-  if (age > timeoutMs) {
+  // Faz 1.2 (B10 düzeltmesi): >= , sadece > değil — "süre dolunca" timeout sayılmalı,
+  // "geçtikten SONRA" değil. Eskiden backtest simülatöründe (simulator.js) age
+  // matematiksel olarak asla timeoutMs'i KESİN geçemiyordu (en fazla eşitleniyordu),
+  // bu yüzden backtest'te timeout hep ayrı bir r:0 fallback'e düşüyordu (bedava timeout).
+  if (age >= timeoutMs) {
     const pnlR = risk > 0 ? ((isLong ? 1 : -1) * (close - entry)) / risk : 0;
     return { status: 'timeout', exitPrice: close, pnlR: +pnlR.toFixed(4) };
   }
