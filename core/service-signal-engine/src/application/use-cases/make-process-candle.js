@@ -1,11 +1,12 @@
 import { calcAllIndicators } from '../../domain/indicators.js';
 import { commitCandle } from '../../domain/candle-buffer.js';
-import { isCandleStale } from '../../domain/staleness.js';
+import { isCandleStale, isMarketDataStale } from '../../domain/staleness.js';
 import { calcLiquidationPressure } from '../../domain/liquidation-pressure.js';
 import { calcConfluence } from '../../domain/confluence.js';
 import { calcRegime, calcHigherTfTrend } from '../../domain/regime.js';
 import { applyEntryFilters } from '../../domain/entry-filters.js';
 import { buildSetup } from '../../domain/setup-builder.js';
+import { calcMlFeatures } from '../../domain/ml-features.js';
 
 const CANDLE_BUFFER_SIZE = 60;
 // commitCandle'a boşluk (gap) tespiti için timeframe süresi — bağlantı koptuğunda
@@ -18,6 +19,9 @@ const COOLDOWN_BY_TF = { '1m': 60 * 60 * 1000, '5m': 120 * 60 * 1000 };
 const SIGNAL_COOLDOWN_MS = 60 * 60 * 1000; // fallback
 // Faz 2.1 (B9 düzeltmesi): OI farkını anlamlı kılmak için 1 saatlik pencere.
 const OI_WINDOW_MS = 60 * 60 * 1000;
+// Faz 3.1: funding z-score için tutulan geçmiş kaydı sayısı (~8 saatlik funding
+// periyodunda ~makul bir örneklem; sabit boyut, bellek sınırlı kalsın diye).
+const FUNDING_HISTORY_MAX = 50;
 // Min stop %2.5: eski %1.2-1.4 stop normal piyasa gürültüsünde 2dk'da vuruluyordu.
 // Daha geniş stop = daha az noise-triggered kayıp = daha yüksek WR.
 const MIN_STOP_PCT_BY_TF = { '1m': 0.025, '5m': 0.025 };
@@ -56,6 +60,10 @@ export function makeProcessCandle({
     if (!marketState[symbol]) {
       marketState[symbol] = {
         funding: { rate: 0, nextTs: 0 },
+        // Faz 3.1 (feature logging): funding z-score için kısa bir geçmiş —
+        // calcMlFeatures'ın kendi hesabı, bu ayrı bir "gerçek veri" penceresi
+        // (uydurma yok — funding mesajları geldikçe birikir).
+        fundingHistory: [], // [{ts, rate}, ...] artan ts, son FUNDING_HISTORY_MAX
         oi: { oi: 0, oiDelta: 0 },
         // Faz 2.1 (B9 düzeltmesi): 1 saatlik OI geçmişi. `oi` alanı ticker'ın
         // HER tick'inde (saniye-altı sıklıkta) güncelleniyordu ve oiDelta bir
@@ -65,6 +73,15 @@ export function makeProcessCandle({
         // tutar; oiDelta SADECE o kadar eski bir referansa göre hesaplanır.
         oiHistory: [], // [{ts, oi}, ...] artan ts
         lsr: { longRatio: 0.5, shortRatio: 0.5 },
+        // Faz 3.2 (B7/B8 tekrarını önleme): her kaynağın SON ALINDIĞI zaman.
+        // funding/oi/lsr mesajları kendi ts taşımıyor (bkz. make-publisher.js) —
+        // bu yüzden "mesaj ne zaman işlendi" burada kaydedilir. Kullanıcı kararı:
+        // bayat veri sinyal üretimini DURDURMAZ (candle bayatlığından farklı) —
+        // sadece indicatorsSnapshot.dataQuality'de açıkça işaretlenir. Eskiden
+        // eksik veri sessizce nötr bir sabite düşüyordu (LSR/OI bug'ları
+        // aylarca fark edilmedi) — artık "veri var" ile "veri yok/bayat" ayrımı
+        // her sinyalde görünür.
+        receivedAt: { funding: null, oi: null, lsr: null },
       };
     }
     return marketState[symbol];
@@ -81,12 +98,17 @@ export function makeProcessCandle({
     const { type, symbol, data } = msg;
 
     if (type === 'funding') {
-      ensureState(symbol).funding = data;
+      const st = ensureState(symbol);
+      st.funding = data;
+      st.receivedAt.funding = Date.now();
+      st.fundingHistory.push({ ts: Date.now(), rate: data.rate });
+      if (st.fundingHistory.length > FUNDING_HISTORY_MAX) st.fundingHistory.shift();
       return;
     }
     if (type === 'oi') {
       const st = ensureState(symbol);
       const now = Date.now();
+      st.receivedAt.oi = now;
       // OI_WINDOW_MS'den eski referansı bul; yoksa oiDelta 0 kalır (saniye-altı
       // gürültüye dönmez — anlamlı bir referans olmadan fark hesaplamamak,
       // yanlış küçük bir fark hesaplamaktan iyidir).
@@ -109,7 +131,9 @@ export function makeProcessCandle({
       return;
     }
     if (type === 'lsr') {
-      ensureState(symbol).lsr = data;
+      const st = ensureState(symbol);
+      st.lsr = data;
+      st.receivedAt.lsr = Date.now();
       return;
     }
     if (type !== 'candle') return;
@@ -160,6 +184,33 @@ export function makeProcessCandle({
       shortRatio:   state.lsr?.shortRatio ?? 0.5,
       priceChange,
     });
+
+    // Faz 3.1 (feature logging): meta-etiketleyici (Faz 3.3) için ek feature'lar.
+    // BTC korelasyonu SADECE symbol !== 'BTCUSDT' iken ve candles ile aynı
+    // uzunlukta bir BTC 1m serisi varsa hesaplanabilir — bu buffer mimarisinde
+    // sembol başına ayrı candles var, BTC 1m'i her sembolün kendi candles'ıyla
+    // hizalı tutmak ayrı bir altyapı gerektirir (Faz 3.3 kapsamında). Şimdilik
+    // btcCloses geçilmiyor → btcCorrelation açıkça null (uydurma yok).
+    const mlFeatures = calcMlFeatures({
+      candles,
+      fundingRate: state.funding?.rate,
+      fundingHistory: state.fundingHistory,
+      oiDelta1h: state.oi?.oiDelta,
+      currentPrice: closedCandle.close,
+      supportLevel: indicators.supportLevel,
+      resistanceLevel: indicators.resistanceLevel,
+    });
+    indicators.mlFeatures = mlFeatures;
+
+    // Faz 3.2 (B7/B8 tekrarını önleme): her kaynağın tazelik durumu açıkça
+    // işaretlenir. Kullanıcı kararı: bayat veri sinyal üretimini DURDURMAZ
+    // (candle bayatlığından farklı), sadece kayıtta görünür kalır.
+    const nowTs = Date.now();
+    indicators.dataQuality = {
+      funding: isMarketDataStale({ receivedAt: state.receivedAt.funding, now: nowTs }) ? 'stale' : 'fresh',
+      oi: isMarketDataStale({ receivedAt: state.receivedAt.oi, now: nowTs }) ? 'stale' : 'fresh',
+      lsr: isMarketDataStale({ receivedAt: state.receivedAt.lsr, now: nowTs }) ? 'stale' : 'fresh',
+    };
 
     // Piyasa rejimi: BTC 4h trendi (ana piyasa yönü)
     const btc4hBuf = candleBuffers['BTCUSDT.4h'] ?? [];

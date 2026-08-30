@@ -131,6 +131,46 @@ describe('signal-repository', () => {
     expect(params).toContain(null);
   });
 
+  // Faz 3.5 (AI kapısı ölçümü): ai_approved/ai_confidence/ai_reason kolonları
+  // (02-signals.sql) önceden hiçbir kod tarafından yazılmıyordu — event_veto.py
+  // (Faz 3.4) artık bu kolonları doldurabilecek bir çıktı üretiyor.
+  it('saveSignal aiApproved/aiConfidence/aiReason verilirse INSERT eder', async () => {
+    db.query.mockResolvedValue({ rows: [{ id: 'sig-1', created_at: new Date() }] });
+    await repo.saveSignal({
+      symbol: 'BTCUSDT', direction: 'long', triggerTimeframe: '1m',
+      entryPrice: 100, stopPrice: 90, targetPrice: 120,
+      rrRatio: 1.5, confluenceScore: 0.8, indicatorsSnapshot: {},
+      aiApproved: true, aiConfidence: 0.85, aiReason: 'Belirgin bir olay yok',
+    });
+    const [sql, params] = db.query.mock.calls[0];
+    expect(sql).toContain('ai_approved');
+    expect(sql).toContain('ai_confidence');
+    expect(sql).toContain('ai_reason');
+    expect(params).toContain(true);
+    expect(params).toContain(0.85);
+    expect(params).toContain('Belirgin bir olay yok');
+  });
+
+  it('saveSignal aiApproved verilmezse null geçer (AI vetosu opsiyonel — geriye uyumlu)', async () => {
+    db.query.mockResolvedValue({ rows: [{ id: 'sig-1', created_at: new Date() }] });
+    await repo.saveSignal({
+      symbol: 'BTCUSDT', direction: 'long', triggerTimeframe: '1m',
+      entryPrice: 100, stopPrice: 90, targetPrice: 120,
+      rrRatio: 1.5, confluenceScore: 0.8, indicatorsSnapshot: {},
+    });
+    const [, params] = db.query.mock.calls[0];
+    // aiApproved/aiConfidence/aiReason null olarak geçmeli — sessizce false/0 DEĞİL
+    // (Faz 3.2 ilkesiyle aynı: "veri yok" ile "veri var, olumsuz" ayrımı korunmalı)
+    expect(params.filter((p) => p === null).length).toBeGreaterThanOrEqual(3);
+  });
+
+  it('getSignalStats (Faz 3.5): ai_approved bazlı kırılım whitelist\'te tanımlıdır', async () => {
+    db.query.mockResolvedValue({ rows: [] });
+    await repo.getStatsBreakdown({ by: 'ai_approved' });
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toContain('ai_approved');
+  });
+
   it('getSignalStats days parametresini interval olarak geçirir', async () => {
     db.query.mockResolvedValue({ rows: [{}] });
     await repo.getSignalStats(14);
