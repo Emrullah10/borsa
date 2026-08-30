@@ -2544,3 +2544,7 @@ istatistiklerin ne kadarının kirli olduğu, sweep hiç çalıştırılmadı.
 | 12:25 | Faz 3.4: LLM olay vetosu (event_veto.py, POST /veto, fail-open) — ai_approved/confidence/reason kolonları nihayet kullanılabilir | services/service-ai/event_veto.py, main.py | 13 pytest yeşil | ~4000 |
 | 12:32 | Faz 3.5: saveSignal AI alanlarını yazabiliyor, getStatsBreakdown ai_approved kırılımı | signal-repository.js | 30 test yeşil | ~2000 |
 | 12:34 | buglog.json'a bug-173 eklendi | .wolf/buglog.json | 173 bug kayıtlı | ~1000 |
+| 10:02 | Session end: 27 writes across 24 files (imdi-ben-art-k-gerilmeye-unified-flask.md, candle-store-repository.test.js, candle-store-repository.js, backfill-candles.js, package.json) | 32 reads | ~43279 tok |
+| 10:02 | Session end: 27 writes across 24 files (imdi-ben-art-k-gerilmeye-unified-flask.md, candle-store-repository.test.js, candle-store-repository.js, backfill-candles.js, package.json) | 32 reads | ~43279 tok |
+| 10:10 | Session end: 27 writes across 24 files (imdi-ben-art-k-gerilmeye-unified-flask.md, candle-store-repository.test.js, candle-store-repository.js, backfill-candles.js, package.json) | 32 reads | ~43279 tok |
+| 10:10 | Session end: 27 writes across 24 files (imdi-ben-art-k-gerilmeye-unified-flask.md, candle-store-repository.test.js, candle-store-repository.js, backfill-candles.js, package.json) | 32 reads | ~43279 tok |
