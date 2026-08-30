@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { makeProcessCandle } from '../../src/application/use-cases/make-process-candle.js';
 
 // Yeterince uzun, dalgalı bir seri — ADX/RSI/BB gibi göstergelerin non-null
@@ -53,6 +53,156 @@ function withNoisyTicks(candles, ticksPerCandle = 4) {
   }
   return out;
 }
+
+// Faz 2.1 (B9 düzeltmesi): OI (open interest) her ticker tick'inde (saniye-altı
+// sıklıkta) geliyor. Eski `oiDelta = data.oi - prev` bu yüzden neredeyse her
+// zaman sıfıra yakındı — calcLiquidationPressure'daki oiPressure bileşeni
+// (ağırlık 0.25) fiilen ölüydü. Artık OI için 1 saatlik bir referans tutuluyor;
+// oiDelta SADECE en az 1 saat eski bir referansa göre hesaplanıyor.
+describe('makeProcessCandle — OI 1 saatlik pencere (Faz 2.1, B9 düzeltmesi)', () => {
+  let deps;
+  let processCandle;
+
+  beforeEach(() => {
+    deps = makeDeps();
+    processCandle = makeProcessCandle(deps);
+  });
+
+  async function sendOi(oi) {
+    await processCandle.handleMessage('md.TESTUSDT.oi', { type: 'oi', symbol: 'TESTUSDT', data: { oi } });
+  }
+
+  // liqPressureScore, oiPressure = clamp(|oiDelta|/10000) bileşenini 0.25 ağırlıkla
+  // taşıyor (calcLiquidationPressure). Büyük bir OI sıçraması 1 saat İÇİNDE hâlâ
+  // referanssız (oiDelta=0) kalmalı; 1 saat SONRA fark yakalanmalı.
+  it('1 saatten ÖNCE gelen büyük OI değişimi oiDelta\'yı etkilemez (referans yok)', async () => {
+    vi.useFakeTimers();
+    try {
+      await sendOi(1_000_000);
+      vi.advanceTimersByTime(30 * 60 * 1000); // 30dk sonra — hâlâ 1 saatin altında
+      await sendOi(1_500_000); // %50 büyük sıçrama
+
+      const candles = makeClosedCandles(80);
+      await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+
+      expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+      const snap = deps.signalRepo.saveSignal.mock.calls[0][0];
+      // 1 saat dolmadığı için referans yok → oiPressure katkısı sıfıra yakın →
+      // liqPressureScore taban değere (nötr fundingNorm=0 varsayımıyla ~0.5) yakın kalmalı.
+      expect(snap.liqPressureScore).toBeLessThan(0.55);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('1 saatten SONRA gelen büyük OI değişimi oiDelta\'yı yakalar, liqPressureScore yükselir', async () => {
+    vi.useFakeTimers();
+    try {
+      await sendOi(1_000_000);
+      vi.advanceTimersByTime(61 * 60 * 1000); // 61dk sonra — 1 saat referansı artık var
+      await sendOi(1_100_000); // oiDelta = 100_000 → oiPressure = clamp(100000/10000) = 1 (max)
+
+      const candles = makeClosedCandles(80);
+      await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+
+      expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+      const snap = deps.signalRepo.saveSignal.mock.calls[0][0];
+      // oiPressure=1, ağırlık 0.25 → rawScore'a +0.25 katkı → score = 0.5 + rawScore*0.5
+      // en az 0.5 + 0.25*0.5 = 0.625 civarı beklenir (fundingNorm/imbalance sıfır varsayımıyla)
+      expect(snap.liqPressureScore).toBeGreaterThan(0.55);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
+describe('makeProcessCandle — veri kalitesi işaretleme (Faz 3.2, B7/B8 tekrarını önleme)', () => {
+  let deps;
+  let processCandle;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    deps = makeDeps();
+    processCandle = makeProcessCandle(deps);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('funding/oi/lsr HİÇ gelmemişse (receivedAt yok) dataQuality hepsini "stale" işaretler — sessizce nötr değil', async () => {
+    const candles = makeClosedCandles(80);
+    await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+
+    expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+    const snap = deps.signalRepo.saveSignal.mock.calls[0][0].indicatorsSnapshot;
+    expect(snap.dataQuality).toBeDefined();
+    expect(snap.dataQuality.funding).toBe('stale');
+    expect(snap.dataQuality.oi).toBe('stale');
+    expect(snap.dataQuality.lsr).toBe('stale');
+  });
+
+  it('funding TAZE gelmişse dataQuality.funding "fresh" olur', async () => {
+    await processCandle.handleMessage('md.TESTUSDT.funding', {
+      type: 'funding', symbol: 'TESTUSDT', data: { rate: 0.0001, nextTs: 0 },
+    });
+    const candles = makeClosedCandles(80);
+    await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+
+    expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+    const snap = deps.signalRepo.saveSignal.mock.calls[0][0].indicatorsSnapshot;
+    expect(snap.dataQuality.funding).toBe('fresh');
+  });
+
+  it('funding geldikten ÇOK sonra (MAX_MARKET_DATA_AGE_MS üstü) sinyal üretilirse "stale" olur', async () => {
+    await processCandle.handleMessage('md.TESTUSDT.funding', {
+      type: 'funding', symbol: 'TESTUSDT', data: { rate: 0.0001, nextTs: 0 },
+    });
+    vi.advanceTimersByTime(20 * 60 * 1000); // 20dk sonra — 15dk eşiğinin üstünde
+
+    const candles = makeClosedCandles(80);
+    await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+
+    expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+    const snap = deps.signalRepo.saveSignal.mock.calls[0][0].indicatorsSnapshot;
+    expect(snap.dataQuality.funding).toBe('stale');
+  });
+
+  it('veri bayat olsa bile sinyal üretimi DURMAZ — sadece işaretlenir (kullanıcı kararı: durdurma)', async () => {
+    // Hiçbir funding/oi/lsr mesajı gönderilmedi — hepsi stale olacak
+    const candles = makeClosedCandles(80);
+    await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+    expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+  });
+});
+
+describe('makeProcessCandle — mlFeatures entegrasyonu (Faz 3.1)', () => {
+  let deps;
+  let processCandle;
+
+  beforeEach(() => {
+    deps = makeDeps();
+    processCandle = makeProcessCandle(deps);
+  });
+
+  it('kaydedilen sinyalin indicatorsSnapshot\'ında mlFeatures alanı vardır', async () => {
+    const candles = makeClosedCandles(80);
+    await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+
+    expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+    const snap = deps.signalRepo.saveSignal.mock.calls[0][0].indicatorsSnapshot;
+    expect(snap.mlFeatures).toBeDefined();
+    expect(snap.mlFeatures._provenance).toBeDefined();
+    // Bu buffer mimarisinde BTC korelasyonu/likidite kademesi/spread henüz
+    // beslenmiyor — açıkça null olmalı, sessizce uydurulmuş bir değer DEĞİL.
+    expect(snap.mlFeatures.spreadPct).toBeNull();
+    expect(snap.mlFeatures.liquidityTier).toBeNull();
+    expect(snap.mlFeatures.btcCorrelation).toBeNull();
+    // Ama gerçekten hesaplanabilenler dolu olmalı
+    expect(snap.mlFeatures.realizedVolatility).not.toBeNull();
+    expect(snap.mlFeatures.hourOfDayUtc).not.toBeNull();
+  });
+});
 
 describe('makeProcessCandle — kapanmamış mum kirliliği düzeltmesi', () => {
   let deps;

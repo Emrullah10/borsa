@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isCandleStale, MAX_CANDLE_AGE_MS } from '../../src/domain/staleness.js';
+import { isCandleStale, MAX_CANDLE_AGE_MS, isMarketDataStale, MAX_MARKET_DATA_AGE_MS } from '../../src/domain/staleness.js';
 
 describe('isCandleStale', () => {
   // 2026-08-26: signal-engine ~10 SAAT bayat mumlarla sinyal üretti.
@@ -42,5 +42,30 @@ describe('isCandleStale', () => {
   it('MAX_CANDLE_AGE_MS tf başına tanımlı', () => {
     expect(MAX_CANDLE_AGE_MS['1m']).toBeGreaterThan(0);
     expect(MAX_CANDLE_AGE_MS['5m']).toBeGreaterThan(MAX_CANDLE_AGE_MS['1m']);
+  });
+
+  // Faz 3.2 (B7/B8 tekrarını önleme): funding/OI/LSR mesajları hiç ts taşımıyordu
+  // — eksik veri sessizce nötr bir sabite (0.5, 0) düşüyordu ve LSR/OI bozukluğu
+  // (bug-170, bug-171) aylarca fark edilmedi çünkü "veri var ama nötr" ile "veri
+  // hiç yok" ayrımı görünmüyordu. isMarketDataStale genel amaçlı bir tazelik
+  // kontrolüdür — funding/oi/lsr state'inin receivedAt'ine uygulanır.
+  describe('isMarketDataStale (Faz 3.2)', () => {
+    it('taze veri (30sn önce) bayat DEĞİL', () => {
+      expect(isMarketDataStale({ receivedAt: now - 30_000, now })).toBe(false);
+    });
+
+    it('MAX_MARKET_DATA_AGE_MS\'ten eski veri BAYAT', () => {
+      expect(isMarketDataStale({ receivedAt: now - MAX_MARKET_DATA_AGE_MS - 1, now })).toBe(true);
+    });
+
+    it('receivedAt hiç yoksa (mesaj hiç gelmedi) bayat sayılır (güvenli taraf)', () => {
+      expect(isMarketDataStale({ receivedAt: null, now })).toBe(true);
+      expect(isMarketDataStale({ receivedAt: undefined, now })).toBe(true);
+    });
+
+    it('tam eşikte kabul, hemen üstünde ret', () => {
+      expect(isMarketDataStale({ receivedAt: now - MAX_MARKET_DATA_AGE_MS, now })).toBe(false);
+      expect(isMarketDataStale({ receivedAt: now - MAX_MARKET_DATA_AGE_MS - 1, now })).toBe(true);
+    });
   });
 });

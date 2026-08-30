@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateOutcome, evaluateSimOutcome } from '../../src/domain/evaluate-outcome.js';
+import { evaluateOutcome, evaluateSimOutcome, isSimEntryFillable } from '../../src/domain/evaluate-outcome.js';
 
 // Helper: candle oluştur
 const candle = (high, low, close) => ({ open: close, high, low, close });
@@ -11,6 +11,8 @@ const BASE = {
   target_price: '1150', // reward = 150, pnlR = 1.5
   signal_created_at: new Date(Date.now() - 60_000).toISOString(),
 };
+
+const TF_MS_1M = 60_000;
 
 const TIMEOUT_MS = 4 * 60 * 60 * 1000;
 
@@ -50,6 +52,19 @@ describe('evaluateOutcome — LONG', () => {
     const r = evaluateOutcome(BASE, candle(1050, 900, 950));
     expect(r.tieBreak).toBeFalsy();
   });
+
+  it('Faz 1.2 (B10 düzeltmesi): tam timeoutMs anında (== ) da timeout tetiklenir, sadece geçtikten sonra değil', () => {
+    // Önceki `age > timeoutMs` backtest simulator.js'te MATEMATİKSEL OLARAK hiç
+    // tetiklenemiyordu: now = (i+1)*CANDLE_MS, max i = window.length-1 = MAX_CANDLES-1
+    // = 239 → max now = 240*60000 = TIMEOUT_MS TAM OLARAK, hiçbir zaman kesin BÜYÜK
+    // olamıyordu. Backtest bu yüzden hep r:0 fallback'e düşüyordu (B10 — "bedava
+    // timeout"). Canlıda age sürekli arttığı için semptom görülmüyordu ama sınır
+    // semantiği yine de yanlıştı: "süre dolunca" timeout olmalı, "geçtikten SONRA" değil.
+    const atExactly = { ...BASE, signal_created_at: new Date(Date.now() - TIMEOUT_MS).toISOString() };
+    const r = evaluateOutcome(atExactly, candle(1060, 1040, 1050), Date.now(), TIMEOUT_MS);
+    expect(r).not.toBeNull();
+    expect(r.status).toBe('timeout');
+  });
 });
 
 describe('evaluateOutcome — SHORT', () => {
@@ -87,10 +102,21 @@ describe('evaluateOutcome — SHORT', () => {
 describe('evaluateSimOutcome', () => {
   const takerFee = 0.0006;
 
-  it('LONG tp_hit: sim risk üzerinden pnlR hesaplar, fee düşer', () => {
-    // simEntry=1010 (slippage'lı), stop=900 → simRisk=110; target=1150 → reward=140
+  // KRİTİK DAVRANIŞ DEĞİŞİKLİĞİ (Faz 0.1, B1/B3 düzeltmesi):
+  // Risk birimi artık SİNYALİN PLANLANAN riskinden (entryPrice - stopPrice)
+  // hesaplanır, sim girişten YENİDEN ÖLÇÜLMEZ. Önceki `Math.abs(simEntry - stopPrice)`
+  // payda yaklaşımı iki hataya yol açıyordu:
+  //   1. simEntry stopPrice'ın ÖTESİNDEYSE (bayat veri/aşırı kayma) Math.abs paydayı
+  //      pozitif tutuyor ama pay işaret değiştiriyor → SL zararı +1R KÂR yazılıyordu.
+  //   2. R birimi işlemler arası 134× değişiyordu (simRisk/realRisk oranı) — bu
+  //      sayıların ortalaması istatistiksel olarak anlamsızdı.
+  // Artık simEntry stop'un ötesindeyse (fiilen doldurulamazdı) simPnlR NULL döner.
+
+  it('LONG tp_hit: risk entryPrice-stopPrice üzerinden (sabit birim), fee düşer', () => {
+    // entry=1000, stop=900 → riskUnit=100 (SABİT, simEntry'den bağımsız)
     const r = evaluateSimOutcome({
       direction: 'long',
+      entryPrice: 1000,
       simEntry: 1010,
       stopPrice: 900,
       targetPrice: 1150,
@@ -98,14 +124,16 @@ describe('evaluateSimOutcome', () => {
       exitPrice: 1150,
       takerFee,
     });
-    const grossR = (1150 - 1010) / 110; // 1.2727...
-    const feeR = (2 * takerFee * 1010) / 110;
+    const riskUnit = 100;
+    const grossR = (1150 - 1010) / riskUnit;
+    const feeR = (2 * takerFee * 1010) / riskUnit;
     expect(r.simPnlR).toBeCloseTo(grossR - feeR, 4);
   });
 
-  it('LONG sl_hit: negatif simPnlR, fee dahil', () => {
+  it('LONG sl_hit: negatif simPnlR, fee dahil, sabit riskUnit', () => {
     const r = evaluateSimOutcome({
       direction: 'long',
+      entryPrice: 1000,
       simEntry: 1010,
       stopPrice: 900,
       targetPrice: 1150,
@@ -113,14 +141,16 @@ describe('evaluateSimOutcome', () => {
       exitPrice: 900,
       takerFee,
     });
-    const grossR = (900 - 1010) / 110; // -1
-    const feeR = (2 * takerFee * 1010) / 110;
+    const riskUnit = 100;
+    const grossR = (900 - 1010) / riskUnit;
+    const feeR = (2 * takerFee * 1010) / riskUnit;
     expect(r.simPnlR).toBeCloseTo(grossR - feeR, 4);
   });
 
-  it('SHORT tp_hit: yön ters çevrilir', () => {
+  it('SHORT tp_hit: yön ters çevrilir, sabit riskUnit', () => {
     const r = evaluateSimOutcome({
       direction: 'short',
+      entryPrice: 1000,
       simEntry: 990,
       stopPrice: 1100,
       targetPrice: 850,
@@ -128,15 +158,16 @@ describe('evaluateSimOutcome', () => {
       exitPrice: 850,
       takerFee,
     });
-    const simRisk = Math.abs(990 - 1100); // 110
-    const grossR = (990 - 850) / simRisk;
-    const feeR = (2 * takerFee * 990) / simRisk;
+    const riskUnit = 100; // |entryPrice - stopPrice|
+    const grossR = -1 * (850 - 990) / riskUnit;
+    const feeR = (2 * takerFee * 990) / riskUnit;
     expect(r.simPnlR).toBeCloseTo(grossR - feeR, 4);
   });
 
   it('timeout: exitPrice (close) ile hesaplar', () => {
     const r = evaluateSimOutcome({
       direction: 'long',
+      entryPrice: 1000,
       simEntry: 1000,
       stopPrice: 900,
       targetPrice: 1150,
@@ -147,9 +178,10 @@ describe('evaluateSimOutcome', () => {
     expect(r.simPnlR).not.toBeNull();
   });
 
-  it('sıfır risk durumunda (simEntry === stopPrice) simPnlR null döner', () => {
+  it('sıfır risk durumunda (entryPrice === stopPrice) simPnlR null döner', () => {
     const r = evaluateSimOutcome({
       direction: 'long',
+      entryPrice: 900,
       simEntry: 900,
       stopPrice: 900,
       targetPrice: 1150,
@@ -163,6 +195,7 @@ describe('evaluateSimOutcome', () => {
   it('simEntry null ise simPnlR null döner (henüz doldurulmadı)', () => {
     const r = evaluateSimOutcome({
       direction: 'long',
+      entryPrice: 1000,
       simEntry: null,
       stopPrice: 900,
       targetPrice: 1150,
@@ -171,6 +204,70 @@ describe('evaluateSimOutcome', () => {
       takerFee,
     });
     expect(r.simPnlR).toBeNull();
+  });
+
+  // --- B1 regresyon: simEntry stop'un ÖTESİNDE → doldurulamaz sayılmalı ---
+  describe('unfillable simEntry (B1 işaret hatası regresyonu)', () => {
+    it('LONG: simEntry stop seviyesinin AŞAĞISINDA (stop-through) → simPnlR null', () => {
+      // Canlı DB'de gözlenen desen: TACUSDT long, entry=0.03350, stop=0.033096,
+      // sim_entry=0.004350 (stop'un çok altında) — Math.abs eskiden bunu +0.9998 yazıyordu.
+      const r = evaluateSimOutcome({
+        direction: 'long',
+        entryPrice: 0.03350,
+        simEntry: 0.004350,
+        stopPrice: 0.033096,
+        targetPrice: 0.03500,
+        status: 'sl_hit',
+        exitPrice: 0.033096,
+        takerFee,
+      });
+      expect(r.simPnlR).toBeNull();
+      expect(r.reason).toBe('unfillable');
+    });
+
+    it('SHORT: simEntry stop seviyesinin ÜSTÜNDE → simPnlR null', () => {
+      const r = evaluateSimOutcome({
+        direction: 'short',
+        entryPrice: 1.14700,
+        simEntry: 3.386984,
+        stopPrice: 1.221137,
+        targetPrice: 1.00000,
+        status: 'sl_hit',
+        exitPrice: 1.221137,
+        takerFee,
+      });
+      expect(r.simPnlR).toBeNull();
+      expect(r.reason).toBe('unfillable');
+    });
+
+    it('LONG: simEntry tam stop seviyesinde → unfillable (sıfır/negatif risk)', () => {
+      const r = evaluateSimOutcome({
+        direction: 'long',
+        entryPrice: 1000,
+        simEntry: 900,
+        stopPrice: 900,
+        targetPrice: 1150,
+        status: 'sl_hit',
+        exitPrice: 900,
+        takerFee,
+      });
+      expect(r.simPnlR).toBeNull();
+    });
+
+    it('LONG: simEntry stop ile entry arasında (normal aralık) → doldurulabilir, hesaplanır', () => {
+      const r = evaluateSimOutcome({
+        direction: 'long',
+        entryPrice: 1000,
+        simEntry: 950,
+        stopPrice: 900,
+        targetPrice: 1150,
+        status: 'sl_hit',
+        exitPrice: 900,
+        takerFee,
+      });
+      expect(r.simPnlR).not.toBeNull();
+      expect(r.simPnlR).toBeLessThan(0);
+    });
   });
 
   // --- Çıkış kayması (exit slippage) ---
@@ -183,6 +280,7 @@ describe('evaluateSimOutcome', () => {
     it('LONG sl_hit: çıkış stop seviyesinin ALTINDA dolar (aleyhe)', () => {
       const args = {
         direction: 'long',
+        entryPrice: 1000,
         simEntry: 1010,
         stopPrice: 900,
         targetPrice: 1150,
@@ -193,10 +291,10 @@ describe('evaluateSimOutcome', () => {
       const withSlip = evaluateSimOutcome({ ...args, exitSlippagePct });
       const without = evaluateSimOutcome(args);
 
-      const simRisk = 110;
+      const riskUnit = 100;
       const realExit = 900 * (1 - exitSlippagePct); // long stop → aşağı kayar
-      const grossR = (realExit - 1010) / simRisk;
-      const feeR = (2 * takerFee * 1010) / simRisk;
+      const grossR = (realExit - 1010) / riskUnit;
+      const feeR = (2 * takerFee * 1010) / riskUnit;
 
       expect(withSlip.simPnlR).toBeCloseTo(grossR - feeR, 4);
       expect(withSlip.simPnlR).toBeLessThan(without.simPnlR);
@@ -205,6 +303,7 @@ describe('evaluateSimOutcome', () => {
     it('SHORT sl_hit: çıkış stop seviyesinin ÜSTÜNDE dolar (aleyhe)', () => {
       const withSlip = evaluateSimOutcome({
         direction: 'short',
+        entryPrice: 1000,
         simEntry: 990,
         stopPrice: 1100,
         targetPrice: 850,
@@ -214,10 +313,10 @@ describe('evaluateSimOutcome', () => {
         exitSlippagePct,
       });
 
-      const simRisk = 110;
+      const riskUnit = 100;
       const realExit = 1100 * (1 + exitSlippagePct); // short stop → yukarı kayar
-      const grossR = -1 * (realExit - 990) / simRisk;
-      const feeR = (2 * takerFee * 990) / simRisk;
+      const grossR = -1 * (realExit - 990) / riskUnit;
+      const feeR = (2 * takerFee * 990) / riskUnit;
 
       expect(withSlip.simPnlR).toBeCloseTo(grossR - feeR, 4);
     });
@@ -225,6 +324,7 @@ describe('evaluateSimOutcome', () => {
     it('tp_hit: limit emirle dolar, kayma UYGULANMAZ', () => {
       const args = {
         direction: 'long',
+        entryPrice: 1000,
         simEntry: 1010,
         stopPrice: 900,
         targetPrice: 1150,
@@ -239,6 +339,7 @@ describe('evaluateSimOutcome', () => {
     it('timeout: market kapanış → kayma UYGULANIR', () => {
       const args = {
         direction: 'long',
+        entryPrice: 1000,
         simEntry: 1000,
         stopPrice: 900,
         targetPrice: 1150,
@@ -253,6 +354,7 @@ describe('evaluateSimOutcome', () => {
     it('exitSlippagePct verilmezse davranış değişmez (geriye uyumlu)', () => {
       const args = {
         direction: 'long',
+        entryPrice: 1000,
         simEntry: 1010,
         stopPrice: 900,
         targetPrice: 1150,
@@ -260,9 +362,58 @@ describe('evaluateSimOutcome', () => {
         exitPrice: 900,
         takerFee,
       };
-      const simRisk = 110;
-      const expected = (900 - 1010) / simRisk - (2 * takerFee * 1010) / simRisk;
+      const riskUnit = 100;
+      const expected = (900 - 1010) / riskUnit - (2 * takerFee * 1010) / riskUnit;
       expect(evaluateSimOutcome(args).simPnlR).toBeCloseTo(expected, 4);
     });
+  });
+});
+
+describe('isSimEntryFillable (Faz 0.2, B2 düzeltmesi)', () => {
+  const signalCreatedAt = new Date('2026-08-20T10:00:00Z').toISOString();
+
+  it('sinyal zamanına yakın, taze 1m mum → doldurulabilir', () => {
+    const candleTs = new Date('2026-08-20T10:01:00Z').getTime();
+    const now = new Date('2026-08-20T10:01:30Z').getTime();
+    expect(isSimEntryFillable({ signalCreatedAt, candleTs, tf: '1m', now })).toBe(true);
+  });
+
+  it('mum sinyalden ÖNCEyse reddedilir', () => {
+    const candleTs = new Date('2026-08-20T09:59:00Z').getTime();
+    const now = new Date('2026-08-20T10:01:00Z').getTime();
+    expect(isSimEntryFillable({ signalCreatedAt, candleTs, tf: '1m', now })).toBe(false);
+  });
+
+  it('mum "şimdi"ye göre tfMs×2\'den eskiyse (bayat) reddedilir — B2 regresyonu', () => {
+    // 1m için tfMs=60_000, eşik=120_000ms. Canlı DB'de gözlenen desen:
+    // haftalarca eski pending satır güncel bir mumla eşleşiyordu (%4.97 ortalama sapma).
+    const candleTs = new Date('2026-08-20T10:01:00Z').getTime();
+    const now = new Date('2026-08-27T10:01:00Z').getTime(); // 7 gün sonra
+    expect(isSimEntryFillable({ signalCreatedAt, candleTs, tf: '1m', now })).toBe(false);
+  });
+
+  it('tam eşikte (tfMs×2) kabul, hemen üstünde ret — 1m sınır testi', () => {
+    const candleTs = new Date('2026-08-20T10:01:00Z').getTime();
+    const atThreshold = candleTs + TF_MS_1M * 2;
+    const overThreshold = atThreshold + 1;
+    expect(isSimEntryFillable({ signalCreatedAt, candleTs, tf: '1m', now: atThreshold })).toBe(true);
+    expect(isSimEntryFillable({ signalCreatedAt, candleTs, tf: '1m', now: overThreshold })).toBe(false);
+  });
+
+  it('5m mumda daha geniş tolerans (tfMs×2 = 10dk)', () => {
+    const candleTs = new Date('2026-08-20T10:01:00Z').getTime();
+    const now = candleTs + 9 * 60_000; // 9dk sonra — hâlâ 10dk eşiğinin altında
+    expect(isSimEntryFillable({ signalCreatedAt, candleTs, tf: '5m', now })).toBe(true);
+  });
+
+  it('candleTs verilmemişse (eski entegrasyon) geriye uyumlu true döner', () => {
+    expect(isSimEntryFillable({ signalCreatedAt, candleTs: null, tf: '1m' })).toBe(true);
+    expect(isSimEntryFillable({ signalCreatedAt, candleTs: undefined, tf: '1m' })).toBe(true);
+  });
+
+  it('tf belirtilmemişse 1m varsayılanı kullanılır', () => {
+    const candleTs = new Date('2026-08-20T10:01:00Z').getTime();
+    const now = candleTs + 121_000; // 1m eşiğinin (120s) üstünde
+    expect(isSimEntryFillable({ signalCreatedAt, candleTs, now })).toBe(false);
   });
 });

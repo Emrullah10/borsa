@@ -46,6 +46,16 @@ describe('signal-repository', () => {
     expect(sql).toContain('sim_entry_price');
   });
 
+  it('getPendingOutcomes (Faz 0.3, B13 düzeltmesi): 6 saatten eski pending/active satırları eler', async () => {
+    // Zombi pending kaynaklı bayat sim-entry hatası: yaşsız sorgu haftalarca eski
+    // satırları güncel mumlarla eşleştiriyordu (ortalama çözülme süresi 27.93 saat
+    // ölçülmüştü — timeout 4 saat olmasına rağmen).
+    db.query.mockResolvedValue({ rows: [] });
+    await repo.getPendingOutcomes();
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toMatch(/created_at\s*>\s*now\(\)\s*-\s*interval\s*'6 hours'/);
+  });
+
   it('recordRealFill gerçek giriş/çıkış fiyatlarını signal_outcomes.real_* kolonlarına yazar (Faz 3 execution doğrulama)', async () => {
     db.query.mockResolvedValue({ rows: [] });
     await repo.recordRealFill('outcome-1', {
@@ -121,6 +131,46 @@ describe('signal-repository', () => {
     expect(params).toContain(null);
   });
 
+  // Faz 3.5 (AI kapısı ölçümü): ai_approved/ai_confidence/ai_reason kolonları
+  // (02-signals.sql) önceden hiçbir kod tarafından yazılmıyordu — event_veto.py
+  // (Faz 3.4) artık bu kolonları doldurabilecek bir çıktı üretiyor.
+  it('saveSignal aiApproved/aiConfidence/aiReason verilirse INSERT eder', async () => {
+    db.query.mockResolvedValue({ rows: [{ id: 'sig-1', created_at: new Date() }] });
+    await repo.saveSignal({
+      symbol: 'BTCUSDT', direction: 'long', triggerTimeframe: '1m',
+      entryPrice: 100, stopPrice: 90, targetPrice: 120,
+      rrRatio: 1.5, confluenceScore: 0.8, indicatorsSnapshot: {},
+      aiApproved: true, aiConfidence: 0.85, aiReason: 'Belirgin bir olay yok',
+    });
+    const [sql, params] = db.query.mock.calls[0];
+    expect(sql).toContain('ai_approved');
+    expect(sql).toContain('ai_confidence');
+    expect(sql).toContain('ai_reason');
+    expect(params).toContain(true);
+    expect(params).toContain(0.85);
+    expect(params).toContain('Belirgin bir olay yok');
+  });
+
+  it('saveSignal aiApproved verilmezse null geçer (AI vetosu opsiyonel — geriye uyumlu)', async () => {
+    db.query.mockResolvedValue({ rows: [{ id: 'sig-1', created_at: new Date() }] });
+    await repo.saveSignal({
+      symbol: 'BTCUSDT', direction: 'long', triggerTimeframe: '1m',
+      entryPrice: 100, stopPrice: 90, targetPrice: 120,
+      rrRatio: 1.5, confluenceScore: 0.8, indicatorsSnapshot: {},
+    });
+    const [, params] = db.query.mock.calls[0];
+    // aiApproved/aiConfidence/aiReason null olarak geçmeli — sessizce false/0 DEĞİL
+    // (Faz 3.2 ilkesiyle aynı: "veri yok" ile "veri var, olumsuz" ayrımı korunmalı)
+    expect(params.filter((p) => p === null).length).toBeGreaterThanOrEqual(3);
+  });
+
+  it('getSignalStats (Faz 3.5): ai_approved bazlı kırılım whitelist\'te tanımlıdır', async () => {
+    db.query.mockResolvedValue({ rows: [] });
+    await repo.getStatsBreakdown({ by: 'ai_approved' });
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toContain('ai_approved');
+  });
+
   it('getSignalStats days parametresini interval olarak geçirir', async () => {
     db.query.mockResolvedValue({ rows: [{}] });
     await repo.getSignalStats(14);
@@ -136,11 +186,55 @@ describe('signal-repository', () => {
     expect(params).toEqual([7]);
   });
 
+  it('getSignalStats (Faz 0.4, B4/B5 düzeltmesi): avg_sim_r artık avg_r ile AYNI satır kümesinde (status IN tp_hit/sl_hit/timeout), sim_pnl_r IS NOT NULL ek filtresiyle', async () => {
+    // Önceki hata: avg_sim_r SADECE `sim_pnl_r IS NOT NULL` filtresi kullanıyordu,
+    // status filtresi YOKTU — avg_r'den TAMAMEN FARKLI (seçilmiş, dönemsel çarpık)
+    // bir satır kümesi üzerinden hesaplanıyordu. Canlı DB'de bu küme toplam satırların
+    // sadece %13.9'uydu ve döneme göre %0.07 ile %98.5 arası dalgalanıyordu.
+    db.query.mockResolvedValue({ rows: [{}] });
+    await repo.getSignalStats();
+    const [sql] = db.query.mock.calls[0];
+    // avg_sim_r hesaplayan FILTER ifadesi hem status kümesini hem sim_pnl_r IS NOT NULL'ı içermeli
+    const simRLine = sql.split('\n').find(line => line.includes('AS avg_sim_r'));
+    expect(simRLine).toBeDefined();
+    expect(simRLine).toMatch(/status IN \('tp_hit','sl_hit','timeout'\)/);
+    expect(simRLine).toMatch(/sim_pnl_r IS NOT NULL/);
+  });
+
+  it('getSignalStats (Faz 0.5, B5 düzeltmesi): sim_n alanı döner — avg_sim_r\'nin GERÇEK n\'i, CI hesapları için', async () => {
+    // Önceden panel CI'yi tp_hit+sl_hit+timeout toplamıyla (avg_r'nin n'i) hesaplıyordu,
+    // ama avg_sim_r çok daha küçük bir alt kümeden geliyordu — güven aralığı ~2.7×
+    // dar çıkıyordu, "edge kanıtlandı" gibi yanlış bir izlenim verebilirdi.
+    db.query.mockResolvedValue({ rows: [{}] });
+    await repo.getSignalStats();
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toMatch(/AS sim_n/);
+  });
+
   it('getSignalStats tie_breaks sayısını da döner', async () => {
     db.query.mockResolvedValue({ rows: [{}] });
     await repo.getSignalStats();
     const [sql] = db.query.mock.calls[0];
     expect(sql).toContain('tie_break');
+  });
+
+  it('getSignalStats (Faz 0.6, kapı/muhasebe tutarlılığı): fee_adj_pnl feeRoundtrip parametresi geçildiğinde 2×takerFee yerine tam roundtrip kullanır', async () => {
+    // Önceki hata: fee_adj_pnl her zaman 2×takerFee (0.0012) düşüyordu, ama giriş
+    // kapısı (setup-builder.js meetsFeeFloor) feeRoundtrip = 2×takerFee+slippage+
+    // exitSlippage (0.0018) kullanıyordu. Kapı ile muhasebe farklı maliyet
+    // varsayıyordu — risk/entry ≈%3.5 için ~0.017R eksik ölçüm.
+    const repoWithRoundtrip = makeSignalRepository({ db, takerFee: 0.0006, feeRoundtrip: 0.0018 });
+    db.query.mockResolvedValue({ rows: [{}] });
+    await repoWithRoundtrip.getSignalStats();
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toContain('0.0018');
+  });
+
+  it('getSignalStats feeRoundtrip verilmezse eski 2×takerFee davranışını korur (geriye uyumlu)', async () => {
+    db.query.mockResolvedValue({ rows: [{}] });
+    await repo.getSignalStats();
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toContain('0.0012'); // 2 * 0.0006 (varsayılan takerFee)
   });
 
   it('getSignalStats resolved_n döner — win_rate paydası (total ile karıştırılmasın)', async () => {
@@ -162,6 +256,16 @@ describe('signal-repository', () => {
     await repo.getSignalStats();
     const [sql] = db.query.mock.calls[0];
     expect(sql).toMatch(/AS profit_factor_after_fee/);
+  });
+
+  it('getStatsBreakdown (Faz 0.4 düzeltmesi): avg_sim_r aynı status kümesinde + sim_pnl_r IS NOT NULL', async () => {
+    db.query.mockResolvedValue({ rows: [] });
+    await repo.getStatsBreakdown({ by: 'regime' });
+    const [sql] = db.query.mock.calls[0];
+    const simRLine = sql.split('\n').find(line => line.includes('AS avg_sim_r'));
+    expect(simRLine).toBeDefined();
+    expect(simRLine).toMatch(/o\.status IN \('tp_hit','sl_hit','timeout'\)/);
+    expect(simRLine).toMatch(/o\.sim_pnl_r IS NOT NULL/);
   });
 
   it('getTopSymbolStats days parametresini kabul eder', async () => {
