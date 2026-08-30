@@ -9,6 +9,9 @@ import { simulateTrade } from './simulator.js';
 
 // Parite düzeltmesi (2026-08-20): canlıdaki COOLDOWN_BY_TF['1m'] = 60dk ile eşitlendi.
 // Eski 5dk cooldown backtest'in ~13× fazla sinyal üretmesine yol açıyordu → şişirilmiş metrikler.
+// Faz 2.5 (trigger TF sweep boyutu): artık VARSAYILAN, cooldownMs parametresiyle
+// override edilebilir — canlıda COOLDOWN_BY_TF 5m için 120dk kullanıyor
+// (make-process-candle.js), backtest önceden bunu simüle edemiyordu.
 const COOLDOWN_MS = 60 * 60 * 1000;
 // Parite: canlıdaki MIN_STOP_PCT_BY_TF['1m'] = 0.025 ile eşitlendi.
 const DEFAULT_MIN_STOP_PCT = 0.025;
@@ -26,7 +29,7 @@ const DEFAULT_MIN_STOP_PCT = 0.025;
 export function runStrategyOverCandles({
   candles, fundingHistory, regimeBuffer, higherTfBuffer,
   window, threshold, symbol, filterParams, minStopPct = DEFAULT_MIN_STOP_PCT, requireSrCap = false,
-  atrStopMult, targetRR, fees,
+  atrStopMult, targetRR, fees, cooldownMs = COOLDOWN_MS,
 }) {
   if (candles.length < window) return [];
 
@@ -117,7 +120,7 @@ export function runStrategyOverCandles({
     // hemen tekrar denenebilir (bkz. make-process-candle.js:161-162 yorumu). Eski sıra
     // backtest'in canlıdan daha AZ sinyal üretmesine yol açıyordu.
     const lastSignal = cooldowns.get(symbol) ?? 0;
-    if (current.timestamp - lastSignal < COOLDOWN_MS) continue;
+    if (current.timestamp - lastSignal < cooldownMs) continue;
     cooldowns.set(symbol, current.timestamp);
 
     const remainingCandles = candles.slice(i + 1);

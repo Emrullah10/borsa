@@ -2496,3 +2496,11 @@ istatistiklerin ne kadarının kirli olduğu, sweep hiç çalıştırılmadı.
 | 10:35 | Faz 1.5: candles tablosu + candle-store-repository + cached-fetcher + backfill script | db-schemas/03-candles.sql, core/service-backtest/src/infrastructure/*, services/service-backtest/src/backfill-candles.js | 13 test yeşil, DB'ye henüz backfill edilmedi | ~9000 |
 | 10:38 | Faz 1.6: sweep sonuçları backtest-results/'a JSON yazılıyor | services/service-backtest/src/sweep.js | syntax OK, çalıştırılmadı | ~1500 |
 | 10:40 | buglog.json'a bug-166..169 eklendi | .wolf/buglog.json | 169 bug kayıtlı | ~2000 |
+| 09:40 | Created services/service-market-data/test/unit/bitget-ws.test.js | — | ~1013 |
+| 09:40 | Created services/service-market-data/test/unit/bitget-ws.test.js | — | ~1013 |
+| 11:00 | Faz 2.1: LSR onarıldı (doğru metot+alan adları, hata artık loglanıyor), OI 1 saatlik pencere | services/service-market-data/src/bitget-ws.js, make-process-candle.js | 5+2 test yeşil (dosyalarda hiç test yoktu) | ~5000 |
+| 11:10 | Faz 2.2: maker giriş modeli (limit fill window, NO_FILL, makerFee) | core/service-backtest/src/domain/simulator.js | 5 test yeşil | ~3500 |
+| 11:15 | Faz 2.3: min hacim filtresi, ölü 15m/4h abonelikleri kaldırıldı | bitget-ws.js | 2 test yeşil | ~2500 |
+| 11:20 | Faz 2.4: calcMetricsByDirection (LONG/SHORT ayrı ölçüm) | core/service-backtest/src/domain/reporter.js | 3 test yeşil | ~1500 |
+| 11:25 | Faz 2.5: cooldownMs parametrik, sweep.js TF×entryMode dış döngüsü | run-strategy.js, services/service-backtest/src/sweep.js | 1 test yeşil, sweep syntax OK | ~4000 |
+| 11:28 | buglog.json'a bug-170..172 eklendi | .wolf/buglog.json | 172 bug kayıtlı | ~1500 |

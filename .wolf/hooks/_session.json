@@ -217,6 +217,12 @@
       "action": "create",
       "tokens": 644,
       "at": "2026-08-30T06:36:41.717Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-market-data/test/unit/bitget-ws.test.js",
+      "action": "create",
+      "tokens": 1013,
+      "at": "2026-08-30T06:40:06.588Z"
     }
   ],
   "edit_counts": {
@@ -227,7 +233,8 @@
     "services/service-backtest/package.json": 2,
     "package.json": 1,
     "core/service-backtest/test/unit/cached-fetcher.test.js": 1,
-    "core/service-backtest/src/infrastructure/cached-fetcher.js": 1
+    "core/service-backtest/src/infrastructure/cached-fetcher.js": 1,
+    "services/service-market-data/test/unit/bitget-ws.test.js": 1
   },
   "anatomy_hits": 23,
   "anatomy_misses": 7,

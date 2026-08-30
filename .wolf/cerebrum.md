@@ -33,6 +33,23 @@ var olması uygulandığı anlamına GELMEZ — `db:migrate:up` script'i idempot
 
 <!-- Significant technical decisions with rationale. Why X was chosen over Y. -->
 
+**[2026-08-30] Faz 2 (maliyet yapısı) uygulandı:**
+LSR onarıldı (bitget-api'de doğru metot getFuturesActiveLongShortAccountData,
+doğru alan adları longAccountRatio/shortAccountRatio; boş catch{} kaldırıldı —
+artık hata gözlemlenebilir). OI 1 saatlik pencereye alındı (saniye-altı gürültü
+yerine anlamlı fark). Maker giriş modeli eklendi (simulator.js: entryMode
+'maker'/'taker', limit-fill penceresi + NO_FILL). Sembol evrenine minimum
+24s hacim filtresi (MIN_24H_VOLUME_USDT) eklendi. Ölü WS abonelikleri
+(15m tüm semboller, 4h 49 sembol) kaldırıldı — ~99/250 topic canlıdan çıktı.
+calcMetricsByDirection ile LONG/SHORT ayrı raporlanıyor. run-strategy.js
+cooldownMs parametrik oldu (canlıdaki COOLDOWN_BY_TF ile eşleşsin diye).
+sweep.js artık TF (1m/5m) × entryMode (taker/maker) dış döngüsüyle 4 ayrı
+grid çalıştırıp genel en iyiyi seçiyor — hiçbiri sezgiyle canlıya alınmayacak,
+hepsi sweep'te A/B ölçülecek. 308/308 test yeşil, bitget-ws.js için ilk kez
+test dosyası eklendi (önceden hiç yoktu — LSR bug'ının aylarca fark
+edilmemesinin sebeplerinden biri).
+Faz 3 (AI meta-etiketleme) ve Faz 4 (karar kapısı belgeleme) devam ediyor.
+
 **[2026-08-30] Faz 1 (backtest güvenilirliği) uygulandı — kullanıcı "durma bitir tüm fazları" dedi:**
 Faz 0'ın devamı olarak backtest/sweep altyapısındaki B6-B11 bulguları TDD ile
 düzeltildi: (1) `aligned-buffer.js` durumsuz ikili aramaya çevrildi — eski durumlu

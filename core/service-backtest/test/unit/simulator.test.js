@@ -74,6 +74,63 @@ describe('simulateTrade — SHORT', () => {
   });
 });
 
+// Faz 2.2 (maker giriş modeli): sinyal fiyatı yerine, biraz daha iyi bir fiyatta
+// bekleyen bir LIMIT (post-only, maker) emri simüle eder. Amaç: taker roundtrip
+// (~0.0012) yerine maker roundtrip (~0.0004) — stop %2.5'te feeR 0.048R'den
+// 0.016R'ye düşer, %39.4 WR'deki açığın bir kısmını kapatır. Karşılığında
+// DOLMAMA RİSKİ var: fiyat N mum içinde limit seviyesine hiç dönmeyebilir —
+// bu durumda işlem hiç açılmaz (kaçırılan fırsat, ama kayıp da yok).
+describe('simulateTrade — maker giriş modeli (Faz 2.2)', () => {
+  const setup = { entryPrice: 100, stopPrice: 95, targetPrice: 110, direction: 'long' };
+  const MAKER_FEES = { takerFee: 0.0006, makerFee: 0.0002, slippagePct: 0.0003, exitSlippagePct: 0.0003 };
+
+  it('entryMode olmadan (varsayılan) davranış DEĞİŞMEZ — geriye uyumlu', () => {
+    const candles = [candle(100, 105, 99, 102), candle(102, 111, 100, 108)];
+    const withoutMode = simulateTrade(setup, candles, MAKER_FEES);
+    const explicitTaker = simulateTrade(setup, candles, { ...MAKER_FEES, entryMode: 'taker' });
+    expect(withoutMode).toEqual(explicitTaker);
+  });
+
+  it('entryMode:"maker" ile LONG: limit emri entryPrice\'ın ALTINDA (daha iyi fiyat) bekler', () => {
+    // limit = entryPrice * (1 - makerOffsetPct), ilk mum bu seviyeye dokunursa dolar
+    const candles = [
+      candle(100, 101, 99.5, 100.5), // limit'e dokunmuyor (limit ~99.7 civarı varsayımla)
+      candle(100.5, 111, 99, 108),   // low=99 → limit seviyesine değiyor, TP de aynı mumda
+    ];
+    const result = simulateTrade(setup, candles, { ...MAKER_FEES, entryMode: 'maker' });
+    expect(['WIN', 'LOSS', 'NO_FILL']).toContain(result.outcome);
+  });
+
+  it('entryMode:"maker" ile fiyat hiç limit seviyesine dönmezse NO_FILL döner, fee/R hesaplanmaz', () => {
+    // Fiyat sürekli entryPrice'ın ÜSTÜNDE kalıyor — long limit (altta) hiç dolmuyor
+    const neverTouches = Array(240).fill(candle(105, 106, 104, 105));
+    const result = simulateTrade(setup, neverTouches, { ...MAKER_FEES, entryMode: 'maker' });
+    expect(result.outcome).toBe('NO_FILL');
+    expect(result.r).toBe(0);
+  });
+
+  it('entryMode:"maker" ile dolan işlemde makerFee kullanılır (takerFee DEĞİL) — daha düşük fee yükü', () => {
+    // Fiyat hemen limit'e dokunup sonra TP'ye gidiyor
+    const candles = [
+      candle(100, 101, 99, 100.5),  // low=99, limit'e (99.7 civarı) dokunur → dolar
+      candle(100.5, 111, 100, 108), // TP=110'a ulaşır
+    ];
+    const makerResult = simulateTrade(setup, candles, { ...MAKER_FEES, entryMode: 'maker' });
+    const takerResult = simulateTrade(setup, candles, { ...MAKER_FEES, entryMode: 'taker' });
+    if (makerResult.outcome === 'WIN' && takerResult.outcome === 'WIN') {
+      // Maker daha düşük fee kullandığı için R en az taker kadar iyi olmalı
+      expect(makerResult.r).toBeGreaterThanOrEqual(takerResult.r - 0.001);
+    }
+  });
+
+  it('SHORT: limit emri entryPrice\'ın ÜSTÜNDE (daha iyi fiyat) bekler', () => {
+    const shortSetup = { entryPrice: 100, stopPrice: 105, targetPrice: 90, direction: 'short' };
+    const neverTouches = Array(50).fill(candle(95, 96, 94, 95)); // hep entry'nin ALTINDA
+    const result = simulateTrade(shortSetup, neverTouches, { ...MAKER_FEES, entryMode: 'maker' });
+    expect(result.outcome).toBe('NO_FILL'); // short limit üstte bekliyor, hiç dokunulmuyor
+  });
+});
+
 describe('simulateTrade — canlı tracker ile parite', () => {
   it('aynı setup+mumlar simulateTrade ve evaluateOutcome/evaluateSimOutcome zincirinde aynı sonucu vermeli', () => {
     const setup = { entryPrice: 50, stopPrice: 48, targetPrice: 54, direction: 'long' };

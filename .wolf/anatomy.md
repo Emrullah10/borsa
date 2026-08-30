@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-08-30T06:36:41.708Z
-> Files: 577 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-08-30T06:40:06.579Z
+> Files: 584 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -92,11 +92,13 @@
 ## core/service-backtest/src/infrastructure/
 
 - `cached-fetcher.js` — Faz 1.5 (kalıcı mum deposu): "önce DB, yoksa REST" katmanı. sweep.js/main.js'in (~644 tok)
+- `cached-fetcher.js` — Faz 1.5 — fetchCandlesCached: DB kapsamı yeterliyse DB'den okur, yoksa REST'e düşüp DB'ye yazar (~600 tok)
 - `fetcher.js` — Exports fetchCandles, fetchFundingHistory, fetchOISnapshot, interpolateFunding (~908 tok)
 
 ## core/service-backtest/src/infrastructure/persistence/repositories/
 
 - `candle-store-repository.js` — Faz 1.5 (kalıcı mum deposu): candles tablosuna (db-schemas/03-candles.sql) upsert (~818 tok)
+- `candle-store-repository.js` — Faz 1.5 — Exports makeCandleStoreRepository (upsertCandles, getCandles, getCoverage) (~700 tok)
 
 ## core/service-backtest/test/unit/
 
@@ -108,6 +110,11 @@
 - `run-strategy.test.js` — Yeterince uzun, dalgalı bir seri üretir — ADX/RSI/BB gibi göstergelerin (~1577 tok)
 - `simulator.test.js` — Declares candle (~542 tok)
 - `walk-forward.test.js` — Declares trade (~432 tok)
+
+## core/service-backtest/test/unit/ (Faz 1 ekleri)
+
+- `cached-fetcher.test.js` — DB-first/REST-fallback testleri (~700 tok)
+- `candle-store-repository.test.js` — upsert/okuma/coverage testleri (~800 tok)
 
 ## core/service-market-data/
 
@@ -205,6 +212,7 @@
 - `00-init.sql` (~138 tok)
 - `01-config-watchlist.sql` — SQL: tables: watchlist, bot_config (~300 tok)
 - `02-signals.sql` — SQL: tables: signals, signal_outcomes (~452 tok)
+- `03-candles.sql` — Faz 1.5 — candles tablosu (symbol,tf,ts) PK, kalıcı OHLCV deposu (~250 tok)
 
 ## db-schemas/migrations/
 
@@ -214,27 +222,6 @@
 - `2026-08-20-02-execution-validation.sql` — Faz 3 execution doğrulama: signal_outcomes.real_entry_price/real_exit_price/real_entry_at/real_notes (~90 tok)
 - `2026-08-23-01-exit-slippage.sql` — Faz 0.1 — Çıkış kayması (exit slippage) modeli (~212 tok)
 - `2026-08-29-01-zombie-pending-cleanup.sql` — Faz 0.3 — 6 saatten eski pending/active outcome'ları tek seferlik 'cancelled' işaretler (bug-162) (~220 tok)
-
-## db-schemas/
-
-- `03-candles.sql` — Faz 1.5 — candles tablosu (symbol,tf,ts) PK, kalıcı OHLCV deposu (~250 tok)
-
-## core/service-backtest/src/infrastructure/
-
-- `cached-fetcher.js` — Faz 1.5 — fetchCandlesCached: DB kapsamı yeterliyse DB'den okur, yoksa REST'e düşüp DB'ye yazar (~600 tok)
-
-## core/service-backtest/src/infrastructure/persistence/repositories/
-
-- `candle-store-repository.js` — Faz 1.5 — Exports makeCandleStoreRepository (upsertCandles, getCandles, getCoverage) (~700 tok)
-
-## core/service-backtest/test/unit/ (Faz 1 ekleri)
-
-- `candle-store-repository.test.js` — upsert/okuma/coverage testleri (~800 tok)
-- `cached-fetcher.test.js` — DB-first/REST-fallback testleri (~700 tok)
-
-## services/service-backtest/src/
-
-- `backfill-candles.js` — Faz 1.5 — CLI: Bitget REST'ten geçmiş mum çekip candles tablosuna yazar (~700 tok)
 
 ## docs/
 
@@ -862,8 +849,13 @@
 
 ## services/service-backtest/src/
 
+- `backfill-candles.js` — Faz 1.5 — CLI: Bitget REST'ten geçmiş mum çekip candles tablosuna yazar (~700 tok)
 - `backfill-candles.js` — Faz 1.5 (kalıcı mum deposu) — Bitget REST'ten geçmiş mum verisi çekip (~1094 tok)
 - `sweep.js` — 2026-07-13: BTC/ETH/SOL/BNB/XRP gibi büyük-cap coinlerle test edilmişti, ama (~2598 tok)
+
+## services/service-market-data/test/unit/
+
+- `bitget-ws.test.js` — Faz 2.1 (B7 düzeltmesi, bug-166 deseniyle aynı kök neden): bu dosya için hiç (~1013 tok)
 
 ## services/service-notifier/configs/
 

@@ -2777,6 +2777,56 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-08-30T09:36:00Z"
+    },
+    {
+      "id": "bug-170",
+      "timestamp": "2026-08-30T09:44:00Z",
+      "error_message": "LSR (long/short ratio) hiç akmıyordu — confluence skorunun liq bileşeninin %30 ağırlıklı imbalance kısmı ve tüm squeeze mantığı ölü koddu",
+      "file": "services/service-market-data/src/bitget-ws.js",
+      "root_cause": "getFuturesAccountLongShortRatio bitget-api'de hiç yoktu (doğrusu getFuturesActiveLongShortAccountData, farklı alan adları). Boş catch{} hatayı sessizce yutuyordu, 'LSR poller başlatıldı' logu yanıltıcı şekilde basılıyordu.",
+      "fix": "Doğru metot adı + doğru alan adları (longAccountRatio/shortAccountRatio) kullanıldı. Boş catch kaldırıldı, hata artık loglanıyor. 5 yeni test eklendi (dosyada hiç test yoktu).",
+      "tags": [
+        "measurement-integrity",
+        "lsr",
+        "dead-code",
+        "faz-2"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:44:00Z"
+    },
+    {
+      "id": "bug-171",
+      "timestamp": "2026-08-30T09:46:00Z",
+      "error_message": "oiDelta neredeyse her zaman sıfıra yakındı — calcLiquidationPressure'daki oiPressure bileşeni (ağırlık 0.25) fiilen ölüydü",
+      "file": "core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+      "root_cause": "OI her ticker tick'inde (saniye-altı sıklıkta) güncelleniyordu, oiDelta bir önceki mesajla anlık farkı alıyordu — 1 saatlik bir değişimi yakalayamıyordu.",
+      "fix": "1 saatlik OI geçmişi (oiHistory) eklendi; oiDelta artık sadece en az 1 saat eski bir referansa göre hesaplanıyor.",
+      "tags": [
+        "measurement-integrity",
+        "open-interest",
+        "dead-code",
+        "faz-2"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:46:00Z"
+    },
+    {
+      "id": "bug-172",
+      "timestamp": "2026-08-30T09:48:00Z",
+      "error_message": "~99/250 WS topic ölüydü (15m tüm sembollerde abone ama hiç okunmuyor, 4h 49 sembolde abone ama sadece BTCUSDT kullanılıyor) — WS abonelik limitine boşuna baskı",
+      "file": "services/service-market-data/src/bitget-ws.js",
+      "root_cause": "TIMEFRAMES = ['1m','5m','15m','4H'] tüm semboller için abone ediliyordu ama make-process-candle.js sadece 5m'i (higherTfTrend) ve BTCUSDT.4h'ı (regime) okuyordu.",
+      "fix": "TIMEFRAMES'ten 15m kaldırıldı. 4h artık sadece REGIME_SYMBOL (BTCUSDT) için ayrıca abone ediliyor.",
+      "tags": [
+        "measurement-integrity",
+        "dead-subscription",
+        "faz-2"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:48:00Z"
     }
   ]
 }
