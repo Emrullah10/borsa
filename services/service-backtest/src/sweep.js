@@ -7,7 +7,7 @@ import { fetchCandlesCached } from '@borsa-bot/core-backtest/src/infrastructure/
 import { makeCandleStoreRepository } from '@borsa-bot/core-backtest/src/infrastructure/persistence/repositories/candle-store-repository.js';
 import { makeAlignedBuffer } from '@borsa-bot/core-backtest/src/domain/aligned-buffer.js';
 import { runStrategyOverCandles } from '@borsa-bot/core-backtest/src/domain/run-strategy.js';
-import { calcMetrics } from '@borsa-bot/core-backtest/src/domain/reporter.js';
+import { calcMetrics, calcMetricsByDirection } from '@borsa-bot/core-backtest/src/domain/reporter.js';
 import { splitTrainTest } from '@borsa-bot/core-backtest/src/domain/walk-forward.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -52,7 +52,12 @@ const SYMBOLS = ['EVAAUSDT', 'LABUSDT', 'VANRYUSDT', 'KORUUSDT', 'VELVETUSDT'];
 // Seçim kriteri farklı: SYMBOLS listesiyle örtüşmeyen, orta-likit altcoinler.
 const HOLDOUT_SYMBOLS = ['WIFUSDT', 'ORDIUSDT', 'PEOPLEUSDT'];
 const DAYS = 30;
-const TIMEFRAME = '1m';
+// Faz 2.5 (trigger TF sweep boyutu): "günde 1-3 işlem" hedefi 1m trigger ile
+// uyumsuz olabilir — artık sweep 1m VE 5m'i ayrı ayrı dener. Canlıdaki
+// COOLDOWN_BY_TF ile eşleşen cooldown her TF için ayrı kullanılır
+// (make-process-candle.js:17).
+const TF_OPTIONS = ['1m', '5m'];
+const COOLDOWN_MS_BY_TF = { '1m': 60 * 60 * 1000, '5m': 120 * 60 * 1000 };
 const WINDOW = 60;
 const REGIME_SYMBOL = 'BTCUSDT';
 const REGIME_LEAD_DAYS = 10;
@@ -94,10 +99,11 @@ function buildFilterParams() {
 
 // Faz 1 temizliği (B9-5): regimeBuffer parametresi kaldırıldı — gövdede hiç
 // referans edilmiyordu (ölü parametre, çağıranları yanıltıyordu).
-async function fetchSymbolSet(symbols) {
+// Faz 2.5: tf parametrik oldu — trigger TF sweep boyutu bunu her TF için ayrı çağırır.
+async function fetchSymbolSet(symbols, tf) {
   const perSymbol = {};
   for (const symbol of symbols) {
-    const candles = await fetchCandlesForSweep(symbol, TIMEFRAME, DAYS);
+    const candles = await fetchCandlesForSweep(symbol, tf, DAYS);
     const m5 = await fetchCandlesForSweep(symbol, '5m', DAYS);
     const fundingHistory = await fetchFundingHistory(symbol);
     perSymbol[symbol] = {
@@ -105,20 +111,20 @@ async function fetchSymbolSet(symbols) {
       higherTfBuffer: makeAlignedBuffer(m5, 60),
       fundingHistory,
     };
-    console.log(`[${symbol}] ${candles.length} mum hazır.`);
+    console.log(`[${symbol}.${tf}] ${candles.length} mum hazır.`);
   }
   return perSymbol;
 }
 
-async function fetchAllSymbolData() {
-  console.log(`Veri çekiliyor: ${SYMBOLS.join(', ')} (${DAYS} gün)...`);
+async function fetchAllSymbolData(tf) {
+  console.log(`Veri çekiliyor: ${SYMBOLS.join(', ')} (${DAYS} gün, TF=${tf})...`);
   const btc4h = await fetchCandlesForSweep(REGIME_SYMBOL, '4h', DAYS + REGIME_LEAD_DAYS);
   const regimeBuffer = makeAlignedBuffer(btc4h, 60);
-  const perSymbol = await fetchSymbolSet(SYMBOLS);
+  const perSymbol = await fetchSymbolSet(SYMBOLS, tf);
   return { regimeBuffer, perSymbol };
 }
 
-function runCombo({ regimeBuffer, perSymbol, threshold, filterParams, requireSrCap, atrStopMult, targetRR, fees }) {
+function runCombo({ regimeBuffer, perSymbol, threshold, filterParams, requireSrCap, atrStopMult, targetRR, fees, cooldownMs }) {
   const allTrades = [];
   for (const [symbol, data] of Object.entries(perSymbol)) {
     if (data.candles.length < WINDOW) continue;
@@ -135,6 +141,7 @@ function runCombo({ regimeBuffer, perSymbol, threshold, filterParams, requireSrC
       atrStopMult,
       targetRR,
       fees,
+      cooldownMs,
     });
     allTrades.push(...trades);
   }
@@ -204,9 +211,14 @@ function computeFixedRange(perSymbol) {
   return { rangeStartMs, rangeEndMs };
 }
 
-async function main() {
-  const { regimeBuffer, perSymbol } = await fetchAllSymbolData();
+// Faz 2.2/2.5: bir (tf, entryMode) çifti için tam parametre grid'ini çalıştırır.
+// TF ve entryMode dış boyutlar olarak main()'de dolaşılır — her biri kendi veri
+// setini çeker (farklı TF'nin mumları farklıdır) ve kendi grid'ini raporlar.
+async function runOneSweep(tf, entryMode) {
+  const { regimeBuffer, perSymbol } = await fetchAllSymbolData(tf);
   const range = computeFixedRange(perSymbol);
+  const cooldownMs = COOLDOWN_MS_BY_TF[tf] ?? COOLDOWN_MS_BY_TF['1m'];
+  const fees = { ...FEES, entryMode };
 
   const filterParams = buildFilterParams();
   const rows = [];
@@ -215,41 +227,48 @@ async function main() {
       for (const targetRR of TARGET_RR_OPTIONS) {
         const trades = runCombo({
           regimeBuffer, perSymbol, threshold, filterParams,
-          requireSrCap: FIXED_REQUIRE_SR_CAP, atrStopMult, targetRR, fees: FEES,
+          requireSrCap: FIXED_REQUIRE_SR_CAP, atrStopMult, targetRR, fees, cooldownMs,
         });
         const { trainTrades, testTrades } = splitTrainTest(trades, TEST_FRACTION, range);
         rows.push({
           threshold, atrStopMult, targetRR,
           trainMetrics: calcMetrics(trainTrades),
           testMetrics: calcMetrics(testTrades),
+          // Faz 2.4 (SHORT ayrı ölç): test katmanının direction kırılımı — LONG/SHORT
+          // birbirini gizlememesi için ayrıca raporlanır (sweep sonucu JSON'a yazılır,
+          // karar kuralı hâlâ toplu testMetrics üzerinden — bilinçli, ayrı kural sonraki tur).
+          testMetricsByDirection: calcMetricsByDirection(testTrades),
         });
       }
     }
   }
 
-  // Kazanan combo TEST metriğine göre seçilir — train'e göre sıralamak curve-fit'i ödüllendirir.
   rows.sort((a, b) => b.testMetrics.avgR - a.testMetrics.avgR || b.testMetrics.winRate - a.testMetrics.winRate);
 
-  console.log('\n=== PARAMETRE SWEEP SONUÇLARI — WALK-FORWARD (train/test, SABİT takvim aralığı) ===');
+  console.log(`\n=== PARAMETRE SWEEP SONUÇLARI — TF=${tf} entryMode=${entryMode} (train/test, SABİT takvim aralığı) ===`);
   console.log(`Semboller: ${SYMBOLS.join(', ')} | Dönem: ${DAYS} gün | Test payı: son %${(TEST_FRACTION * 100).toFixed(0)}`);
-  console.log(`Cooldown: 60dk (per-symbol) | MinStop: %2.5 | SrCap: ON\n`);
+  console.log(`Cooldown: ${cooldownMs / 60000}dk (per-symbol) | MinStop: %2.5 | SrCap: ON\n`);
   console.log(formatSweepTable(rows));
 
   const best = rows[0];
   const verdict = passesDecisionRule(best.testMetrics);
-  console.log(`\nEn iyi combo (TEST'e göre): threshold=${best.threshold} atrStopMult=${best.atrStopMult} targetRR=${best.targetRR}`);
+  console.log(`\nEn iyi combo (TEST'e göre, TF=${tf} entryMode=${entryMode}): threshold=${best.threshold} atrStopMult=${best.atrStopMult} targetRR=${best.targetRR}`);
   console.log(
     verdict
       ? '✅ Karar kuralını geçti (test AvgR>0, WR ≥ başabaş+3p, n≥10) — walk-forward doğrulandı.'
       : '❌ Karar kuralını GEÇEMEDİ — test metrikleri train ile örtüşmüyor veya örneklem çok küçük. Bu parametreleri canlıda DEĞİŞTİRME, veri toplamaya devam et.',
   );
+  console.log(
+    `Test katmanı LONG: N=${best.testMetricsByDirection.long.totalSignals} Win%=${(best.testMetricsByDirection.long.winRate*100).toFixed(1)}% ` +
+    `| SHORT: N=${best.testMetricsByDirection.short.totalSignals} Win%=${(best.testMetricsByDirection.short.winRate*100).toFixed(1)}%`,
+  );
 
-  console.log('\n=== HOLDOUT SEMBOLLERİNDE KAZANAN COMBO KONTROLÜ ===');
+  console.log(`\n=== HOLDOUT SEMBOLLERİNDE KAZANAN COMBO KONTROLÜ (TF=${tf} entryMode=${entryMode}) ===`);
   console.log(`Semboller (grid'e hiç girmedi): ${HOLDOUT_SYMBOLS.join(', ')}`);
-  const holdoutPerSymbol = await fetchSymbolSet(HOLDOUT_SYMBOLS);
+  const holdoutPerSymbol = await fetchSymbolSet(HOLDOUT_SYMBOLS, tf);
   const holdoutTrades = runCombo({
     regimeBuffer, perSymbol: holdoutPerSymbol, threshold: best.threshold, filterParams,
-    requireSrCap: FIXED_REQUIRE_SR_CAP, atrStopMult: best.atrStopMult, targetRR: best.targetRR, fees: FEES,
+    requireSrCap: FIXED_REQUIRE_SR_CAP, atrStopMult: best.atrStopMult, targetRR: best.targetRR, fees, cooldownMs,
   });
   const holdoutMetrics = calcMetrics(holdoutTrades);
   const h = fmtMetrics(holdoutMetrics);
@@ -261,13 +280,33 @@ async function main() {
       : "⚠️  Holdout'ta karar kuralını geçemedi — sembol evrenine özgü curve-fit olabilir.",
   );
 
-  // Faz 1.6 (B10 kapsamı dışı, ayrı madde): sonuçları diske yaz — önceden sweep
-  // sadece console.log basıyordu, 2026-07-13/2026-08-20 turlarının tam çıktısı
-  // hiç repoda kalmamıştı.
-  writeSweepReport({ rows, best, verdict, holdoutMetrics, holdoutVerdict, range });
+  return { tf, entryMode, rows, best, verdict, holdoutMetrics, holdoutVerdict, range, cooldownMs };
 }
 
-function writeSweepReport({ rows, best, verdict, holdoutMetrics, holdoutVerdict, range }) {
+async function main() {
+  const results = [];
+  for (const tf of TF_OPTIONS) {
+    for (const entryMode of ['taker', 'maker']) {
+      const result = await runOneSweep(tf, entryMode);
+      results.push(result);
+    }
+  }
+
+  results.sort((a, b) => b.best.testMetrics.avgR - a.best.testMetrics.avgR);
+  const overallBest = results[0];
+  console.log('\n=== GENEL EN İYİ (tüm TF × entryMode kombinasyonları arasında) ===');
+  console.log(
+    `TF=${overallBest.tf} entryMode=${overallBest.entryMode} → threshold=${overallBest.best.threshold} ` +
+    `atrStopMult=${overallBest.best.atrStopMult} targetRR=${overallBest.best.targetRR} ` +
+    `(test AvgR=${overallBest.best.testMetrics.avgR})`,
+  );
+
+  // Faz 1.6 (sonuçları diske yaz): önceden sweep sadece console.log basıyordu —
+  // 2026-07-13 ve 2026-08-20 turlarının tam sonuçları repoda hiç kayıtlı değildi.
+  writeSweepReport(results, overallBest);
+}
+
+function writeSweepReport(results, overallBest) {
   const now = new Date();
   const ts = now.toISOString().replace(/[:.]/g, '-').slice(0, 16);
   const filename = `sweep-${ts}.json`;
@@ -276,12 +315,18 @@ function writeSweepReport({ rows, best, verdict, holdoutMetrics, holdoutVerdict,
     symbols: SYMBOLS,
     holdoutSymbols: HOLDOUT_SYMBOLS,
     days: DAYS,
-    fixedRange: range,
     testFraction: TEST_FRACTION,
-    grid: { thresholds: THRESHOLDS, atrStopMultOptions: ATR_STOP_MULT_OPTIONS, targetRROptions: TARGET_RR_OPTIONS },
-    rows,
-    best: { threshold: best.threshold, atrStopMult: best.atrStopMult, targetRR: best.targetRR, verdict },
-    holdout: { metrics: holdoutMetrics, verdict: holdoutVerdict },
+    grid: {
+      thresholds: THRESHOLDS, atrStopMultOptions: ATR_STOP_MULT_OPTIONS, targetRROptions: TARGET_RR_OPTIONS,
+      tfOptions: TF_OPTIONS, entryModeOptions: ['taker', 'maker'],
+    },
+    results: results.map((r) => ({
+      tf: r.tf, entryMode: r.entryMode, fixedRange: r.range, cooldownMs: r.cooldownMs,
+      rows: r.rows,
+      best: { threshold: r.best.threshold, atrStopMult: r.best.atrStopMult, targetRR: r.best.targetRR, verdict: r.verdict },
+      holdout: { metrics: r.holdoutMetrics, verdict: r.holdoutVerdict },
+    })),
+    overallBest: { tf: overallBest.tf, entryMode: overallBest.entryMode, ...overallBest.best },
   };
   mkdirSync(RESULTS_DIR, { recursive: true });
   const outPath = join(RESULTS_DIR, filename);

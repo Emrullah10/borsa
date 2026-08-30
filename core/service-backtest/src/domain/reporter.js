@@ -30,6 +30,17 @@ export function calcMetrics(trades) {
   };
 }
 
+// Faz 2.4 (SHORT ayrı ölç): canlı veride LONG %48.0 / SHORT %30.6 kazanma
+// gözlenmişti — tek toplu metrik bu farkı gizliyordu. calcMetrics'i direction'a
+// göre ayrı ayrı çalıştırır; SHORT rejim kapısı arkasına alınmalı mı yoksa
+// kapatılmalı mı sorusuna sweep sonuçlarıyla (sezgiyle değil) cevap verilebilsin diye.
+export function calcMetricsByDirection(trades) {
+  return {
+    long: calcMetrics(trades.filter((t) => t.direction === 'long')),
+    short: calcMetrics(trades.filter((t) => t.direction === 'short')),
+  };
+}
+
 export function formatTable(bySymbol, total) {
   const header = ['Symbol', 'Signals', 'Win%', 'PF', 'MaxDD', 'AvgR', 'Timeouts'];
   const rows = Object.entries(bySymbol).map(([sym, m]) => [

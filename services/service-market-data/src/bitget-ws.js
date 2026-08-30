@@ -5,17 +5,31 @@ const DEFAULT_SYMBOLS = [
   'DOGEUSDT', 'ADAUSDT', 'AVAXUSDT', 'LINKUSDT', 'SUIUSDT',
 ];
 
-const TIMEFRAMES = ['1m', '5m', '15m', '4H'];
+// Faz 2.3 (B16 düzeltmesi): '15m' ve '4H' TÜM semboller için abone ediliyordu
+// ama sinyal-motoru tarafında sadece BTCUSDT.4h okunuyor (rejim), 15m ise HİÇ
+// okunmuyor — ~99/250 topic (%40) ölüydü, WS abonelik limitine (code 30006)
+// boşuna baskı yapıyordu ve muhtemelen kopmaların bir sebebiydi. '4H' artık
+// sadece REGIME_SYMBOL (BTCUSDT) için ayrıca abone ediliyor (aşağıda), '15m'
+// tamamen kaldırıldı — kullanılmıyor.
+const TIMEFRAMES = ['1m', '5m'];
+const REGIME_SYMBOL = 'BTCUSDT';
 
 // Bitget public WS hız/topic limiti nedeniyle (code 30006 "request too many")
 // tüm 595 coin tek bağlantıda izlenemez. TOP_N en likit coin'lerle sınırlar.
 const DEFAULT_TOP_N = 50;
+// Faz 2.3 (B9-2): minimum 24s USDT hacim eşiği — likidite filtresi. Bitget
+// vadeli piyasada gerçekten aktif olmayan semboller yüksek slippage taşır.
+// Fonksiyon içinde (top-level'da DEĞİL) okunuyor ki testlerde env değişimi
+// modül yeniden import edilmeden etkili olsun.
+function getMinVolumeThreshold() {
+  return parseFloat(process.env.MIN_24H_VOLUME_USDT ?? '1000000');
+}
 
 // Coin listesini belirle:
 // - MARKET_DATA_SYMBOLS=TOP[:N] → hacme göre en likit N coin (varsayılan N=50)
 // - MARKET_DATA_SYMBOLS=a,b,c    → o liste
 // - boş                          → DEFAULT_SYMBOLS
-async function resolveSymbols() {
+export async function resolveSymbols() {
   const env = process.env.MARKET_DATA_SYMBOLS?.trim();
   const upper = env?.toUpperCase();
 
@@ -29,14 +43,19 @@ async function resolveSymbols() {
       const { RestClientV2 } = await import('bitget-api');
       const rest = new RestClientV2({}, {});
       const res = await rest.getFuturesAllTickers({ productType: 'USDT-FUTURES' });
+      const minVolume = getMinVolumeThreshold();
       const ranked = (res?.data ?? [])
         .map((t) => ({ symbol: t.symbol, vol: parseFloat(t.usdtVolume ?? 0) }))
         .filter((t) => t.symbol)
+        // Faz 2.3 (B9-2, likidite filtresi): sadece hacme göre sıralamak küçük-cap
+        // altcoinleri (en yüksek slippage) TOP:N'e sokabiliyordu. Minimum 24s hacim
+        // eşiği ile aşırı düşük likiditeli semboller elenir.
+        .filter((t) => t.vol >= minVolume)
         .sort((a, b) => b.vol - a.vol)
         .slice(0, n === Infinity ? undefined : n)
         .map((t) => t.symbol);
       if (ranked.length > 0) {
-        helper.log.info(`MARKET_DATA_SYMBOLS=${env} → hacme göre ${ranked.length} coin yüklendi`);
+        helper.log.info(`MARKET_DATA_SYMBOLS=${env} → hacme göre ${ranked.length} coin yüklendi (min hacim: $${minVolume.toLocaleString()})`);
         return ranked;
       }
       helper.log.warn('Bitget ticker listesi boş döndü, DEFAULT_SYMBOLS kullanılıyor');
@@ -87,28 +106,40 @@ async function prefill4hCandles(publisher) {
 // LSR (Long/Short Ratio) WS'te gelmiyor — REST'ten periyodik çek
 const LSR_POLL_INTERVAL_MS = 5 * 60 * 1000; // 5 dakika
 
-async function startLsrPoller(symbols, publisher) {
+// Faz 2.1 (B7 düzeltmesi, 2026-08-30): `getFuturesAccountLongShortRatio` diye bir
+// metot bitget-api'de HİÇ YOKTU — doğrusu `getFuturesActiveLongShortAccountData`
+// (params: {symbol, period?} — productType/limit YOK, önceki kod bunları da yanlış
+// geçiyordu). Yanlış metot adı her sembolde TypeError atıyordu ama içteki boş
+// `catch {}` bunu sessizce yutuyordu; dıştaki log.warn hiç tetiklenmiyordu ("LSR
+// poller başlatıldı" logu yine de basılıyordu — sistem çalışıyormuş gibi
+// görünüyordu). Sonuç: longRatio/shortRatio sonsuza kadar 0.5/0.5 varsayılanında
+// kaldı, calcLiquidationPressure'daki imbalance bileşeni (ağırlık 0.30) ve
+// squeeze mantığının tamamı ölü koddu (bkz. B8).
+// Dönen alan adları da farklı: longAccountRatio/shortAccountRatio (longRatio/
+// shortRatio DEĞİL) — bkz. FuturesActiveLongShortAccountV2 tipi.
+export async function startLsrPoller(symbols, publisher) {
   const pollLsr = async () => {
     try {
       const { RestClientV2 } = await import('bitget-api');
       const rest = new RestClientV2({}, {});
       for (const symbol of symbols) {
         try {
-          const res = await rest.getFuturesAccountLongShortRatio({
-            productType: 'USDT-FUTURES',
+          const res = await rest.getFuturesActiveLongShortAccountData({
             symbol,
             period: '5min',
-            limit: '1',
           });
           const d = res?.data?.[0];
-          if (d?.longRatio != null) {
+          if (d?.longAccountRatio != null) {
+            const longRatio = parseFloat(d.longAccountRatio);
             await publisher.publishLongShortRatio(symbol, {
-              longRatio:  parseFloat(d.longRatio),
-              shortRatio: parseFloat(d.shortRatio ?? (1 - parseFloat(d.longRatio))),
+              longRatio,
+              shortRatio: d.shortAccountRatio != null ? parseFloat(d.shortAccountRatio) : (1 - longRatio),
             });
           }
-        } catch {
-          // Sembol başına hata → sessizce geç
+        } catch (err) {
+          // Sembol başına hata — artık SESSİZCE yutulmuyor, gözlemlenebilirlik için loglanıyor.
+          // Tek sembolün hatası diğerlerini engellemesin diye döngü kırılmıyor.
+          helper.log.debug(`LSR poll hata (${symbol}): ${err.message}`);
         }
       }
     } catch (err) {
@@ -204,6 +235,10 @@ async function subscribeAll(ws, symbols) {
     // 'ticker' kanalı fundingRate, nextFundingTime ve holdingAmount (OI) taşır.
     topics.push({ channel: 'ticker', instId: symbol });
   }
+  // Faz 2.3 (B16): 4h SADECE rejim sembolü (BTCUSDT) için — make-process-candle.js
+  // sadece 'BTCUSDT.4h' buffer'ını okuyor (calcRegime). Diğer 49 sembolün 4h'ı
+  // hiç kullanılmıyordu, aboneliği tamamen ölüydü.
+  topics.push({ channel: 'candle4H', instId: REGIME_SYMBOL });
 
   helper.log.info(
     `Abone olunuyor: ${symbols.length} coin → ${topics.length} topic, ` +

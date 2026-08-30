@@ -142,6 +142,27 @@ describe('runStrategyOverCandles', () => {
     });
   });
 
+  // Faz 2.5 (trigger TF sweep boyutu): canlıda 1m COOLDOWN_BY_TF=60dk, 5m=120dk
+  // (make-process-candle.js). Backtest önceden 1m'e sabitlenmiş tek bir COOLDOWN_MS
+  // kullanıyordu — 5m sweep'i doğru simüle edilemiyordu.
+  it('cooldownMs parametresi verilirse KULLANILIR (varsayılan 60dk\'dan gerçekten farklı davranır)', () => {
+    // Eşiği düşürüp veriyi yeterince yoğunlaştırarak varsayılan 60dk cooldown'un
+    // ardışık sinyalleri fiilen bastırdığı bir senaryo kur — sonra çok kısa
+    // (1dk) cooldown ile KESİN olarak daha FAZLA sinyal beklenmeli. Eğer
+    // cooldownMs parametresi yoksayılıyorsa (implementasyon hatası) iki çalıştırma
+    // aynı sinyal SAYISINI verir.
+    const candles = makeCandles(300);
+    const defaultCooldown = runStrategyOverCandles({
+      candles, fundingHistory: [], regimeBuffer: flatRegimeBuffer, higherTfBuffer: flatHigherTfBuffer,
+      window: 60, threshold: 0.5,
+    });
+    const veryShortCooldown = runStrategyOverCandles({
+      candles, fundingHistory: [], regimeBuffer: flatRegimeBuffer, higherTfBuffer: flatHigherTfBuffer,
+      window: 60, threshold: 0.5, cooldownMs: 60 * 1000, // 1dk — varsayılanın 1/60'ı
+    });
+    expect(veryShortCooldown.length).toBeGreaterThan(defaultCooldown.length);
+  });
+
   it('atrStopMult/targetRR verilirse buildSetup\'a geçirilir (sweep parametreleri)', () => {
     const candles = makeCandles(300);
     const trades = runStrategyOverCandles({

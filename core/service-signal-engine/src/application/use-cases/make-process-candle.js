@@ -16,6 +16,8 @@ const TF_MS = { '1m': 60_000, '5m': 300_000, '15m': 900_000, '4h': 14_400_000 };
 // Yeni değerler günde ~5-15 sinyal hedefliyor (kalite > miktar).
 const COOLDOWN_BY_TF = { '1m': 60 * 60 * 1000, '5m': 120 * 60 * 1000 };
 const SIGNAL_COOLDOWN_MS = 60 * 60 * 1000; // fallback
+// Faz 2.1 (B9 düzeltmesi): OI farkını anlamlı kılmak için 1 saatlik pencere.
+const OI_WINDOW_MS = 60 * 60 * 1000;
 // Min stop %2.5: eski %1.2-1.4 stop normal piyasa gürültüsünde 2dk'da vuruluyordu.
 // Daha geniş stop = daha az noise-triggered kayıp = daha yüksek WR.
 const MIN_STOP_PCT_BY_TF = { '1m': 0.025, '5m': 0.025 };
@@ -55,6 +57,13 @@ export function makeProcessCandle({
       marketState[symbol] = {
         funding: { rate: 0, nextTs: 0 },
         oi: { oi: 0, oiDelta: 0 },
+        // Faz 2.1 (B9 düzeltmesi): 1 saatlik OI geçmişi. `oi` alanı ticker'ın
+        // HER tick'inde (saniye-altı sıklıkta) güncelleniyordu ve oiDelta bir
+        // önceki mesajla farkı alıyordu — bu yüzden neredeyse her zaman ~0'dı,
+        // calcLiquidationPressure'daki oiPressure bileşeni (ağırlık 0.25) fiilen
+        // ölüydü. oiHistory, en az OI_WINDOW_MS eskiye giden {ts, oi} kayıtlarını
+        // tutar; oiDelta SADECE o kadar eski bir referansa göre hesaplanır.
+        oiHistory: [], // [{ts, oi}, ...] artan ts
         lsr: { longRatio: 0.5, shortRatio: 0.5 },
       };
     }
@@ -77,8 +86,26 @@ export function makeProcessCandle({
     }
     if (type === 'oi') {
       const st = ensureState(symbol);
-      const prev = st.oi?.oi ?? 0;
-      st.oi = { oi: data.oi, oiDelta: data.oi - prev };
+      const now = Date.now();
+      // OI_WINDOW_MS'den eski referansı bul; yoksa oiDelta 0 kalır (saniye-altı
+      // gürültüye dönmez — anlamlı bir referans olmadan fark hesaplamamak,
+      // yanlış küçük bir fark hesaplamaktan iyidir).
+      const cutoff = now - OI_WINDOW_MS;
+      let reference = null;
+      for (const entry of st.oiHistory) {
+        if (entry.ts <= cutoff) reference = entry;
+        else break;
+      }
+      const oiDelta = reference ? data.oi - reference.oi : 0;
+      st.oi = { oi: data.oi, oiDelta };
+
+      st.oiHistory.push({ ts: now, oi: data.oi });
+      // Geçmişi sınırla: OI_WINDOW_MS'den daha eski, ihtiyaç duyulmayan kayıtları
+      // budayarak belleği sınırlı tut (referans bulma her zaman en eski uygun kaydı
+      // arıyor, daha eskileri hiç kullanılmayacak).
+      while (st.oiHistory.length > 1 && st.oiHistory[1].ts <= cutoff) {
+        st.oiHistory.shift();
+      }
       return;
     }
     if (type === 'lsr') {

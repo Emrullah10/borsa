@@ -54,6 +54,68 @@ function withNoisyTicks(candles, ticksPerCandle = 4) {
   return out;
 }
 
+// Faz 2.1 (B9 düzeltmesi): OI (open interest) her ticker tick'inde (saniye-altı
+// sıklıkta) geliyor. Eski `oiDelta = data.oi - prev` bu yüzden neredeyse her
+// zaman sıfıra yakındı — calcLiquidationPressure'daki oiPressure bileşeni
+// (ağırlık 0.25) fiilen ölüydü. Artık OI için 1 saatlik bir referans tutuluyor;
+// oiDelta SADECE en az 1 saat eski bir referansa göre hesaplanıyor.
+describe('makeProcessCandle — OI 1 saatlik pencere (Faz 2.1, B9 düzeltmesi)', () => {
+  let deps;
+  let processCandle;
+
+  beforeEach(() => {
+    deps = makeDeps();
+    processCandle = makeProcessCandle(deps);
+  });
+
+  async function sendOi(oi) {
+    await processCandle.handleMessage('md.TESTUSDT.oi', { type: 'oi', symbol: 'TESTUSDT', data: { oi } });
+  }
+
+  // liqPressureScore, oiPressure = clamp(|oiDelta|/10000) bileşenini 0.25 ağırlıkla
+  // taşıyor (calcLiquidationPressure). Büyük bir OI sıçraması 1 saat İÇİNDE hâlâ
+  // referanssız (oiDelta=0) kalmalı; 1 saat SONRA fark yakalanmalı.
+  it('1 saatten ÖNCE gelen büyük OI değişimi oiDelta\'yı etkilemez (referans yok)', async () => {
+    vi.useFakeTimers();
+    try {
+      await sendOi(1_000_000);
+      vi.advanceTimersByTime(30 * 60 * 1000); // 30dk sonra — hâlâ 1 saatin altında
+      await sendOi(1_500_000); // %50 büyük sıçrama
+
+      const candles = makeClosedCandles(80);
+      await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+
+      expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+      const snap = deps.signalRepo.saveSignal.mock.calls[0][0];
+      // 1 saat dolmadığı için referans yok → oiPressure katkısı sıfıra yakın →
+      // liqPressureScore taban değere (nötr fundingNorm=0 varsayımıyla ~0.5) yakın kalmalı.
+      expect(snap.liqPressureScore).toBeLessThan(0.55);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('1 saatten SONRA gelen büyük OI değişimi oiDelta\'yı yakalar, liqPressureScore yükselir', async () => {
+    vi.useFakeTimers();
+    try {
+      await sendOi(1_000_000);
+      vi.advanceTimersByTime(61 * 60 * 1000); // 61dk sonra — 1 saat referansı artık var
+      await sendOi(1_100_000); // oiDelta = 100_000 → oiPressure = clamp(100000/10000) = 1 (max)
+
+      const candles = makeClosedCandles(80);
+      await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+
+      expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+      const snap = deps.signalRepo.saveSignal.mock.calls[0][0];
+      // oiPressure=1, ağırlık 0.25 → rawScore'a +0.25 katkı → score = 0.5 + rawScore*0.5
+      // en az 0.5 + 0.25*0.5 = 0.625 civarı beklenir (fundingNorm/imbalance sıfır varsayımıyla)
+      expect(snap.liqPressureScore).toBeGreaterThan(0.55);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
 describe('makeProcessCandle — kapanmamış mum kirliliği düzeltmesi', () => {
   let deps;
   let processCandle;
