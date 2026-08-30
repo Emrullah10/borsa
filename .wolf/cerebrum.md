@@ -33,6 +33,104 @@ var olması uygulandığı anlamına GELMEZ — `db:migrate:up` script'i idempot
 
 <!-- Significant technical decisions with rationale. Why X was chosen over Y. -->
 
+**[2026-08-30] Faz 3 (AI'yı doğru role koy) uygulandı:**
+Kullanıcının istediği yapı: "AI'ın tahminleri + göstergeler + AI'ın onları okuması,
+ultra doğrulamalı, sahte veri yok." Doğru mimari (planla netleşti): birincil model
+confluence.js kural motoru ADAY üretir; ikincil katman (LightGBM) FİLTRELER, LLM
+sadece olay VETOSU verir — hiçbiri sinyal üretmez/yön söylemez.
+(1) ml-features.js: funding z-score, OI 1h delta, gerçekleşmiş volatilite, günün
+saati, BTC korelasyonu, S/R uzaklığı, likidite kademesi — indicatorsSnapshot.mlFeatures.
+Gerçekten mevcut olmayan veri (orderbook spread — hiç akmıyor) SESSİZCE 0 değil,
+açıkça null + _provenance etiketi ('computed'/'unavailable').
+(2) isMarketDataStale + dataQuality: funding/oi/lsr mesajlarının alınma zamanı
+takip ediliyor, bayatsa indicatorsSnapshot.dataQuality'de işaretleniyor.
+KULLANICI KARARI: bayat veri sinyal üretimini DURDURMAZ (candle'dan farklı),
+sadece kayıtta görünür — LSR/OI zaten aylarca çalışmıyordu, sistem yine işliyordu,
+tam durdurma çok yıkıcı olurdu (5dk poll aralığı + ağ gecikmesi normal).
+(3) services/service-ai/meta_label/: LightGBM ile P(win) tahmini. Etiket: TP mi
+SL'den önce (timeout/pending hariç — sızıntı riski). purged k-fold + embargo
+doğrulama (López de Prado yöntemi). train.py çalıştırılabilir CLI ama agent
+ortamında gerçek DB verisiyle ÇALIŞTIRILAMADI — kod 22 pytest ile doğrulandı.
+MİNİMUM VERİ UYARISI: günde 1-3 sinyalle 500-1000 örnek 6-12 ay sürer — Faz 1.5
+backtest sinyalleri asıl eğitim kaynağı olmalı.
+(4) POST /veto (event_veto.py): LLM'e SADECE "şu an işlem açmayı engelleyen bir
+olay var mı" soruluyor, yön/tahmin YASAK. Fail-open: LLM cevap veremezse
+approved=true confidence=0 — LLM tek nokta arıza olmamalı.
+(5) signals.ai_approved/ai_confidence/ai_reason kolonları (önceden hiç
+kullanılmıyordu) artık saveSignal ile yazılabiliyor, getStatsBreakdown'a
+ai_approved kırılımı eklendi — AI'nın faydası varsayılmayacak, ölçülecek.
+331→334 JS test + 42 Python test (yeni) yeşil.
+
+Faz 4 (karar kapısı — SONUÇLARI GÖRMEDEN taahhüt edilmişti) belgeleme aşamasında;
+kod tarafı (Faz 0-3) tamamlandı.
+
+**[2026-08-30] Faz 2 (maliyet yapısı) uygulandı:**
+LSR onarıldı (bitget-api'de doğru metot getFuturesActiveLongShortAccountData,
+doğru alan adları longAccountRatio/shortAccountRatio; boş catch{} kaldırıldı —
+artık hata gözlemlenebilir). OI 1 saatlik pencereye alındı (saniye-altı gürültü
+yerine anlamlı fark). Maker giriş modeli eklendi (simulator.js: entryMode
+'maker'/'taker', limit-fill penceresi + NO_FILL). Sembol evrenine minimum
+24s hacim filtresi (MIN_24H_VOLUME_USDT) eklendi. Ölü WS abonelikleri
+(15m tüm semboller, 4h 49 sembol) kaldırıldı — ~99/250 topic canlıdan çıktı.
+calcMetricsByDirection ile LONG/SHORT ayrı raporlanıyor. run-strategy.js
+cooldownMs parametrik oldu (canlıdaki COOLDOWN_BY_TF ile eşleşsin diye).
+sweep.js artık TF (1m/5m) × entryMode (taker/maker) dış döngüsüyle 4 ayrı
+grid çalıştırıp genel en iyiyi seçiyor — hiçbiri sezgiyle canlıya alınmayacak,
+hepsi sweep'te A/B ölçülecek. 308/308 test yeşil, bitget-ws.js için ilk kez
+test dosyası eklendi (önceden hiç yoktu — LSR bug'ının aylarca fark
+edilmemesinin sebeplerinden biri).
+Faz 3 (AI meta-etiketleme) ve Faz 4 (karar kapısı belgeleme) devam ediyor.
+
+**[2026-08-30] Faz 1 (backtest güvenilirliği) uygulandı — kullanıcı "durma bitir tüm fazları" dedi:**
+Faz 0'ın devamı olarak backtest/sweep altyapısındaki B6-B11 bulguları TDD ile
+düzeltildi: (1) `aligned-buffer.js` durumsuz ikili aramaya çevrildi — eski durumlu
+pointer 27 sweep kombinasyonunun 26'sının geleceği görmesine yol açıyordu; (2)
+`evaluate-outcome.js` timeout sınırı `>=` yapıldı, backtest artık "bedava" r:0
+yerine gerçek mark-to-market R hesaplıyor; (3) `run-strategy.js` gösterge
+penceresi canlıyla eşitlendi (candles[i] dahil, priceChange 1 barlık, cooldown
+sırası); (4) `walk-forward.js` sabit takvim aralığı desteği eklendi —
+`sweep.js` artık 27 comboyu aynı dönemde karşılaştırıyor; (5) **kalıcı mum
+deposu** (`db-schemas/03-candles.sql` + `candle-store-repository.js` +
+`cached-fetcher.js` + `backfill-candles.js`) — sweep artık DB'den okuyabiliyor,
+REST fırtınası (sunucuyu 88°C'ye çıkarıp Redis'i öldürmüştü) riski azaldı; (6)
+sweep sonuçları artık `backtest-results/`'a JSON yazılıyor. 290/290 test yeşil.
+**Henüz uygulanmadı:** `npm run db:migrate` ile `03-candles.sql`'in DB'ye
+uygulanması ve `npm run backtest:backfill-candles` ile gerçek verinin çekilmesi
+— bu adım gerçek Bitget API + DB erişimi gerektirir, agent ortamında yapılamadı.
+Faz 2 (maliyet yapısı — LSR onarımı/kaldırılması, maker giriş modeli, likidite
+filtresi) ve Faz 3 (AI meta-etiketleme) devam ediyor.
+
+**[2026-08-30] Faz 0 (ölçüm onarımı) uygulandı — kullanıcı "her şeyi silip yeniden mi başlasam"
+dedi, kod incelemesi ölçüm aletinin bozuk olduğunu gösterdi (strateji değil):**
+Kullanıcı panelde düşen `avg_sim_r`'yi görüp projeyi komple silmeyi düşündü. Üç paralel
+Explore ajanı ile kod + canlı DB incelendi (read-only). Bulgu: `avg_sim_r` (-0.018),
+`avg_r`'den (-0.151) DAHA İYİ görünüyordu — matematiksel olarak imkânsız, sim daha
+gerçekçi olduğu için daha KÖTÜ olması gerekirdi. Kök neden zinciri:
+1. `evaluateSimOutcome`'da `Math.abs(simEntry-stopPrice)` payda kullanımı, `simEntry`
+   stop'un ötesine düştüğünde (bayat sim-giriş, bkz. bug-159 deseni) pay işareti
+   değiştiriyordu ama payda pozitif kalıyordu → 137 `sl_hit` satırı canlı DB'de
+   `+1R KÂR` olarak yazılmıştı (bug-160).
+2. `sim_entry_price` yaş kontrolü olmadan yazılıyordu — zombi pending satırlar
+   (haftalarca eski, `getPendingOutcomes` yaş sınırı yoktu — bug-162) güncel mumlarla
+   eşleşince gerçek fiyattan ortalama %4.97 sapıyordu (modellenen slippage %0.03'e
+   karşı, 165 kat — bug-161).
+3. Panel CI'si (`avgRInterval`) `avg_sim_r`'nin gerçek n'i (869) yerine `avg_r`'nin
+   n'ini (6267) kullanıyordu — aralık ~2.7× dar, yanlışlıkla "edge kanıtlandı"
+   diyebilirdi (bug-163).
+Ayrıca backtest tarafında (`aligned-buffer.js`) durumlu pointer'ın 27 kombinasyon×5
+sembol arasında paylaşılması nedeniyle 26 kombinasyonun gelecek verisini gördüğü
+(lookahead sızıntısı) ve LSR verisinin hiç akmadığı (`getFuturesAccountLongShortRatio`
+bitget-api'de yok, boş `catch{}` yutuyordu) tespit edildi — bunlar Faz 1/2'ye bırakıldı.
+**Karar: proje SİLİNMEDİ.** "Strateji kötü" hükmü şu an verilemez çünkü ölçüm aleti
+bozuktu — hem geçmişteki artı hem şimdiki eksi rakamlar aynı bozuk aletten çıktı.
+Kullanıcıya net anlatıldı: $50-200 sermayede bu iş gelir üretmez (ayda $5-15 bandı,
+iyi bir edge'de bile), amaç kanıt üretmek. Plan dosyası:
+`.claude/plans/imdi-ben-art-k-gerilmeye-unified-flask.md`. Faz 0 uygulandı (TDD,
+268+109 test yeşil): risk birimi sabitlendi, bayat sim-giriş engellendi, zombi
+pending temizlendi (migration `2026-08-29-01`), CI doğru n ile hesaplanıyor,
+kapı/muhasebe fee tutarlılığı sağlandı. Faz 1+ (backtest sızıntı onarımı, kalıcı
+mum deposu, ML meta-etiketleme) henüz uygulanmadı.
+
 **[2026-08-23] Faz 0 (ölçüm dürüstlüğü) uygulandı; otomatik trade'den önce "giriş kayması" darboğazı seçildi:**
 Kullanıcı "projenin benim yerime scalp trade yapmasını istiyorum" dedi ve doğruluk oranını sordu.
 Canlı veri çekildi (temiz veri, `CLEAN_DATA_SINCE=2026-08-21T21:25` sonrası, n=99):

@@ -32,3 +32,20 @@ export function isCandleStale({ ts, tf, now = Date.now() }) {
   const maxAge = MAX_CANDLE_AGE_MS[tf] ?? DEFAULT_MAX_AGE_MS;
   return (now - Number(ts)) > maxAge;
 }
+
+// Faz 3.2 (B7/B8 tekrarını önleme): funding/OI/LSR mesajları hiç zaman damgası
+// taşımıyordu (bkz. make-publisher.js — publishFunding/publishOI/publishLongShortRatio).
+// Eksik/durmuş veri sessizce nötr bir sabite (funding=0, OI=0, LSR=0.5/0.5) düşüyordu;
+// bu, LSR'nin (bug-170) ve OI'nin (bug-171) aylarca fark edilmemesinin kök nedeniydi —
+// "veri var ama nötr" ile "veri hiç yok" ayrımı görünmüyordu.
+//
+// isMarketDataStale genel amaçlı bir tazelik kontrolüdür — herhangi bir market-data
+// kaynağının (funding/oi/lsr) state'ine, mesajın ALINDIĞI zamanı (receivedAt) işaretleyip
+// uygulanır. Sinyal üretiminden ÖNCE çağrılmalı; bayatsa o kaynak sessizce nötre
+// düşmek yerine sinyal üretimi tamamen durdurulmalı (isCandleStale ile aynı desen).
+export const MAX_MARKET_DATA_AGE_MS = 15 * 60_000; // 15 dk — LSR 5dk'da bir poll ediliyor, 3× tolerans
+
+export function isMarketDataStale({ receivedAt, now = Date.now() }) {
+  if (receivedAt == null || !Number.isFinite(Number(receivedAt))) return true;
+  return (now - Number(receivedAt)) > MAX_MARKET_DATA_AGE_MS;
+}

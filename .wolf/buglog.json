@@ -2597,6 +2597,252 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-08-27T10:30:00Z"
+    },
+    {
+      "id": "bug-160",
+      "timestamp": "2026-08-29T23:00:00Z",
+      "error_message": "avg_sim_r (-0.018) panelde avg_r'den (-0.151) daha İYİ görünüyordu — sim daha gerçekçi olduğu için daha KÖTÜ olmalıydı",
+      "file": "core/service-tracker/src/domain/evaluate-outcome.js",
+      "root_cause": "evaluateSimOutcome, simRisk = Math.abs(simEntry - stopPrice) payda olarak kullanıyordu. simEntry bayat veri yüzünden (bug-159 ile aynı kök) stop'un ötesine düşünce Math.abs paydayı pozitif tutuyor ama pay işaret değiştiriyor — canlı DB'de 137 sl_hit satırı +1R KAR olarak, 126 tp_hit satırı negatif olarak yazılmıştı. Ayrıca R birimi işlemler arası 134x değişiyordu (simRisk/realRisk oranı) — bu sayıların ortalaması istatistiksel olarak anlamsızdı.",
+      "fix": "Risk birimi artık sinyalin PLANLANAN riskinden (|entryPrice-stopPrice|) hesaplanıyor, simEntry'den yeniden ölçülmüyor. simEntry stop'un ötesindeyse (fiilen doldurulamazdı) simPnlR NULL döner, reason:'unfillable'. evaluateSimOutcome imzasına entryPrice eklendi, 3 çağrı sitesi güncellendi.",
+      "tags": [
+        "measurement-integrity",
+        "sim-pnl-r",
+        "sign-error",
+        "risk-unit",
+        "faz-0"
+      ],
+      "related_bugs": [
+        "bug-159"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-08-29T23:00:00Z"
+    },
+    {
+      "id": "bug-161",
+      "timestamp": "2026-08-29T23:15:00Z",
+      "error_message": "sim_entry_price gerçek sinyal fiyatından ortalama %4.97 sapıyordu (modellenen slippage %0.03'e karşı — 165 kat)",
+      "file": "core/service-tracker/src/application/use-cases/make-process-outcome-candle.js",
+      "root_cause": "handleCandleMessage, sim_entry_price'ı yaş kontrolü olmadan Redis'ten gelen HERHANGİ bir muma göre yazıyordu. Zombi pending satırlar (bug-162) güncel mumlarla eşleşince sim-giriş gerçek fiyattan çok sapıyordu.",
+      "fix": "isSimEntryFillable() (evaluate-outcome.js) eklendi: mum sinyalden SONRA VE 'şimdi'ye göre tfMs×2'den eski değilse sim-giriş yazılır. handleCandleMessage artık msg.tf ve data.ts kullanıyor. Bayatsa sim-entry o mumda yazılmıyor, ana status/pnl_r akışı etkilenmiyor.",
+      "tags": [
+        "measurement-integrity",
+        "stale-data",
+        "sim-entry",
+        "faz-0"
+      ],
+      "related_bugs": [
+        "bug-159",
+        "bug-160"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-08-29T23:15:00Z"
+    },
+    {
+      "id": "bug-162",
+      "timestamp": "2026-08-29T23:30:00Z",
+      "error_message": "Outcome'lar ortalama 27.93 saat sonra çözülüyordu (timeout 4 saat olmasına rağmen) — Haziran'dan kalma pending satırlar Ağustos mumlarıyla eşleşiyordu",
+      "file": "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "root_cause": "getPendingOutcomes() yaş sınırı olmadan TÜM pending/active satırları döndürüyordu ('zombi pending'). Bu, bug-161'deki bayat sim-entry hatasının ana besleme kaynağıydı.",
+      "fix": "getPendingOutcomes sorgusuna \"s.created_at > now() - interval '6 hours'\" filtresi eklendi. Migration 2026-08-29-01-zombie-pending-cleanup.sql ile birikmiş eski satırlar tek seferlik 'cancelled' olarak işaretlendi.",
+      "tags": [
+        "measurement-integrity",
+        "zombie-pending",
+        "faz-0"
+      ],
+      "related_bugs": [
+        "bug-161"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-08-29T23:30:00Z"
+    },
+    {
+      "id": "bug-163",
+      "timestamp": "2026-08-29T23:45:00Z",
+      "error_message": "Panelde güven aralığı (CI) yanlış n ile hesaplanıyordu — n=6267 (tp+sl+timeout) kullanılıyordu ama avg_sim_r'nin gerçek n'i 869'du (~2.7x dar aralık, yanlışlıkla 'edge kanıtlandı' diyebilirdi)",
+      "file": "web-app/src/features/stats/utils/avgRInterval.js",
+      "root_cause": "getSignalStats SQL'i avg_sim_r'yi 'sim_pnl_r IS NOT NULL' filtresiyle (status filtresi OLMADAN) hesaplıyordu — avg_r'den TAMAMEN FARKLI, dönemsel çarpık bir satır kümesiydi. Panel bu iki farklı n'i ayırt etmiyordu.",
+      "fix": "getSignalStats/getStatsBreakdown artık avg_sim_r'yi avg_r ile AYNI status kümesinde (+ sim_pnl_r IS NOT NULL) hesaplıyor, ayrıca sim_n alanı dönüyor. avgRInterval() yeni simN parametresi alıyor, StatsPage.jsx bunu geçiriyor.",
+      "tags": [
+        "measurement-integrity",
+        "confidence-interval",
+        "sample-size",
+        "faz-0"
+      ],
+      "related_bugs": [
+        "bug-160",
+        "bug-161"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-08-29T23:45:00Z"
+    },
+    {
+      "id": "bug-164",
+      "timestamp": "2026-08-30T00:00:00Z",
+      "error_message": "fee_adj_pnl (getSignalStats) sadece 2×takerFee (0.0012) düşüyordu ama giriş kapısı (setup-builder.js meetsFeeFloor) feeRoundtrip=0.0018 kullanıyordu — kapı ile muhasebe farklı maliyet varsayıyordu",
+      "file": "core/service-signal-engine/src/infrastructure/persistence/repositories/signal-repository.js",
+      "root_cause": "makeSignalRepository sadece takerFee alıyordu, feeRoundtrip parametresi yoktu; fee_adj_pnl hesabı hardcoded 2*takerFee kullanıyordu.",
+      "fix": "makeSignalRepository'ye opsiyonel feeRoundtrip parametresi eklendi (verilmezse 2*takerFee'ye düşer, geriye uyumlu). container.js zaten hesaplanmış feeRoundtrip'i geçiriyor.",
+      "tags": [
+        "measurement-integrity",
+        "fee-consistency",
+        "faz-0"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T00:00:00Z"
+    },
+    {
+      "id": "bug-165",
+      "timestamp": "2026-08-30T00:05:00Z",
+      "error_message": "TDD sırasında keşfedildi: outcome.sim_entry_price null iken parseFloat(null) = NaN dönüyordu, simEntry==null kontrolü NaN'ı yakalamıyordu — sim-entry hiç yazılmamış satırlarda simPnlR NaN olarak resolveOutcome'a gidiyordu",
+      "file": "core/service-tracker/src/application/use-cases/make-process-outcome-candle.js",
+      "root_cause": "parseFloat(outcome.sim_entry_price) koşulsuz çağrılıyordu; JS'te parseFloat(null) NaN döner, null değil.",
+      "fix": "outcome.sim_entry_price != null ? parseFloat(...) : null şeklinde güvenli parse eklendi.",
+      "tags": [
+        "null-safety",
+        "nan",
+        "faz-0",
+        "tdd-caught"
+      ],
+      "related_bugs": [
+        "bug-161"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T00:05:00Z"
+    },
+    {
+      "id": "bug-166",
+      "timestamp": "2026-08-30T09:30:00Z",
+      "error_message": "sweep.js'te 27 parametre kombinasyonunun 26'sı geleceği görüyordu (lookahead sızıntısı) — aligned-buffer.js pointer'ı combolar/semboller arasında paylaşılıyordu",
+      "file": "core/service-backtest/src/domain/aligned-buffer.js",
+      "root_cause": "makeAlignedBuffer durumlu bir pointer kullanıyordu (monoton artan, hiç sıfırlanmayan). sweep.js aynı regimeBuffer/higherTfBuffer nesnesini 27 combo × 5 sembol arasında paylaşıyordu — combo #1'in ilk sembolünden sonra pointer diziyi tüketiyor, kalan tüm combolar dönem sonundaki (gelecekteki) mumları görüyordu. higherTfTrend confluence.js'te sert kapı olduğu için etkisi büyüktü.",
+      "fix": "makeAlignedBuffer durumsuz ikili aramaya (binary search) çevrildi — aynı buffer'a hangi sırada sorulursa sorulsun sadece geçilen timestampMs'e göre sonuç döner, paylaşılan referans artık sızıntı üretemez.",
+      "tags": [
+        "measurement-integrity",
+        "lookahead-leak",
+        "backtest",
+        "faz-1"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:30:00Z"
+    },
+    {
+      "id": "bug-167",
+      "timestamp": "2026-08-30T09:32:00Z",
+      "error_message": "Backtest'te timeout'lar hep 'bedava' r:0 dönüyordu, gerçek mark-to-market P&L hesaplanmıyordu",
+      "file": "core/service-backtest/src/domain/simulator.js",
+      "root_cause": "evaluate-outcome.js'teki 'age > timeoutMs' KESİN eşitsizliği + simulator.js'teki 'now = (i+1)*CANDLE_MS' (max = TIMEOUT_MS TAM) kombinasyonu backtest'te timeout dalının matematiksel olarak asla tetiklenmemesine yol açıyordu. Canlıda age sürekli arttığı için semptom görülmüyordu.",
+      "fix": "evaluate-outcome.js'te '>' yerine '>=' kullanıldı — süre TAM dolduğunda da timeout tetiklenir. Backtest artık gerçek mark-to-market R + fee hesaplıyor.",
+      "tags": [
+        "measurement-integrity",
+        "backtest-parity",
+        "timeout",
+        "faz-1"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:32:00Z"
+    },
+    {
+      "id": "bug-168",
+      "timestamp": "2026-08-30T09:34:00Z",
+      "error_message": "Backtest göstergeleri canlıdan 1 bar geride hesaplanıyordu — ADX/RSI/BB/S-R gibi tüm seri-bağımlı göstergeler etkileniyordu",
+      "file": "core/service-backtest/src/domain/run-strategy.js",
+      "root_cause": "canlı make-process-candle.js calcAllIndicators'ı KAPANAN mumu (closedCandle) İÇEREN buffer'la çağırıyor. Backtest'teki 'win = candles.slice(i-window, i)' candles[i]'yi (o an işlenen mum) DIŞLIYORDU. priceChange de bu yüzden 2 barlık fark hesaplıyordu (1 barlık olması gerekirken). Ayrıca cooldown, buildSetup gate'lerinden ÖNCE kontrol ediliyordu — canlıda SONRA kontrol ediliyor (reddedilen setup cooldown başlatmamalı).",
+      "fix": "win artık candles.slice(i-window+1, i+1) — candles[i] dahil. priceChange win'in son iki elemanından. Cooldown kontrolü buildSetup gate'lerinden sonraya taşındı.",
+      "tags": [
+        "measurement-integrity",
+        "backtest-parity",
+        "indicator-window",
+        "faz-1"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:34:00Z"
+    },
+    {
+      "id": "bug-169",
+      "timestamp": "2026-08-30T09:36:00Z",
+      "error_message": "sweep.js'te 27 parametre kombinasyonu 27 FARKLI takvim dönemi üzerinde karşılaştırılıyordu",
+      "file": "core/service-backtest/src/domain/walk-forward.js",
+      "root_cause": "splitTrainTest, train/test sınırını trade'lerin KENDİ min/max ts'inden türetiyordu. Farklı parametre kombinasyonları farklı trade zaman aralıkları ürettiği için her combo farklı bir test dönemi üzerinde değerlendiriliyordu — karşılaştırma anlamsızdı.",
+      "fix": "splitTrainTest'e opsiyonel range={rangeStartMs,rangeEndMs} parametresi eklendi. sweep.js artık computeFixedRange() ile gerçek çekilen veri aralığından SABİT bir takvim penceresi hesaplayıp tüm combolara aynı range'i geçiriyor.",
+      "tags": [
+        "measurement-integrity",
+        "walk-forward",
+        "faz-1"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:36:00Z"
+    },
+    {
+      "id": "bug-170",
+      "timestamp": "2026-08-30T09:44:00Z",
+      "error_message": "LSR (long/short ratio) hiç akmıyordu — confluence skorunun liq bileşeninin %30 ağırlıklı imbalance kısmı ve tüm squeeze mantığı ölü koddu",
+      "file": "services/service-market-data/src/bitget-ws.js",
+      "root_cause": "getFuturesAccountLongShortRatio bitget-api'de hiç yoktu (doğrusu getFuturesActiveLongShortAccountData, farklı alan adları). Boş catch{} hatayı sessizce yutuyordu, 'LSR poller başlatıldı' logu yanıltıcı şekilde basılıyordu.",
+      "fix": "Doğru metot adı + doğru alan adları (longAccountRatio/shortAccountRatio) kullanıldı. Boş catch kaldırıldı, hata artık loglanıyor. 5 yeni test eklendi (dosyada hiç test yoktu).",
+      "tags": [
+        "measurement-integrity",
+        "lsr",
+        "dead-code",
+        "faz-2"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:44:00Z"
+    },
+    {
+      "id": "bug-171",
+      "timestamp": "2026-08-30T09:46:00Z",
+      "error_message": "oiDelta neredeyse her zaman sıfıra yakındı — calcLiquidationPressure'daki oiPressure bileşeni (ağırlık 0.25) fiilen ölüydü",
+      "file": "core/service-signal-engine/src/application/use-cases/make-process-candle.js",
+      "root_cause": "OI her ticker tick'inde (saniye-altı sıklıkta) güncelleniyordu, oiDelta bir önceki mesajla anlık farkı alıyordu — 1 saatlik bir değişimi yakalayamıyordu.",
+      "fix": "1 saatlik OI geçmişi (oiHistory) eklendi; oiDelta artık sadece en az 1 saat eski bir referansa göre hesaplanıyor.",
+      "tags": [
+        "measurement-integrity",
+        "open-interest",
+        "dead-code",
+        "faz-2"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:46:00Z"
+    },
+    {
+      "id": "bug-172",
+      "timestamp": "2026-08-30T09:48:00Z",
+      "error_message": "~99/250 WS topic ölüydü (15m tüm sembollerde abone ama hiç okunmuyor, 4h 49 sembolde abone ama sadece BTCUSDT kullanılıyor) — WS abonelik limitine boşuna baskı",
+      "file": "services/service-market-data/src/bitget-ws.js",
+      "root_cause": "TIMEFRAMES = ['1m','5m','15m','4H'] tüm semboller için abone ediliyordu ama make-process-candle.js sadece 5m'i (higherTfTrend) ve BTCUSDT.4h'ı (regime) okuyordu.",
+      "fix": "TIMEFRAMES'ten 15m kaldırıldı. 4h artık sadece REGIME_SYMBOL (BTCUSDT) için ayrıca abone ediliyor.",
+      "tags": [
+        "measurement-integrity",
+        "dead-subscription",
+        "faz-2"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T09:48:00Z"
+    },
+    {
+      "id": "bug-173",
+      "timestamp": "2026-08-30T10:15:00Z",
+      "error_message": "signals.ai_approved/ai_confidence/ai_reason kolonları vardı ama hiçbir kod yazmıyordu — AI tamamen dekoratifti, sinyal üretim yoluna dahil değildi",
+      "file": "services/service-ai/main.py",
+      "root_cause": "AI servisi sadece POST /analyze ile açıklayıcı Türkçe metin üretiyordu, kullanıcı karta tıklayınca çağrılıyordu — sinyal DB'ye yazıldıktan SONRA, karara hiç katkısı yoktu.",
+      "fix": "POST /veto endpoint'i eklendi (event_veto.py): LLM sinyal üretmiyor/yön söylemiyor, sadece 'işlem açmayı engelleyen güncel bir olay var mı' sorusuna cevap veriyor (borsa kesintisi, unlock, hack, makro takvim). Fail-open tasarım: LLM cevap veremezse approved=true, confidence=0. saveSignal artık aiApproved/aiConfidence/aiReason'ı ai_approved/ai_confidence/ai_reason kolonlarına yazabiliyor (opsiyonel). getStatsBreakdown'a ai_approved kırılımı eklendi — AI'nın gerçek faydası ölçülecek, varsayılmayacak.",
+      "tags": [
+        "ai-architecture",
+        "dead-column",
+        "faz-3"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T10:15:00Z"
     }
   ]
 }

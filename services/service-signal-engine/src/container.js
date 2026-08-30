@@ -4,7 +4,7 @@ import { makeSignalRepository } from '@borsa-bot/core-signal-engine/src/infrastr
 import { makeProcessCandle } from '@borsa-bot/core-signal-engine/src/application/use-cases/make-process-candle.js';
 
 export async function buildContainer({ confluenceThreshold, takerFee, filterParams, requireSrCap, atrStopMult, targetRR, feeRoundtrip }) {
-  const signalRepo = makeSignalRepository({ db: datasources.postgres, takerFee });
+  const signalRepo = makeSignalRepository({ db: datasources.postgres, takerFee, feeRoundtrip });
 
   const processCandle = makeProcessCandle({
     signalRepo,

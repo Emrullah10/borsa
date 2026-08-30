@@ -1,4 +1,4 @@
-import { evaluateOutcome, evaluateSimOutcome } from '../../domain/evaluate-outcome.js';
+import { evaluateOutcome, evaluateSimOutcome, isSimEntryFillable } from '../../domain/evaluate-outcome.js';
 import { backfillOutcome } from '../../domain/backfill-outcome.js';
 
 // C4 düzeltmesi (2026-08-20): servis restart'ı gibi durumlarda tracker'ın candle
@@ -22,7 +22,7 @@ export function makeProcessOutcomeCandle({ signalRepo, publish, log, timeoutMs, 
       const candles = await fetchMissedCandles(row.symbol, fromTs);
       if (!candles?.length) return;
 
-      const { simEntry, resolved } = backfillOutcome(row, candles, now, timeoutMs, { takerFee, slippagePct });
+      const { simEntry, resolved } = backfillOutcome(row, candles, now, timeoutMs, { takerFee, slippagePct, exitSlippagePct });
 
       if (simEntry != null && row.sim_entry_price == null) {
         row.sim_entry_price = simEntry;
@@ -75,7 +75,7 @@ export function makeProcessOutcomeCandle({ signalRepo, publish, log, timeoutMs, 
   async function handleCandleMessage(msg, now = Date.now()) {
     if (msg.type !== 'candle') return;
 
-    const { symbol, data } = msg;
+    const { symbol, data, tf } = msg;
     const outcomes = pendingBySymbol[symbol];
     if (!outcomes?.length) return;
 
@@ -87,12 +87,19 @@ export function makeProcessOutcomeCandle({ signalRepo, publish, log, timeoutMs, 
       if (resolvedIds.has(outcome.outcome_id)) continue;
 
       // Paper-trading: henüz sim giriş yakalanmadıysa bu mumun açılışını (± slippage) kullan.
-      // Aynı mum hem sim entry'yi doldurabilir hem de resolve edebilir (sim entry evaluateOutcome'dan önce yazılır).
+      // Faz 0.2 (B2 düzeltmesi): yaş kontrolü olmadan HERHANGİ bir mumdan sim-giriş
+      // yazılıyordu — zombi pending satırlar güncel mumla eşleşince gerçek fiyattan
+      // ortalama %4.97 sapıyordu (bkz. isSimEntryFillable). Bayatsa bu mumdan sim-giriş
+      // YAZILMAZ; bir sonraki taze mum tekrar dener. Ana status/pnl_r akışı bundan etkilenmez.
       if (outcome.sim_entry_price == null) {
-        const isLong = outcome.direction === 'long';
-        const simEntry = candle.open * (isLong ? 1 + slippagePct : 1 - slippagePct);
-        outcome.sim_entry_price = simEntry;
-        await signalRepo.setSimEntry(outcome.outcome_id, simEntry);
+        if (isSimEntryFillable({ signalCreatedAt: outcome.signal_created_at, candleTs: data.ts, tf, now })) {
+          const isLong = outcome.direction === 'long';
+          const simEntry = candle.open * (isLong ? 1 + slippagePct : 1 - slippagePct);
+          outcome.sim_entry_price = simEntry;
+          await signalRepo.setSimEntry(outcome.outcome_id, simEntry);
+        } else {
+          log.debug(`Sim-entry atlandı (bayat mum): ${symbol} outcome=${outcome.outcome_id}`);
+        }
       }
 
       const result = evaluateOutcome(outcome, candle, now, timeoutMs);
@@ -108,7 +115,8 @@ export function makeProcessOutcomeCandle({ signalRepo, publish, log, timeoutMs, 
 
       const { simPnlR } = evaluateSimOutcome({
         direction: outcome.direction,
-        simEntry: parseFloat(outcome.sim_entry_price),
+        entryPrice: parseFloat(outcome.entry_price),
+        simEntry: outcome.sim_entry_price != null ? parseFloat(outcome.sim_entry_price) : null,
         stopPrice: parseFloat(outcome.stop_price),
         targetPrice: parseFloat(outcome.target_price),
         status: result.status,

@@ -2408,3 +2408,143 @@ kaymayı azaltmak). getRecentSignals'a outcome_id eklendi.
 
 **BEKLEYEN:** kaldıraç kararı (10x → 3x önerisi), sunucu DNS sorunu, geçmiş
 istatistiklerin ne kadarının kirli olduğu, sweep hiç çalıştırılmadı.
+| 10:35 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:35 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:35 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:35 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:37 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:37 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:39 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:39 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:40 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:40 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:40 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:40 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:41 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:41 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:41 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:41 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:44 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:44 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:50 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:50 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:51 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:51 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:52 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+| 10:52 | Session end: 1 writes across 1 files (borsa-strategy-validation-plan.md) | 0 reads | ~1924 tok |
+
+## Session: 2026-08-29 22:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-29 22:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-29 22:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-29 22:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-29 23:09
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-08-29 23:09
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 23:44 | Created ../../../.claude/plans/imdi-ben-art-k-gerilmeye-unified-flask.md | — | ~5245 |
+| 23:44 | Created ../../../.claude/plans/imdi-ben-art-k-gerilmeye-unified-flask.md | — | ~5245 |
+| 00:10 | Faz 0.1: sim-R işaret hatası (Math.abs) düzeltildi, entryPrice sabit risk birimi | core/service-tracker/src/domain/evaluate-outcome.js + 3 çağıran | 268 test yeşil | ~8000 |
+| 00:15 | Faz 0.2: bayat sim-entry engellendi (isSimEntryFillable) | evaluate-outcome.js, make-process-outcome-candle.js | TDD, entegrasyon testleri PASS | ~4000 |
+| 00:20 | Faz 0.3: zombi pending 6 saat filtresi + migration | signal-repository.js, migrations/2026-08-29-01 | test yeşil, migration henüz DB'ye uygulanmadı | ~2500 |
+| 00:25 | Faz 0.4/0.5: avg_sim_r aynı kohort + sim_n + avgRInterval simN parametresi | signal-repository.js, avgRInterval.js, StatsPage.jsx | 27+10 test yeşil | ~5000 |
+| 00:28 | Faz 0.6: fee_adj_pnl feeRoundtrip parametrize edildi | signal-repository.js, container.js | geriye uyumlu, test yeşil | ~1500 |
+| 00:32 | Faz 0.8: MEASUREMENT_FIX_SINCE uyarı bandı eklendi | StatsPage.jsx | görsel, test etkilenmedi | ~1000 |
+| 00:35 | buglog.json'a bug-160..165 eklendi, cerebrum.md Decision Log güncellendi | .wolf/buglog.json, .wolf/cerebrum.md | 165 bug kayıtlı | ~3000 |
+| 09:14 | Session end: 1 writes across 1 files (imdi-ben-art-k-gerilmeye-unified-flask.md) | 32 reads | ~26246 tok |
+| 09:14 | Session end: 1 writes across 1 files (imdi-ben-art-k-gerilmeye-unified-flask.md) | 32 reads | ~26246 tok |
+| 09:34 | Created core/service-backtest/test/unit/candle-store-repository.test.js | — | ~1179 |
+| 09:34 | Created core/service-backtest/test/unit/candle-store-repository.test.js | — | ~1179 |
+| 09:34 | Created core/service-backtest/src/infrastructure/persistence/repositories/candle-store-repository.js | — | ~818 |
+| 09:34 | Created core/service-backtest/src/infrastructure/persistence/repositories/candle-store-repository.js | — | ~818 |
+| 09:35 | Created services/service-backtest/src/backfill-candles.js | — | ~1094 |
+| 09:35 | Created services/service-backtest/src/backfill-candles.js | — | ~1094 |
+| 09:35 | Edited services/service-backtest/package.json | expanded (+6 lines) | ~94 |
+| 09:35 | Edited services/service-backtest/package.json | expanded (+6 lines) | ~94 |
+| 09:35 | Created services/service-backtest/package.json | — | ~125 |
+| 09:35 | Created services/service-backtest/package.json | — | ~125 |
+| 09:35 | Edited package.json | 6→7 lines | ~200 |
+| 09:35 | Edited package.json | 6→7 lines | ~200 |
+| 09:36 | Created core/service-backtest/test/unit/cached-fetcher.test.js | — | ~1090 |
+| 09:36 | Created core/service-backtest/test/unit/cached-fetcher.test.js | — | ~1090 |
+| 09:36 | Created core/service-backtest/src/infrastructure/cached-fetcher.js | — | ~644 |
+| 09:36 | Created core/service-backtest/src/infrastructure/cached-fetcher.js | — | ~644 |
+| 10:00 | Faz 1.1: aligned-buffer.js durumsuz ikili aramaya çevrildi (lookahead sızıntısı B6) | core/service-backtest/src/domain/aligned-buffer.js | 9 test yeşil | ~3000 |
+| 10:05 | Faz 1.2: timeout boundary >= yapıldı, backtest artık gerçek mark-to-market R | evaluate-outcome.js, simulator.js | 33+8 test yeşil | ~2500 |
+| 10:15 | Faz 1.3: gösterge penceresi paritesi (candles[i] dahil), priceChange 1 barlık, cooldown sırası düzeltildi | run-strategy.js | 8 test yeşil | ~4000 |
+| 10:20 | Faz 1.4: splitTrainTest sabit takvim aralığı (range parametresi) | walk-forward.js, sweep.js | 7 test yeşil | ~3000 |
+| 10:35 | Faz 1.5: candles tablosu + candle-store-repository + cached-fetcher + backfill script | db-schemas/03-candles.sql, core/service-backtest/src/infrastructure/*, services/service-backtest/src/backfill-candles.js | 13 test yeşil, DB'ye henüz backfill edilmedi | ~9000 |
+| 10:38 | Faz 1.6: sweep sonuçları backtest-results/'a JSON yazılıyor | services/service-backtest/src/sweep.js | syntax OK, çalıştırılmadı | ~1500 |
+| 10:40 | buglog.json'a bug-166..169 eklendi | .wolf/buglog.json | 169 bug kayıtlı | ~2000 |
+| 09:40 | Created services/service-market-data/test/unit/bitget-ws.test.js | — | ~1013 |
+| 09:40 | Created services/service-market-data/test/unit/bitget-ws.test.js | — | ~1013 |
+| 11:00 | Faz 2.1: LSR onarıldı (doğru metot+alan adları, hata artık loglanıyor), OI 1 saatlik pencere | services/service-market-data/src/bitget-ws.js, make-process-candle.js | 5+2 test yeşil (dosyalarda hiç test yoktu) | ~5000 |
+| 11:10 | Faz 2.2: maker giriş modeli (limit fill window, NO_FILL, makerFee) | core/service-backtest/src/domain/simulator.js | 5 test yeşil | ~3500 |
+| 11:15 | Faz 2.3: min hacim filtresi, ölü 15m/4h abonelikleri kaldırıldı | bitget-ws.js | 2 test yeşil | ~2500 |
+| 11:20 | Faz 2.4: calcMetricsByDirection (LONG/SHORT ayrı ölçüm) | core/service-backtest/src/domain/reporter.js | 3 test yeşil | ~1500 |
+| 11:25 | Faz 2.5: cooldownMs parametrik, sweep.js TF×entryMode dış döngüsü | run-strategy.js, services/service-backtest/src/sweep.js | 1 test yeşil, sweep syntax OK | ~4000 |
+| 11:28 | buglog.json'a bug-170..172 eklendi | .wolf/buglog.json | 172 bug kayıtlı | ~1500 |
+| 09:49 | Created core/service-signal-engine/test/unit/ml-features.test.js | — | ~1381 |
+| 09:49 | Created core/service-signal-engine/test/unit/ml-features.test.js | — | ~1381 |
+| 09:50 | Created core/service-signal-engine/src/domain/ml-features.js | — | ~1507 |
+| 09:50 | Created core/service-signal-engine/src/domain/ml-features.js | — | ~1507 |
+| 09:54 | Created services/service-ai/requirements.txt | — | ~88 |
+| 09:54 | Created services/service-ai/requirements.txt | — | ~88 |
+| 09:54 | Created services/service-ai/meta_label/test_features.py | — | ~759 |
+| 09:54 | Created services/service-ai/meta_label/test_features.py | — | ~759 |
+| 09:55 | Created services/service-ai/meta_label/features.py | — | ~603 |
+| 09:55 | Created services/service-ai/meta_label/features.py | — | ~603 |
+| 09:55 | Created services/service-ai/meta_label/test_labeling.py | — | ~203 |
+| 09:55 | Created services/service-ai/meta_label/test_labeling.py | — | ~203 |
+| 09:55 | Created services/service-ai/meta_label/labeling.py | — | ~154 |
+| 09:55 | Created services/service-ai/meta_label/labeling.py | — | ~154 |
+| 09:55 | Created services/service-ai/meta_label/test_validation.py | — | ~560 |
+| 09:55 | Created services/service-ai/meta_label/test_validation.py | — | ~560 |
+| 09:55 | Created services/service-ai/meta_label/validation.py | — | ~468 |
+| 09:55 | Created services/service-ai/meta_label/validation.py | — | ~468 |
+| 09:56 | Created services/service-ai/meta_label/test_model.py | — | ~448 |
+| 09:56 | Created services/service-ai/meta_label/test_model.py | — | ~448 |
+| 09:56 | Created services/service-ai/meta_label/model.py | — | ~256 |
+| 09:56 | Created services/service-ai/meta_label/model.py | — | ~256 |
+| 09:57 | Created services/service-ai/requirements.txt | — | ~94 |
+| 09:57 | Created services/service-ai/requirements.txt | — | ~94 |
+| 09:57 | Created services/service-ai/meta_label/train.py | — | ~1781 |
+| 09:57 | Created services/service-ai/meta_label/train.py | — | ~1781 |
+| 09:57 | Created services/service-ai/meta_label/test_train.py | — | ~492 |
+| 09:57 | Created services/service-ai/meta_label/test_train.py | — | ~492 |
+| 09:58 | Created services/service-ai/test_event_veto.py | — | ~695 |
+| 09:58 | Created services/service-ai/test_event_veto.py | — | ~695 |
+| 09:58 | Created services/service-ai/event_veto.py | — | ~652 |
+| 09:58 | Created services/service-ai/event_veto.py | — | ~652 |
+| 09:59 | Created services/service-ai/test_veto_endpoint.py | — | ~622 |
+| 09:59 | Created services/service-ai/test_veto_endpoint.py | — | ~622 |
+| 11:35 | Faz 3.1: calcMlFeatures (funding z-score, OI 1h, realized vol, saat, BTC korr, S/R uzaklık, likidite kademesi) — indicatorsSnapshot'a mlFeatures eklendi | ml-features.js, make-process-candle.js | 14+1 test yeşil | ~6000 |
+| 11:45 | Faz 3.2: isMarketDataStale — funding/oi/lsr için dataQuality işaretleme (sinyal durmuyor, sadece işaretleniyor — kullanıcı kararı) | staleness.js, make-process-candle.js | 4+4 test yeşil | ~4000 |
+| 12:10 | Faz 3.3: LightGBM meta-etiketleyici (features/labeling/validation/model/train.py) — purged k-fold+embargo, fail-safe eğitim CLI | services/service-ai/meta_label/ | 22 pytest yeşil (lightgbm+sklearn+pandas kuruldu) | ~9000 |
+| 12:25 | Faz 3.4: LLM olay vetosu (event_veto.py, POST /veto, fail-open) — ai_approved/confidence/reason kolonları nihayet kullanılabilir | services/service-ai/event_veto.py, main.py | 13 pytest yeşil | ~4000 |
+| 12:32 | Faz 3.5: saveSignal AI alanlarını yazabiliyor, getStatsBreakdown ai_approved kırılımı | signal-repository.js | 30 test yeşil | ~2000 |
+| 12:34 | buglog.json'a bug-173 eklendi | .wolf/buglog.json | 173 bug kayıtlı | ~1000 |
+| 10:02 | Session end: 27 writes across 24 files (imdi-ben-art-k-gerilmeye-unified-flask.md, candle-store-repository.test.js, candle-store-repository.js, backfill-candles.js, package.json) | 32 reads | ~43279 tok |
+| 10:02 | Session end: 27 writes across 24 files (imdi-ben-art-k-gerilmeye-unified-flask.md, candle-store-repository.test.js, candle-store-repository.js, backfill-candles.js, package.json) | 32 reads | ~43279 tok |
+| 10:10 | Session end: 27 writes across 24 files (imdi-ben-art-k-gerilmeye-unified-flask.md, candle-store-repository.test.js, candle-store-repository.js, backfill-candles.js, package.json) | 32 reads | ~43279 tok |
+| 10:10 | Session end: 27 writes across 24 files (imdi-ben-art-k-gerilmeye-unified-flask.md, candle-store-repository.test.js, candle-store-repository.js, backfill-candles.js, package.json) | 32 reads | ~43279 tok |

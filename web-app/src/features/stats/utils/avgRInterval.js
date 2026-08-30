@@ -20,16 +20,27 @@ const Z = 1.96; // %95 güven
  * @param {number} p.slHit
  * @param {number} p.timeout
  * @param {number} [p.winR=1.2] - kazanan işlemin R'si (targetRR)
+ * @param {number} [p.simN] - Faz 0.5 (B5 düzeltmesi): avg_sim_r'nin GERÇEK örneklem
+ *   boyutu (repository'nin sim_n alanı). avg_sim_r için CI hesaplanıyorsa MUTLAKA
+ *   geçilmeli — verilmezse n yanlışlıkla tpHit+slHit+timeout'a düşer, ki bu avg_r'nin
+ *   n'idir, avg_sim_r'nin DEĞİL (sim_pnl_r sadece bir alt kümede dolu). Canlı DB'de
+ *   bu ikisi 6267 vs 869 gibi ~7× farklıydı — CI'yi ~2.7× dar gösteriyordu.
+ *   Verilmezse eski davranış (n = tpHit+slHit+timeout) korunur — geriye uyumlu,
+ *   ama SADECE avg_r için doğrudur.
  * @returns {{low:number, high:number, stdErr:number, n:number, provenPositive:boolean}|null}
  */
-export function avgRInterval({ avgR, tpHit = 0, slHit = 0, timeout = 0, winR = 1.2 }) {
-  const n = (tpHit ?? 0) + (slHit ?? 0) + (timeout ?? 0);
+export function avgRInterval({ avgR, tpHit = 0, slHit = 0, timeout = 0, winR = 1.2, simN }) {
+  const fullN = (tpHit ?? 0) + (slHit ?? 0) + (timeout ?? 0);
+  const n = simN != null ? simN : fullN;
   if (!n || avgR == null || !Number.isFinite(avgR)) return null;
 
-  // Gözlenen sonuç dağılımının varyansı: E[R²] - (E[R])²
-  const pWin = tpHit / n;
-  const pLoss = slHit / n;
-  const pTimeout = timeout / n;
+  // Gözlenen sonuç dağılımının varyansı: E[R²] - (E[R])². Oranlar (pWin/pLoss/pTimeout)
+  // hep tam popülasyondan (fullN) gelir — sim alt kümesinin kendi kazanç/kayıp dağılımı
+  // ayrıca bilinmiyor, bu yüzden tam popülasyonun oranı en iyi elimizdeki tahmindir.
+  // Sadece PAYDA (n), varyansı doğru örneklem büyüklüğüne göre ölçeklemek için simN'e döner.
+  const pWin = fullN ? tpHit / fullN : 0;
+  const pLoss = fullN ? slHit / fullN : 0;
+  const pTimeout = fullN ? timeout / fullN : 0;
 
   const eR2 = pWin * winR * winR + pLoss * 1 + pTimeout * 0;
   const variance = Math.max(0, eR2 - avgR * avgR);

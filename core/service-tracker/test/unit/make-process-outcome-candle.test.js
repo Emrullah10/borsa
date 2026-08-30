@@ -173,6 +173,69 @@ describe('make-process-outcome-candle', () => {
     expect(signalRepo.resolveOutcome).toHaveBeenCalledTimes(1);
   });
 
+  describe('sim-entry tazelik kontrolü (Faz 0.2, B2 düzeltmesi)', () => {
+    it('data.ts sinyal zamanına göre bayatsa (tfMs×2 üstü) sim-entry YAZILMAZ', async () => {
+      const signalCreatedAt = new Date('2026-08-20T10:00:00Z').toISOString();
+      const staleOutcome = { ...makePendingOutcome(), signal_created_at: signalCreatedAt };
+      signalRepo.getPendingOutcomes.mockResolvedValue([staleOutcome]);
+      await useCase.refreshPending();
+
+      // Mum ts'i sinyalden hemen sonra ama "şimdi" (now) 7 gün İLERİDE — zombi pending
+      // satırının güncel bir mumla eşleşmesi (B2 deseni): mum kendisi ts taşımıyor/eski
+      // kalmış, servis onu "şimdi" işliyor.
+      const bayatCandleTs = new Date('2026-08-20T10:01:00Z').getTime();
+      const now = new Date('2026-08-27T10:01:00Z').getTime();
+      await useCase.handleCandleMessage({
+        type: 'candle',
+        tf: '1m',
+        symbol: 'BTCUSDT',
+        data: { ts: bayatCandleTs, open: 1010, high: 1020, low: 1005, close: 1015 },
+      }, now);
+
+      expect(signalRepo.setSimEntry).not.toHaveBeenCalled();
+    });
+
+    it('data.ts taze ise (sinyal sonrası, tfMs×2 içinde) sim-entry YAZILIR', async () => {
+      const signalCreatedAt = new Date('2026-08-20T10:00:00Z').toISOString();
+      const freshOutcome = { ...makePendingOutcome(), signal_created_at: signalCreatedAt };
+      signalRepo.getPendingOutcomes.mockResolvedValue([freshOutcome]);
+      await useCase.refreshPending();
+
+      const freshCandleTs = new Date('2026-08-20T10:01:00Z').getTime();
+      await useCase.handleCandleMessage({
+        type: 'candle',
+        tf: '1m',
+        symbol: 'BTCUSDT',
+        data: { ts: freshCandleTs, open: 1010, high: 1020, low: 1005, close: 1015 },
+      }, freshCandleTs + 5000);
+
+      expect(signalRepo.setSimEntry).toHaveBeenCalledOnce();
+    });
+
+    it('bayat mumda ana status/pnl_r akışı ETKİLENMEZ — sadece sim-entry atlanır', async () => {
+      const signalCreatedAt = new Date('2026-08-20T10:00:00Z').toISOString();
+      const staleOutcome = { ...makePendingOutcome(), signal_created_at: signalCreatedAt };
+      signalRepo.getPendingOutcomes.mockResolvedValue([staleOutcome]);
+      await useCase.refreshPending();
+
+      const bayatCandleTs = new Date('2026-08-20T10:01:00Z').getTime();
+      const now = new Date('2026-08-27T10:01:00Z').getTime();
+      await useCase.handleCandleMessage({
+        type: 'candle',
+        tf: '1m',
+        symbol: 'BTCUSDT',
+        // hedefe ulaşan mum — sim-entry bayat olsa da tp_hit çözümlenmeli
+        data: { ts: bayatCandleTs, open: 1100, high: 1150, low: 1090, close: 1140 },
+      }, now);
+
+      expect(signalRepo.setSimEntry).not.toHaveBeenCalled();
+      expect(signalRepo.resolveOutcome).toHaveBeenCalledWith('o1', expect.objectContaining({
+        status: 'tp_hit',
+        simPnlR: null, // sim-entry hiç yazılmadığı için simPnlR hesaplanamaz
+      }));
+    });
+  });
+
   it('handleCandleMessage: tie-break durumunda notes ve tieBreak resolveOutcome\'a geçer', async () => {
     await useCase.refreshPending();
     await useCase.handleCandleMessage({
