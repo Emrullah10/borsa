@@ -33,6 +33,37 @@ var olması uygulandığı anlamına GELMEZ — `db:migrate:up` script'i idempot
 
 <!-- Significant technical decisions with rationale. Why X was chosen over Y. -->
 
+**[2026-08-30] Faz 3 (AI'yı doğru role koy) uygulandı:**
+Kullanıcının istediği yapı: "AI'ın tahminleri + göstergeler + AI'ın onları okuması,
+ultra doğrulamalı, sahte veri yok." Doğru mimari (planla netleşti): birincil model
+confluence.js kural motoru ADAY üretir; ikincil katman (LightGBM) FİLTRELER, LLM
+sadece olay VETOSU verir — hiçbiri sinyal üretmez/yön söylemez.
+(1) ml-features.js: funding z-score, OI 1h delta, gerçekleşmiş volatilite, günün
+saati, BTC korelasyonu, S/R uzaklığı, likidite kademesi — indicatorsSnapshot.mlFeatures.
+Gerçekten mevcut olmayan veri (orderbook spread — hiç akmıyor) SESSİZCE 0 değil,
+açıkça null + _provenance etiketi ('computed'/'unavailable').
+(2) isMarketDataStale + dataQuality: funding/oi/lsr mesajlarının alınma zamanı
+takip ediliyor, bayatsa indicatorsSnapshot.dataQuality'de işaretleniyor.
+KULLANICI KARARI: bayat veri sinyal üretimini DURDURMAZ (candle'dan farklı),
+sadece kayıtta görünür — LSR/OI zaten aylarca çalışmıyordu, sistem yine işliyordu,
+tam durdurma çok yıkıcı olurdu (5dk poll aralığı + ağ gecikmesi normal).
+(3) services/service-ai/meta_label/: LightGBM ile P(win) tahmini. Etiket: TP mi
+SL'den önce (timeout/pending hariç — sızıntı riski). purged k-fold + embargo
+doğrulama (López de Prado yöntemi). train.py çalıştırılabilir CLI ama agent
+ortamında gerçek DB verisiyle ÇALIŞTIRILAMADI — kod 22 pytest ile doğrulandı.
+MİNİMUM VERİ UYARISI: günde 1-3 sinyalle 500-1000 örnek 6-12 ay sürer — Faz 1.5
+backtest sinyalleri asıl eğitim kaynağı olmalı.
+(4) POST /veto (event_veto.py): LLM'e SADECE "şu an işlem açmayı engelleyen bir
+olay var mı" soruluyor, yön/tahmin YASAK. Fail-open: LLM cevap veremezse
+approved=true confidence=0 — LLM tek nokta arıza olmamalı.
+(5) signals.ai_approved/ai_confidence/ai_reason kolonları (önceden hiç
+kullanılmıyordu) artık saveSignal ile yazılabiliyor, getStatsBreakdown'a
+ai_approved kırılımı eklendi — AI'nın faydası varsayılmayacak, ölçülecek.
+331→334 JS test + 42 Python test (yeni) yeşil.
+
+Faz 4 (karar kapısı — SONUÇLARI GÖRMEDEN taahhüt edilmişti) belgeleme aşamasında;
+kod tarafı (Faz 0-3) tamamlandı.
+
 **[2026-08-30] Faz 2 (maliyet yapısı) uygulandı:**
 LSR onarıldı (bitget-api'de doğru metot getFuturesActiveLongShortAccountData,
 doğru alan adları longAccountRatio/shortAccountRatio; boş catch{} kaldırıldı —

@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-08-30T06:40:06.579Z
-> Files: 584 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-08-30T06:59:18.405Z
+> Files: 599 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../.claude/plans/
 
@@ -169,6 +169,7 @@
 - `entry-filters.js` — Saf fonksiyon — DB/Redis bağımlılığı yok. (~427 tok)
 - `indicators.js` — Exports calcEMA, calcRSI, calcBollingerBands, calcATR + 6 more (~1587 tok)
 - `liquidation-pressure.js` — Exports calcLiquidationPressure (~572 tok)
+- `ml-features.js` — Faz 3.1 (feature logging): meta-etiketleyici (Faz 3.3, LightGBM) için (~1507 tok)
 - `regime.js` — BTC trendine göre piyasa rejimini hesaplar (~601 tok)
 - `setup-builder.js` — Eski: 1.5 → gürültü stopları 2dk'da tetikleniyordu. 2.5× ATR daha geniş stop = daha az noise kayıp. (~1160 tok)
 
@@ -184,6 +185,7 @@
 - `indicators.test.js` — Declares closes20 (~1726 tok)
 - `liquidation-pressure.test.js` — Declares result (~764 tok)
 - `make-process-candle.test.js` — noisy vs clean mum akışı ile indicatorsSnapshot değerlerini karşılaştırır (kapanmamış mum kirliliği düzeltmesinin regresyon testi) (~1200 tok)
+- `ml-features.test.js` — Faz 3.1 (feature logging): meta-etiketleyici (Faz 3.3) için indicators_snapshot'a (~1381 tok)
 - `regime.test.js` — Declares makeCandles (~630 tok)
 - `setup-builder.test.js` — --- applySRCap testleri (değişmedi) --- (~2688 tok)
 - `signal-repository.test.js` — Declares fakeRows (~2416 tok)
@@ -273,12 +275,15 @@
 
 ## services/service-ai/
 
+- `event_veto.py` — build_veto_prompt, parse_veto_response (~652 tok)
 - `main.py` — API: GET, POST (2 endpoints) (~260 tok)
 - `ollama_client.py` — generate (~171 tok)
 - `prompt.py` — build_prompt (~817 tok)
-- `requirements.txt` — Python dependencies (~21 tok)
+- `requirements.txt` — Python dependencies (~88 tok)
 - `test_analyze.py` — Tests: analyze_returns_comment_when_ollama_ok, analyze_returns_null_when_ollama_fails, health (~572 tok)
+- `test_event_veto.py` — Faz 3.4 (LLM'in tek görevi: olay vetosu). LLM SİNYAL ÜRETMEZ, yön SÖYLEMEZ — (~695 tok)
 - `test_prompt.py` — Tests: prompt_contains_symbol, prompt_contains_direction, prompt_contains_prices, prompt_contains_rsi + 3 more (~415 tok)
+- `test_veto_endpoint.py` — Faz 3.4: POST /veto — LLM'in TEK görevi olay vetosu. ai_approved/ai_confidence/ (~622 tok)
 
 ## services/service-ai/.pytest_cache/
 
@@ -842,6 +847,19 @@
 - `constants.py` (~44 tok)
 - `docs.py` — get_swagger_ui_html, get_redoc_html, get_swagger_ui_oauth2_redirect_html (~2959 tok)
 - `models.py` — Pydantic: BaseModelWithConfig (158 fields) (~4400 tok)
+
+## services/service-ai/meta_label/
+
+- `features.py` — extract_feature_vector (~603 tok)
+- `labeling.py` — build_label (~154 tok)
+- `model.py` — from: predict_win_probability (~256 tok)
+- `test_features.py` — Faz 3.3 (LightGBM meta-etiketleyici): indicators_snapshot (signals.indicators_snapshot, (~759 tok)
+- `test_labeling.py` — Faz 3.3: etiket ikili — TP mi SL'den önce geldi mi. Sadece status='tp_hit'/'sl_hit' (~203 tok)
+- `test_model.py` — Faz 3.3: inference katmanı. Gerçek bir eğitilmiş modelle P(win) tahmini üretir. (~448 tok)
+- `test_train.py` — FakeTs: timestamp, make_row, test_build_dataset_excludes_timeout_and_pending, test_build_dataset_han (~492 tok)
+- `test_validation.py` — Faz 3.3 (purged k-fold + embargo): finans zaman serilerinde sıradan k-fold sızıntı (~560 tok)
+- `train.py` — fetch_training_rows, build_dataset, train_with_purged_cv, main (~1781 tok)
+- `validation.py` — purged_kfold_splits (~468 tok)
 
 ## services/service-backtest/
 

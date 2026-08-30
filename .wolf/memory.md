@@ -2504,3 +2504,43 @@ istatistiklerin ne kadarının kirli olduğu, sweep hiç çalıştırılmadı.
 | 11:20 | Faz 2.4: calcMetricsByDirection (LONG/SHORT ayrı ölçüm) | core/service-backtest/src/domain/reporter.js | 3 test yeşil | ~1500 |
 | 11:25 | Faz 2.5: cooldownMs parametrik, sweep.js TF×entryMode dış döngüsü | run-strategy.js, services/service-backtest/src/sweep.js | 1 test yeşil, sweep syntax OK | ~4000 |
 | 11:28 | buglog.json'a bug-170..172 eklendi | .wolf/buglog.json | 172 bug kayıtlı | ~1500 |
+| 09:49 | Created core/service-signal-engine/test/unit/ml-features.test.js | — | ~1381 |
+| 09:49 | Created core/service-signal-engine/test/unit/ml-features.test.js | — | ~1381 |
+| 09:50 | Created core/service-signal-engine/src/domain/ml-features.js | — | ~1507 |
+| 09:50 | Created core/service-signal-engine/src/domain/ml-features.js | — | ~1507 |
+| 09:54 | Created services/service-ai/requirements.txt | — | ~88 |
+| 09:54 | Created services/service-ai/requirements.txt | — | ~88 |
+| 09:54 | Created services/service-ai/meta_label/test_features.py | — | ~759 |
+| 09:54 | Created services/service-ai/meta_label/test_features.py | — | ~759 |
+| 09:55 | Created services/service-ai/meta_label/features.py | — | ~603 |
+| 09:55 | Created services/service-ai/meta_label/features.py | — | ~603 |
+| 09:55 | Created services/service-ai/meta_label/test_labeling.py | — | ~203 |
+| 09:55 | Created services/service-ai/meta_label/test_labeling.py | — | ~203 |
+| 09:55 | Created services/service-ai/meta_label/labeling.py | — | ~154 |
+| 09:55 | Created services/service-ai/meta_label/labeling.py | — | ~154 |
+| 09:55 | Created services/service-ai/meta_label/test_validation.py | — | ~560 |
+| 09:55 | Created services/service-ai/meta_label/test_validation.py | — | ~560 |
+| 09:55 | Created services/service-ai/meta_label/validation.py | — | ~468 |
+| 09:55 | Created services/service-ai/meta_label/validation.py | — | ~468 |
+| 09:56 | Created services/service-ai/meta_label/test_model.py | — | ~448 |
+| 09:56 | Created services/service-ai/meta_label/test_model.py | — | ~448 |
+| 09:56 | Created services/service-ai/meta_label/model.py | — | ~256 |
+| 09:56 | Created services/service-ai/meta_label/model.py | — | ~256 |
+| 09:57 | Created services/service-ai/requirements.txt | — | ~94 |
+| 09:57 | Created services/service-ai/requirements.txt | — | ~94 |
+| 09:57 | Created services/service-ai/meta_label/train.py | — | ~1781 |
+| 09:57 | Created services/service-ai/meta_label/train.py | — | ~1781 |
+| 09:57 | Created services/service-ai/meta_label/test_train.py | — | ~492 |
+| 09:57 | Created services/service-ai/meta_label/test_train.py | — | ~492 |
+| 09:58 | Created services/service-ai/test_event_veto.py | — | ~695 |
+| 09:58 | Created services/service-ai/test_event_veto.py | — | ~695 |
+| 09:58 | Created services/service-ai/event_veto.py | — | ~652 |
+| 09:58 | Created services/service-ai/event_veto.py | — | ~652 |
+| 09:59 | Created services/service-ai/test_veto_endpoint.py | — | ~622 |
+| 09:59 | Created services/service-ai/test_veto_endpoint.py | — | ~622 |
+| 11:35 | Faz 3.1: calcMlFeatures (funding z-score, OI 1h, realized vol, saat, BTC korr, S/R uzaklık, likidite kademesi) — indicatorsSnapshot'a mlFeatures eklendi | ml-features.js, make-process-candle.js | 14+1 test yeşil | ~6000 |
+| 11:45 | Faz 3.2: isMarketDataStale — funding/oi/lsr için dataQuality işaretleme (sinyal durmuyor, sadece işaretleniyor — kullanıcı kararı) | staleness.js, make-process-candle.js | 4+4 test yeşil | ~4000 |
+| 12:10 | Faz 3.3: LightGBM meta-etiketleyici (features/labeling/validation/model/train.py) — purged k-fold+embargo, fail-safe eğitim CLI | services/service-ai/meta_label/ | 22 pytest yeşil (lightgbm+sklearn+pandas kuruldu) | ~9000 |
+| 12:25 | Faz 3.4: LLM olay vetosu (event_veto.py, POST /veto, fail-open) — ai_approved/confidence/reason kolonları nihayet kullanılabilir | services/service-ai/event_veto.py, main.py | 13 pytest yeşil | ~4000 |
+| 12:32 | Faz 3.5: saveSignal AI alanlarını yazabiliyor, getStatsBreakdown ai_approved kırılımı | signal-repository.js | 30 test yeşil | ~2000 |
+| 12:34 | buglog.json'a bug-173 eklendi | .wolf/buglog.json | 173 bug kayıtlı | ~1000 |

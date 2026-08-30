@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { makeProcessCandle } from '../../src/application/use-cases/make-process-candle.js';
 
 // Yeterince uzun, dalgalı bir seri — ADX/RSI/BB gibi göstergelerin non-null
@@ -113,6 +113,94 @@ describe('makeProcessCandle — OI 1 saatlik pencere (Faz 2.1, B9 düzeltmesi)',
     } finally {
       vi.useRealTimers();
     }
+  });
+});
+
+describe('makeProcessCandle — veri kalitesi işaretleme (Faz 3.2, B7/B8 tekrarını önleme)', () => {
+  let deps;
+  let processCandle;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    deps = makeDeps();
+    processCandle = makeProcessCandle(deps);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('funding/oi/lsr HİÇ gelmemişse (receivedAt yok) dataQuality hepsini "stale" işaretler — sessizce nötr değil', async () => {
+    const candles = makeClosedCandles(80);
+    await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+
+    expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+    const snap = deps.signalRepo.saveSignal.mock.calls[0][0].indicatorsSnapshot;
+    expect(snap.dataQuality).toBeDefined();
+    expect(snap.dataQuality.funding).toBe('stale');
+    expect(snap.dataQuality.oi).toBe('stale');
+    expect(snap.dataQuality.lsr).toBe('stale');
+  });
+
+  it('funding TAZE gelmişse dataQuality.funding "fresh" olur', async () => {
+    await processCandle.handleMessage('md.TESTUSDT.funding', {
+      type: 'funding', symbol: 'TESTUSDT', data: { rate: 0.0001, nextTs: 0 },
+    });
+    const candles = makeClosedCandles(80);
+    await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+
+    expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+    const snap = deps.signalRepo.saveSignal.mock.calls[0][0].indicatorsSnapshot;
+    expect(snap.dataQuality.funding).toBe('fresh');
+  });
+
+  it('funding geldikten ÇOK sonra (MAX_MARKET_DATA_AGE_MS üstü) sinyal üretilirse "stale" olur', async () => {
+    await processCandle.handleMessage('md.TESTUSDT.funding', {
+      type: 'funding', symbol: 'TESTUSDT', data: { rate: 0.0001, nextTs: 0 },
+    });
+    vi.advanceTimersByTime(20 * 60 * 1000); // 20dk sonra — 15dk eşiğinin üstünde
+
+    const candles = makeClosedCandles(80);
+    await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+
+    expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+    const snap = deps.signalRepo.saveSignal.mock.calls[0][0].indicatorsSnapshot;
+    expect(snap.dataQuality.funding).toBe('stale');
+  });
+
+  it('veri bayat olsa bile sinyal üretimi DURMAZ — sadece işaretlenir (kullanıcı kararı: durdurma)', async () => {
+    // Hiçbir funding/oi/lsr mesajı gönderilmedi — hepsi stale olacak
+    const candles = makeClosedCandles(80);
+    await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+    expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+  });
+});
+
+describe('makeProcessCandle — mlFeatures entegrasyonu (Faz 3.1)', () => {
+  let deps;
+  let processCandle;
+
+  beforeEach(() => {
+    deps = makeDeps();
+    processCandle = makeProcessCandle(deps);
+  });
+
+  it('kaydedilen sinyalin indicatorsSnapshot\'ında mlFeatures alanı vardır', async () => {
+    const candles = makeClosedCandles(80);
+    await feedClosedCandles(processCandle, candles, 'TESTUSDT');
+
+    expect(deps.signalRepo.saveSignal.mock.calls.length).toBeGreaterThan(0);
+    const snap = deps.signalRepo.saveSignal.mock.calls[0][0].indicatorsSnapshot;
+    expect(snap.mlFeatures).toBeDefined();
+    expect(snap.mlFeatures._provenance).toBeDefined();
+    // Bu buffer mimarisinde BTC korelasyonu/likidite kademesi/spread henüz
+    // beslenmiyor — açıkça null olmalı, sessizce uydurulmuş bir değer DEĞİL.
+    expect(snap.mlFeatures.spreadPct).toBeNull();
+    expect(snap.mlFeatures.liquidityTier).toBeNull();
+    expect(snap.mlFeatures.btcCorrelation).toBeNull();
+    // Ama gerçekten hesaplanabilenler dolu olmalı
+    expect(snap.mlFeatures.realizedVolatility).not.toBeNull();
+    expect(snap.mlFeatures.hourOfDayUtc).not.toBeNull();
   });
 });
 

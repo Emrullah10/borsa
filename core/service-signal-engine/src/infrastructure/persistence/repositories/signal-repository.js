@@ -5,6 +5,10 @@ const BREAKDOWN_GROUP_EXPR = {
   tf: 's.trigger_timeframe',
   direction: 's.direction',
   hour: 'EXTRACT(HOUR FROM s.created_at)',
+  // Faz 3.5 (AI kapısı ölçümü): ai_approved=NULL (AI vetosu hiç çalışmadı/kapalıydı)
+  // ile true/false (AI çalıştı, onayladı/reddetti) sonuçlarını ayrı raporlar —
+  // AI'nın gerçek faydası varsayılmaz, sweep/canlı veriyle ÖLÇÜLÜR.
+  ai_approved: "COALESCE(s.ai_approved::text, 'not_evaluated')",
 };
 
 export function makeSignalRepository({ db, takerFee = 0.0006, feeRoundtrip } = {}) {
@@ -17,13 +21,16 @@ export function makeSignalRepository({ db, takerFee = 0.0006, feeRoundtrip } = {
     symbol, direction, triggerTimeframe, entryPrice, stopPrice, targetPrice,
     rrRatio, confluenceScore, indicatorsSnapshot, liqPressureScore, liqDirection,
     regime, higherTfTrend,
+    // Faz 3.5 (AI kapısı ölçümü): event_veto.py'nin (Faz 3.4) çıktısı — opsiyonel,
+    // verilmezse null (AI vetosu şu an sinyal yolunda ZORUNLU değil, ölçüm amaçlı).
+    aiApproved, aiConfidence, aiReason,
   }) {
     const sql = `
       INSERT INTO signals (
         symbol, direction, trigger_timeframe, entry_price, stop_price, target_price,
         rr_ratio, confluence_score, indicators_snapshot, liq_pressure_score, liq_direction,
-        regime, higher_tf_trend
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+        regime, higher_tf_trend, ai_approved, ai_confidence, ai_reason
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
       RETURNING id, created_at
     `;
     const values = [
@@ -35,6 +42,9 @@ export function makeSignalRepository({ db, takerFee = 0.0006, feeRoundtrip } = {
       liqDirection ?? null,
       regime ?? null,
       higherTfTrend ?? null,
+      aiApproved ?? null,
+      aiConfidence ?? null,
+      aiReason ?? null,
     ];
     const result = await db.query(sql, values);
     return result.rows[0];

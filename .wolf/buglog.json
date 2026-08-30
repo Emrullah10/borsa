@@ -2827,6 +2827,22 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-08-30T09:48:00Z"
+    },
+    {
+      "id": "bug-173",
+      "timestamp": "2026-08-30T10:15:00Z",
+      "error_message": "signals.ai_approved/ai_confidence/ai_reason kolonları vardı ama hiçbir kod yazmıyordu — AI tamamen dekoratifti, sinyal üretim yoluna dahil değildi",
+      "file": "services/service-ai/main.py",
+      "root_cause": "AI servisi sadece POST /analyze ile açıklayıcı Türkçe metin üretiyordu, kullanıcı karta tıklayınca çağrılıyordu — sinyal DB'ye yazıldıktan SONRA, karara hiç katkısı yoktu.",
+      "fix": "POST /veto endpoint'i eklendi (event_veto.py): LLM sinyal üretmiyor/yön söylemiyor, sadece 'işlem açmayı engelleyen güncel bir olay var mı' sorusuna cevap veriyor (borsa kesintisi, unlock, hack, makro takvim). Fail-open tasarım: LLM cevap veremezse approved=true, confidence=0. saveSignal artık aiApproved/aiConfidence/aiReason'ı ai_approved/ai_confidence/ai_reason kolonlarına yazabiliyor (opsiyonel). getStatsBreakdown'a ai_approved kırılımı eklendi — AI'nın gerçek faydası ölçülecek, varsayılmayacak.",
+      "tags": [
+        "ai-architecture",
+        "dead-column",
+        "faz-3"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-30T10:15:00Z"
     }
   ]
 }

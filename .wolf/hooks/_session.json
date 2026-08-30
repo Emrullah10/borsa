@@ -223,6 +223,108 @@
       "action": "create",
       "tokens": 1013,
       "at": "2026-08-30T06:40:06.588Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/test/unit/ml-features.test.js",
+      "action": "create",
+      "tokens": 1381,
+      "at": "2026-08-30T06:49:37.976Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/core/service-signal-engine/src/domain/ml-features.js",
+      "action": "create",
+      "tokens": 1507,
+      "at": "2026-08-30T06:50:12.921Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/requirements.txt",
+      "action": "create",
+      "tokens": 94,
+      "at": "2026-08-30T06:54:32.923Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/meta_label/test_features.py",
+      "action": "create",
+      "tokens": 759,
+      "at": "2026-08-30T06:54:52.384Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/meta_label/features.py",
+      "action": "create",
+      "tokens": 603,
+      "at": "2026-08-30T06:55:08.009Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/meta_label/test_labeling.py",
+      "action": "create",
+      "tokens": 203,
+      "at": "2026-08-30T06:55:18.270Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/meta_label/labeling.py",
+      "action": "create",
+      "tokens": 154,
+      "at": "2026-08-30T06:55:26.763Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/meta_label/test_validation.py",
+      "action": "create",
+      "tokens": 560,
+      "at": "2026-08-30T06:55:42.324Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/meta_label/validation.py",
+      "action": "create",
+      "tokens": 468,
+      "at": "2026-08-30T06:55:56.553Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/meta_label/test_model.py",
+      "action": "create",
+      "tokens": 448,
+      "at": "2026-08-30T06:56:10.132Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/meta_label/model.py",
+      "action": "create",
+      "tokens": 256,
+      "at": "2026-08-30T06:56:50.104Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/requirements.txt",
+      "action": "create",
+      "tokens": 101,
+      "at": "2026-08-30T06:57:05.774Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/meta_label/train.py",
+      "action": "create",
+      "tokens": 1781,
+      "at": "2026-08-30T06:57:32.256Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/meta_label/test_train.py",
+      "action": "create",
+      "tokens": 492,
+      "at": "2026-08-30T06:57:45.080Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/test_event_veto.py",
+      "action": "create",
+      "tokens": 695,
+      "at": "2026-08-30T06:58:24.820Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/event_veto.py",
+      "action": "create",
+      "tokens": 652,
+      "at": "2026-08-30T06:58:46.153Z"
+    },
+    {
+      "file": "/Users/emrullah/developer/fullStack/borsa/services/service-ai/test_veto_endpoint.py",
+      "action": "create",
+      "tokens": 622,
+      "at": "2026-08-30T06:59:18.413Z"
     }
   ],
   "edit_counts": {
@@ -234,7 +336,23 @@
     "package.json": 1,
     "core/service-backtest/test/unit/cached-fetcher.test.js": 1,
     "core/service-backtest/src/infrastructure/cached-fetcher.js": 1,
-    "services/service-market-data/test/unit/bitget-ws.test.js": 1
+    "services/service-market-data/test/unit/bitget-ws.test.js": 1,
+    "core/service-signal-engine/test/unit/ml-features.test.js": 1,
+    "core/service-signal-engine/src/domain/ml-features.js": 1,
+    "services/service-ai/requirements.txt": 2,
+    "services/service-ai/meta_label/test_features.py": 1,
+    "services/service-ai/meta_label/features.py": 1,
+    "services/service-ai/meta_label/test_labeling.py": 1,
+    "services/service-ai/meta_label/labeling.py": 1,
+    "services/service-ai/meta_label/test_validation.py": 1,
+    "services/service-ai/meta_label/validation.py": 1,
+    "services/service-ai/meta_label/test_model.py": 1,
+    "services/service-ai/meta_label/model.py": 1,
+    "services/service-ai/meta_label/train.py": 1,
+    "services/service-ai/meta_label/test_train.py": 1,
+    "services/service-ai/test_event_veto.py": 1,
+    "services/service-ai/event_veto.py": 1,
+    "services/service-ai/test_veto_endpoint.py": 1
   },
   "anatomy_hits": 23,
   "anatomy_misses": 7,
