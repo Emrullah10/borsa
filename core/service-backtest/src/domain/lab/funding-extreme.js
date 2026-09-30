@@ -22,12 +22,16 @@ export function fundingZScores(series, { window = 90, minPeriods = 30 } = {}) {
 // minAbsRate: küçük mutlak oranlardaki (0.02%/8s altı) istatistiksel-ama-ekonomik-olmayan
 // uçları eler. Not: 1s/4s funding aralıklı kontratlarda oranlar küçük olduğundan bu eşik
 // onları daha az yakalar — raporda belirtilir.
-export function detectFundingExtremes(series, { window = 90, zThreshold, minAbsRate = 0.0002, minPeriods = 30 } = {}) {
+export function signalsFromZScores(zScores, { zThreshold, minAbsRate = 0.0002 }) {
   const signals = [];
-  for (const p of fundingZScores(series, { window, minPeriods })) {
+  for (const p of zScores) {
     if (Math.abs(p.rate) < minAbsRate) continue;
     if (p.z >= zThreshold && p.rate > 0) signals.push({ timestamp: p.timestamp, direction: 'short', rate: p.rate, z: p.z });
     else if (p.z <= -zThreshold && p.rate < 0) signals.push({ timestamp: p.timestamp, direction: 'long', rate: p.rate, z: p.z });
   }
   return signals;
+}
+
+export function detectFundingExtremes(series, { window = 90, zThreshold, minAbsRate = 0.0002, minPeriods = 30 } = {}) {
+  return signalsFromZScores(fundingZScores(series, { window, minPeriods }), { zThreshold, minAbsRate });
 }

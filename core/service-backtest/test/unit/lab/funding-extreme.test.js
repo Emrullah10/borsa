@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fundingZScores, detectFundingExtremes } from '../../../src/domain/lab/funding-extreme.js';
+import { fundingZScores, detectFundingExtremes, signalsFromZScores } from '../../../src/domain/lab/funding-extreme.js';
 
 const H8 = 8 * 3_600_000;
 // Hafif dalgalanan taban seri: ortalama ~0.0001, std ~0.00002
@@ -69,5 +69,14 @@ describe('detectFundingExtremes', () => {
     const c2 = detectFundingExtremes(s, { zThreshold: 2, minAbsRate: 0 }).length;
     const c3 = detectFundingExtremes(s, { zThreshold: 3, minAbsRate: 0 }).length;
     expect(c3).toBeLessThanOrEqual(c2);
+  });
+});
+
+describe('signalsFromZScores (z\'ler bir kez hesaplanır, eşikler grid\'de değişir)', () => {
+  it('detectFundingExtremes ile birebir aynı sinyalleri üretir', () => {
+    const s = [...base(60), { timestamp: 60 * H8, rate: 0.001 }, { timestamp: 61 * H8, rate: -0.0012 }];
+    const z = fundingZScores(s, { window: 90, minPeriods: 30 });
+    expect(signalsFromZScores(z, { zThreshold: 2, minAbsRate: 0.0002 }))
+      .toEqual(detectFundingExtremes(s, { zThreshold: 2, minAbsRate: 0.0002 }));
   });
 });
