@@ -31,6 +31,11 @@ Evren: 24s hacmi ≥ $5M olan perp'ler (bugün ~89). Üç aday kural:
   **2026-01 → 2026-09 nihai sınav** (sadece seçilen aday, TEK kez açılır)
 - **Geçme şartı (nihai sınav):** fee + kayma + funding sonrası ort. R'nin %95 CI alt sınırı > 0;
   maliyetler 2× iken de > 0; Tip 1 için n ≥ 100.
+- **Dayanıklılık kuralı (holdout'a BAKMADAN eklendi — 2026-09-30):** ilk tam koşuda (yalnız train+doğrulama) Tip 1'in
+  doğrulama kârı tek bir +49.95R işlemdi (toplam R'nin %48'i, medyan −0.61R), F3'ünki en iyi 5 günündeydi. Ortalama > 0 bunu
+  yakalamıyor. Kural: **en iyi %2.5 gözlem çıkarılınca ortalama hâlâ > 0** — hem doğrulama kapısında (holdout'un tek bakışı
+  piyangoya harcanmasın) hem holdout kararında. Yalnız daha muhafazakâr yönde bir ekleme; sonuç görülmeden önce yapıldı.
+  Ayrıca Tip 1 güven aralığı işlemleri bağımsız saymak yerine **haftalık küme bootstrap** ile hesaplanır (işlemler zamanda kümelenir).
 - **Sahte-pozitif kontrolü (iki ayrı taban çizgisi — uygulama sırasında sentetik testle ayrıştırıldı):**
   1. *Sınav sağlamlığı:* rastgele **zaman + yön** sinyalleri (Tip 2: rastgele sepet). Bunun kaybetmesi gerekir;
      kazanıyorsa sınav bozuktur, sonuçlar geçersiz.

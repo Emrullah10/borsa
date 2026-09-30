@@ -83,3 +83,45 @@ export function percentileRank(value, sample) {
   for (const s of sample) { if (s < value) below++; else if (s === value) equal++; }
   return (below + 0.5 * equal) / sample.length;
 }
+
+// Kâr birkaç uç gözleme mi bağlı? En iyi ceil(f×n) gözlemi (en az 1) çıkarıp kalanın ortalaması.
+// Ortalama > 0 ama bu ≤ 0 ise "kâr" bir piyango biletidir. (Teşhis 2026-09-30: Tip 1'in doğrulama
+// kârı tek bir +49.95R işlemdi; F3'ün kârı en iyi 5 günündeydi.)
+export function trimBestMean(values, fraction = 0.025) {
+  if (values.length < 2) return 0;
+  const drop = Math.max(1, Math.ceil(fraction * values.length));
+  if (drop >= values.length) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  return mean(sorted.slice(0, sorted.length - drop));
+}
+
+// Küme bootstrap: gözlemler kümeler halinde (ör. aynı hafta) birlikte örneklenir. Tip 1 işlemleri
+// zamanda kümelenir (piyasa çapında funding uçları aynı hafta çok coini tetikler); işlemleri
+// bağımsız sayan aralık fazla dar çıkar.
+export function clusterBootstrapMeanCI(values, keys, { level = 0.95, iterations = 2000, seed = 1 } = {}) {
+  if (!values.length) return null;
+  const groups = new Map();
+  values.forEach((v, i) => {
+    const g = groups.get(keys[i]) ?? { sum: 0, n: 0 };
+    g.sum += v; g.n += 1; groups.set(keys[i], g);
+  });
+  const clusters = [...groups.values()];
+  const rand = mulberry32(seed);
+  const means = new Float64Array(iterations);
+  for (let it = 0; it < iterations; it++) {
+    let sum = 0; let count = 0;
+    for (let c = 0; c < clusters.length; c++) {
+      const pick = clusters[Math.floor(rand() * clusters.length)];
+      sum += pick.sum; count += pick.n;
+    }
+    means[it] = sum / count;
+  }
+  means.sort();
+  const alpha = (1 - level) / 2;
+  return {
+    mean: mean(values),
+    low: means[Math.min(iterations - 1, Math.floor(alpha * iterations))],
+    high: means[Math.min(iterations - 1, Math.max(0, Math.ceil((1 - alpha) * iterations) - 1))],
+    n: values.length,
+  };
+}

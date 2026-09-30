@@ -6,7 +6,7 @@
 //   4. holdout (yalnız kapı geçtiyse + --open-holdout + kilit izin verirse):
 //      Bonferroni CI alt sınırı > 0, maliyet ×2 > 0, rastgele %95'i geç, (Tip 1) n ≥ 100
 import { PERIODS } from './periods.js';
-import { blockBootstrapMeanCI, mean, sharpeAnnualized, percentileRank } from './stats.js';
+import { blockBootstrapMeanCI, clusterBootstrapMeanCI, trimBestMean, mean, sharpeAnnualized, percentileRank } from './stats.js';
 import { RULES, judgeValidation, judgeHoldout, assessExamSanity } from './verdict.js';
 import { runBasket } from './basket-portfolio.js';
 import { makeRandom, DAY } from './basket-factors.js';
@@ -28,14 +28,20 @@ function sanityFrom(randomMeans) {
   return assessExamSanity({ randomMeanCI: blockBootstrapMeanCI(randomMeans, { level: 0.95, iterations: 1000, seed: 1 }) });
 }
 
-// Ortak: holdout değerlendirmesi (Tip 1 ve Tip 2 aynı kuralla).
-function evaluateHoldout({ tip, values, blockSize, stressMean, randomMeans, R }) {
-  const ci = blockBootstrapMeanCI(values, { level: R.ciLevel, blockSize, iterations: R.bootstrapIterations, seed: 42 });
+// Ortak: holdout değerlendirmesi (Tip 1 ve Tip 2 aynı kuralla). clusterKeys verilirse (Tip 1: hafta)
+// küme bootstrap, aksi halde blok bootstrap (Tip 2: 5 günlük blok).
+function evaluateHoldout({ tip, values, blockSize, clusterKeys = null, stressMean, randomMeans, R }) {
+  const ci = clusterKeys
+    ? clusterBootstrapMeanCI(values, clusterKeys, { level: R.ciLevel, iterations: R.bootstrapIterations, seed: 42 })
+    : blockBootstrapMeanCI(values, { level: R.ciLevel, blockSize, iterations: R.bootstrapIterations, seed: 42 });
   if (!ci) return { verdict: skipped('Holdout döneminde işlem/gün yok.'), holdout: null };
   const randomPercentile = percentileRank(ci.mean, randomMeans);
-  const verdict = judgeHoldout({ tip, ci, stressMean, randomPercentile, nTrades: values.length });
-  return { verdict, holdout: { mean: ci.mean, ciLow: ci.low, ciHigh: ci.high, n: values.length, stressMean, randomPercentile } };
+  const trimmedMean = trimBestMean(values, R.trimFraction);
+  const verdict = judgeHoldout({ tip, ci, stressMean, randomPercentile, nTrades: values.length, trimmedMean });
+  return { verdict, holdout: { mean: ci.mean, ciLow: ci.low, ciHigh: ci.high, n: values.length, stressMean, randomPercentile, trimmedMean } };
 }
+
+const WEEK_MS = 7 * 86_400_000;
 
 /**
  * Tip 2 — günlük sepet ailesi (F1/F2/F3).
@@ -56,7 +62,7 @@ export function runTip2Family({ key, title, configs, seriesList, fundingForDay, 
 
   // 2) doğrulama
   const valNets = run(best.cfg, PERIODS.validation);
-  const validation = { mean: mean(valNets), n: valNets.length };
+  const validation = { mean: mean(valNets), trimmedMean: trimBestMean(valNets, R.trimFraction), n: valNets.length };
   const gate = judgeValidation(validation);
 
   // 3) sınav sağlamlığı (train)
@@ -124,7 +130,8 @@ export function runTip1Family({ symbolsData, grid, lock, openHoldout, force = fa
 
   // 2) doğrulama
   const valTrades = trades(best.combo, PERIODS.validation.start, PERIODS.validation.end);
-  const validation = { mean: rMeans(valTrades), n: valTrades.length };
+  const valR = valTrades.map((t) => t.r);
+  const validation = { mean: mean(valR), trimmedMean: trimBestMean(valR, R.trimFraction), n: valTrades.length };
   const gate = judgeValidation(validation);
 
   // 3) sınav sağlamlığı (train'de rastgele yön)
@@ -141,6 +148,6 @@ export function runTip1Family({ symbolsData, grid, lock, openHoldout, force = fa
   const hTrades = trades(best.combo, PERIODS.holdout.start, PERIODS.holdout.end);
   const stressMean = rMeans(trades(best.combo, PERIODS.holdout.start, PERIODS.holdout.end, { costMultiplier: R.costStressMultiplier }));
   const randomMeans = Array.from({ length: R.randomTrials }, (_, i) => rMeans(trades(best.combo, PERIODS.holdout.start, PERIODS.holdout.end, { randomSeed: 5000 + i })));
-  const { verdict, holdout } = evaluateHoldout({ tip: 'tip1', values: hTrades.map((t) => t.r), blockSize: 1, stressMean, randomMeans, R });
+  const { verdict, holdout } = evaluateHoldout({ tip: 'tip1', values: hTrades.map((t) => t.r), clusterKeys: hTrades.map((t) => Math.floor(t.timestamp / WEEK_MS)), stressMean, randomMeans, R });
   return { ...result, holdout, verdict: { ...verdict, dirty: lk.dirty } };
 }

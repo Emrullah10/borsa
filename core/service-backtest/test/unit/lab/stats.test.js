@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   mulberry32, mean, std, sharpeAnnualized, maxDrawdown, blockBootstrapMeanCI, percentileRank,
+  trimBestMean, clusterBootstrapMeanCI,
 } from '../../../src/domain/lab/stats.js';
 
 describe('mulberry32 (seed\'li RNG — sonuçlar tekrarlanabilir olmalı)', () => {
@@ -80,4 +81,45 @@ describe('percentileRank', () => {
   it('hepsinden küçükse 0', () => expect(percentileRank(0, [1, 2, 3])).toBe(0));
   it('eşitler yarım sayılır', () => expect(percentileRank(2, [1, 2, 2, 3])).toBe(0.5));
   it('boş örnek → NaN değil 0', () => expect(percentileRank(1, [])).toBe(0));
+});
+
+// Doğrulama teşhisi (2026-09-30): Tip 1'in doğrulama kârı TEK bir +49.95R işlemdi (toplam R'nin %48'i),
+// F3'ün kârı en iyi 5 günündeydi. Ortalama tek başına bunu yakalamaz.
+describe('trimBestMean (kâr birkaç uç gözleme mi bağlı?)', () => {
+  it('en iyi ceil(f×n) gözlemi çıkarıp kalanın ortalamasını alır', () => {
+    expect(trimBestMean([1, 1, 1, 1, 1, 1, 1, 1, 1, 100], 0.1)).toBe(1);
+  });
+  it('n küçükken bile en az 1 gözlem çıkarır', () => expect(trimBestMean([5, 1, 1], 0.025)).toBe(1));
+  it('tek dev gözlemin taşıdığı seri: ortalama > 0 ama kırpılmış ≤ 0', () => {
+    const xs = [...Array(99).fill(-1), 200];
+    expect(mean(xs)).toBeGreaterThan(0);
+    expect(trimBestMean(xs, 0.025)).toBeLessThanOrEqual(0);
+  });
+  it('gerçekten dağınık kâr (her gün küçük +) kırpılınca da pozitif kalır', () => {
+    expect(trimBestMean(Array(200).fill(0.01), 0.025)).toBeCloseTo(0.01, 10);
+  });
+  it('boş / tek elemanlı → 0 (NaN değil), girdiyi değiştirmez', () => {
+    expect(trimBestMean([], 0.025)).toBe(0); expect(trimBestMean([5], 0.025)).toBe(0);
+    const a = [3, 1, 2]; trimBestMean(a, 0.5); expect(a).toEqual([3, 1, 2]);
+  });
+});
+
+// Tip 1 işlemleri zamanda kümelenir (piyasa çapında funding uçları aynı hafta çok coini tetikler);
+// işlemleri bağımsız sayan aralık fazla dar olur. Küme = hafta.
+describe('clusterBootstrapMeanCI', () => {
+  const keys = []; const vals = [];
+  for (let c = 0; c < 40; c++) for (let j = 0; j < 5; j++) { keys.push(c); vals.push((c % 2 === 0 ? 1 : -1) + j * 0.01); }
+
+  it('boş → null', () => expect(clusterBootstrapMeanCI([], [])).toBeNull());
+  it('ortalama tüm değerlerin ortalamasıdır, aynı seed aynı sonuç', () => {
+    const a = clusterBootstrapMeanCI(vals, keys, { seed: 3 });
+    expect(a.mean).toBeCloseTo(mean(vals), 10);
+    expect(a).toEqual(clusterBootstrapMeanCI(vals, keys, { seed: 3 }));
+  });
+  it('kümelenmiş veride, işlemleri bağımsız sayan bootstrap\'ten daha GENİŞ aralık verir', () => {
+    const cl = clusterBootstrapMeanCI(vals, keys, { seed: 5, iterations: 3000 });
+    const iid = blockBootstrapMeanCI(vals, { blockSize: 1, seed: 5, iterations: 3000 });
+    expect(cl.high - cl.low).toBeGreaterThan(2 * (iid.high - iid.low));
+  });
+  it('tek küme → çökmez', () => expect(clusterBootstrapMeanCI([1, 2, 3], ['a', 'a', 'a'])).not.toBeNull());
 });

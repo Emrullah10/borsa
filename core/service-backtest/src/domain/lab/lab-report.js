@@ -32,7 +32,7 @@ export function buildReport({ generatedAt, coverage, holdoutOpened, families }) 
     L.push(`### ${fam.title} — ${tag}`);
     L.push(`- Seçilen ayar (train'de): ${fam.config}`);
     L.push(`- Train: ortalama ${f(fam.train?.mean)} (n=${fam.train?.n ?? 0})`);
-    L.push(`- Doğrulama: ortalama ${f(fam.validation?.mean)} (n=${fam.validation?.n ?? 0})`);
+    L.push(`- Doğrulama: ortalama ${f(fam.validation?.mean)}, en iyi %2.5 çıkarılınca ${f(fam.validation?.trimmedMean)} (n=${fam.validation?.n ?? 0})`);
     if (v.skipped) {
       L.push(`- ${v.reason}`);
     } else if (fam.holdout) {

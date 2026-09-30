@@ -11,20 +11,27 @@ export const RULES = Object.freeze({
   randomPercentileMin: 0.95,
   bootstrapIterations: 4000,
   basketBlockDays: 5,
+  // Dayanıklılık (2026-09-30, holdout'a BAKMADAN, train/doğrulama teşhisiyle eklendi; yalnız daha
+  // muhafazakâr yönde): en iyi %2.5 gözlem çıkarılınca ortalama hâlâ > 0 olmalı.
+  trimFraction: 0.025,
 });
 
 const f = (x, d = 4) => (Number.isFinite(x) ? x.toFixed(d) : '—');
 
-// Doğrulama kapısı: seçilen aday doğrulama döneminde ≤ 0 ise holdout hiç AÇILMAZ.
-export function judgeValidation({ mean, n }) {
+// Doğrulama kapısı: seçilen aday doğrulamada ≤ 0 ise VEYA kârı birkaç uç gözleme bağlıysa
+// (en iyi %2.5 çıkarılınca ≤ 0) holdout hiç AÇILMAZ — tek bakışı piyangoya harcama.
+export function judgeValidation({ mean, trimmedMean, n }) {
   if (!n || !(mean > 0)) {
     return { passed: false, reason: `Doğrulama döneminde ortalama ${f(mean)} (n=${n ?? 0}) ≤ 0 — holdout AÇILMADI.` };
   }
-  return { passed: true, reason: `Doğrulama ortalaması ${f(mean)} > 0 (n=${n}) — holdout açılabilir.` };
+  if (!(trimmedMean > 0)) {
+    return { passed: false, reason: `Doğrulama ortalaması ${f(mean)} > 0 ama en iyi %${RULES.trimFraction * 100} gözlem çıkarılınca ${f(trimmedMean)} ≤ 0: kâr birkaç uç işleme/güne bağlı (piyango) — holdout AÇILMADI.` };
+  }
+  return { passed: true, reason: `Doğrulama ortalaması ${f(mean)} > 0 (n=${n}), en iyi %${RULES.trimFraction * 100} çıkarılınca da ${f(trimmedMean)} > 0 — holdout açılabilir.` };
 }
 
 // Nihai sınav (holdout): dört koşulun HEPSİ sağlanmalı.
-export function judgeHoldout({ tip, ci, stressMean, randomPercentile, nTrades }) {
+export function judgeHoldout({ tip, ci, stressMean, randomPercentile, nTrades, trimmedMean }) {
   const checks = [
     {
       name: 'ciLowPositive', passed: ci.low > 0,
@@ -33,6 +40,10 @@ export function judgeHoldout({ tip, ci, stressMean, randomPercentile, nTrades })
     {
       name: 'stressPositive', passed: stressMean > 0,
       detail: `Maliyetler ×${RULES.costStressMultiplier} olsa ortalama ${f(stressMean)} — ${stressMean > 0 ? 'hâlâ pozitif' : 'eksiye düşüyor (kâr maliyet tahminine fazla duyarlı)'}.`,
+    },
+    {
+      name: 'robustToBest', passed: trimmedMean > 0,
+      detail: `En iyi %${RULES.trimFraction * 100} gözlem çıkarılınca ortalama ${f(trimmedMean)} — ${trimmedMean > 0 ? 'kâr dağınık, birkaç uç işleme bağlı değil' : 'kâr birkaç uç işleme/güne bağlı (piyango)'}.`,
     },
     {
       name: 'randomBeaten', passed: randomPercentile >= RULES.randomPercentileMin,

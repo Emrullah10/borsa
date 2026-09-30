@@ -10,20 +10,28 @@ describe('RULES (önceden kayıtlı)', () => {
     expect(RULES.minTradesTip1).toBe(100);
     expect(RULES.randomPercentileMin).toBe(0.95);
     expect(RULES.randomTrials).toBe(200);
+    expect(RULES.trimFraction).toBe(0.025);
   });
   it('dondurulmuş: sonradan değiştirilemez', () => expect(Object.isFrozen(RULES)).toBe(true));
 });
 
 describe('judgeValidation (holdout kapısı)', () => {
-  it('doğrulama ortalaması > 0 → holdout açılabilir', () => expect(judgeValidation({ mean: 0.02, n: 300 }).passed).toBe(true));
+  it('ortalama > 0 VE en iyi %2.5 çıkarılınca da > 0 → holdout açılabilir', () => {
+    expect(judgeValidation({ mean: 0.02, trimmedMean: 0.01, n: 300 }).passed).toBe(true);
+  });
   it('≤ 0 → holdout AÇILMAZ', () => {
-    const v = judgeValidation({ mean: -0.01, n: 300 });
+    const v = judgeValidation({ mean: -0.01, trimmedMean: -0.02, n: 300 });
     expect(v.passed).toBe(false); expect(v.reason).toMatch(/holdout/i);
   });
-  it('örneklem yoksa geçmez', () => expect(judgeValidation({ mean: 0.5, n: 0 }).passed).toBe(false));
+  it('kâr birkaç uç gözleme bağlıysa (kırpılmış ≤ 0) holdout AÇILMAZ — tek bakışı piyangoya harcama', () => {
+    const v = judgeValidation({ mean: 0.22, trimmedMean: -0.05, n: 418 });
+    expect(v.passed).toBe(false); expect(v.reason).toMatch(/en iyi/i);
+  });
+  it('kırpılmış ortalama verilmezse geçmez (muhafazakâr)', () => expect(judgeValidation({ mean: 0.5, n: 10 }).passed).toBe(false));
+  it('örneklem yoksa geçmez', () => expect(judgeValidation({ mean: 0.5, trimmedMean: 0.5, n: 0 }).passed).toBe(false));
 });
 
-const GOOD = { ci: { mean: 0.1, low: 0.02, high: 0.18, n: 150 }, stressMean: 0.05, randomPercentile: 0.99, nTrades: 150 };
+const GOOD = { ci: { mean: 0.1, low: 0.02, high: 0.18, n: 150 }, stressMean: 0.05, randomPercentile: 0.99, nTrades: 150, trimmedMean: 0.04 };
 
 describe('judgeHoldout', () => {
   it('tüm koşullar sağlanınca GEÇTİ', () => {
@@ -41,6 +49,11 @@ describe('judgeHoldout', () => {
   });
   it('rastgele %95\'ini geçemezse KALDI', () => {
     expect(judgeHoldout({ tip: 'tip1', ...GOOD, randomPercentile: 0.90 }).passed).toBe(false);
+  });
+  it('en iyi %2.5 çıkarılınca ortalama ≤ 0 → KALDI (kâr birkaç uç gözleme bağlı)', () => {
+    const v = judgeHoldout({ tip: 'tip2', ...GOOD, trimmedMean: -0.001 });
+    expect(v.passed).toBe(false);
+    expect(v.checks.find((c) => c.name === 'robustToBest').passed).toBe(false);
   });
   it('Tip 1\'de n < 100 → KALDI, Tip 2\'de bu koşul aranmaz', () => {
     expect(judgeHoldout({ tip: 'tip1', ...GOOD, nTrades: 99 }).passed).toBe(false);
