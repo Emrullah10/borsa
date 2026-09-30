@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { runBasket } from '../../../src/domain/lab/basket-portfolio.js';
+import { runBasket, decisionDaysBetween } from '../../../src/domain/lab/basket-portfolio.js';
 import { buildSeries, makeF1, makeRandom, DAY } from '../../../src/domain/lab/basket-factors.js';
 
 const D0 = Date.UTC(2025, 0, 1);
@@ -142,4 +142,12 @@ describe('runBasket — sızıntı testi', () => {
     expect(rb.longs).toEqual(ra.longs);
     expect(rb.gross).not.toBeCloseTo(ra.gross, 6);
   });
+});
+
+describe('decisionDaysBetween (işlem günü = karar günü + 24s, [başlangıç, bitiş) içinde)', () => {
+  it('ilk işlem günü başlangıçtır, son işlem günü bitişten önceki gündür', () => {
+    const d = decisionDaysBetween(D0 + 10 * DAY, D0 + 13 * DAY);
+    expect(d.map((x) => x + DAY)).toEqual([D0 + 10 * DAY, D0 + 11 * DAY, D0 + 12 * DAY]);
+  });
+  it('aralık boşsa boş dizi', () => expect(decisionDaysBetween(D0 + 5 * DAY, D0 + 5 * DAY)).toEqual([]));
 });

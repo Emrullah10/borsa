@@ -30,30 +30,31 @@ export function judgeValidation({ mean, trimmedMean, n }) {
   return { passed: true, reason: `Doğrulama ortalaması ${f(mean)} > 0 (n=${n}), en iyi %${RULES.trimFraction * 100} çıkarılınca da ${f(trimmedMean)} > 0 — holdout açılabilir.` };
 }
 
-// Nihai sınav (holdout): dört koşulun HEPSİ sağlanmalı.
-export function judgeHoldout({ tip, ci, stressMean, randomPercentile, nTrades, trimmedMean }) {
+// Nihai sınav (holdout / ileri test): koşulların HEPSİ sağlanmalı. `rules` varsayılan RULES;
+// ileri test kendi kural setini (2 aile → %97.5) geçirir.
+export function judgeHoldout({ tip, ci, stressMean, randomPercentile, nTrades, trimmedMean, rules = RULES }) {
   const checks = [
     {
       name: 'ciLowPositive', passed: ci.low > 0,
-      detail: `Bonferroni %${(RULES.ciLevel * 100).toFixed(2)} güven aralığı [${f(ci.low)}, ${f(ci.high)}], ortalama ${f(ci.mean)} — alt sınır ${ci.low > 0 ? 'sıfırın ÜSTÜNDE' : 'sıfırın ALTINDA/EŞİT (kâr şansa bağlı olabilir)'}.`,
+      detail: `Bonferroni %${(rules.ciLevel * 100).toFixed(2)} güven aralığı [${f(ci.low)}, ${f(ci.high)}], ortalama ${f(ci.mean)} — alt sınır ${ci.low > 0 ? 'sıfırın ÜSTÜNDE' : 'sıfırın ALTINDA/EŞİT (kâr şansa bağlı olabilir)'}.`,
     },
     {
       name: 'stressPositive', passed: stressMean > 0,
-      detail: `Maliyetler ×${RULES.costStressMultiplier} olsa ortalama ${f(stressMean)} — ${stressMean > 0 ? 'hâlâ pozitif' : 'eksiye düşüyor (kâr maliyet tahminine fazla duyarlı)'}.`,
+      detail: `Maliyetler ×${rules.costStressMultiplier} olsa ortalama ${f(stressMean)} — ${stressMean > 0 ? 'hâlâ pozitif' : 'eksiye düşüyor (kâr maliyet tahminine fazla duyarlı)'}.`,
     },
     {
       name: 'robustToBest', passed: trimmedMean > 0,
-      detail: `En iyi %${RULES.trimFraction * 100} gözlem çıkarılınca ortalama ${f(trimmedMean)} — ${trimmedMean > 0 ? 'kâr dağınık, birkaç uç işleme bağlı değil' : 'kâr birkaç uç işleme/güne bağlı (piyango)'}.`,
+      detail: `En iyi %${rules.trimFraction * 100} gözlem çıkarılınca ortalama ${f(trimmedMean)} — ${trimmedMean > 0 ? 'kâr dağınık, birkaç uç işleme bağlı değil' : 'kâr birkaç uç işleme/güne bağlı (piyango)'}.`,
     },
     {
-      name: 'randomBeaten', passed: randomPercentile >= RULES.randomPercentileMin,
-      detail: `${RULES.randomTrials} rastgele denemenin %${(randomPercentile * 100).toFixed(1)}'ini geçti (gereken ≥ %${RULES.randomPercentileMin * 100}).`,
+      name: 'randomBeaten', passed: randomPercentile >= rules.randomPercentileMin,
+      detail: `${rules.randomTrials} rastgele denemenin %${(randomPercentile * 100).toFixed(1)}'ini geçti (gereken ≥ %${rules.randomPercentileMin * 100}).`,
     },
   ];
   if (tip === 'tip1') {
     checks.push({
-      name: 'enoughTrades', passed: nTrades >= RULES.minTradesTip1,
-      detail: `${nTrades} işlem (gereken ≥ ${RULES.minTradesTip1}).`,
+      name: 'enoughTrades', passed: nTrades >= rules.minTradesTip1,
+      detail: `${nTrades} işlem (gereken ≥ ${rules.minTradesTip1}).`,
     });
   }
   return { passed: checks.every((c) => c.passed), checks };

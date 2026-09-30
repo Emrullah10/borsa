@@ -9,6 +9,13 @@ import { DAY } from './basket-factors.js';
 
 const AVG_VOL_WINDOW = 30;
 
+// Karar günleri: işlem günü (gün + 24s) [startInclusive, endExclusive) içinde kalacak şekilde.
+export function decisionDaysBetween(startInclusive, endExclusive) {
+  const days = [];
+  for (let d = startInclusive - DAY; d + DAY < endExclusive; d += DAY) days.push(d);
+  return days;
+}
+
 /**
  * @param {object} p
  * @param {Array} p.seriesList   basket-factors.buildSeries çıktıları

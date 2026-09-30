@@ -1,34 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import { runTip1Family, runTip2Family } from '../../../src/domain/lab/lab-pipeline.js';
 import { makeHoldoutLock } from '../../../src/domain/lab/holdout-lock.js';
-import { buildSeries, makeF1, makeF2, makeF3, DAY } from '../../../src/domain/lab/basket-factors.js';
-import { fundingZScores } from '../../../src/domain/lab/funding-extreme.js';
-import { mulberry32 } from '../../../src/domain/lab/stats.js';
+import { makeF1, makeF2, makeF3 } from '../../../src/domain/lab/basket-factors.js';
+import { tip1World, tip2World } from './_worlds.js';
 
 // Bu dosya sınavın KENDİSİNİ sınar (üretici çıktısıyla tüketici testi — cerebrum 2026-06-01 dersi):
 //  • planted dünya: gerçek bir kenar gömülü → sınav onu YAKALAMALI (güç)
 //  • null dünya: kenar yok → sınav GEÇİRMEMELİ (yanlış-pozitif kontrolü)
 const FAST = { randomTrials: 20, sanityTrials: 10, bootstrapIterations: 800 };
-const START = Date.UTC(2024, 2, 1);
-const END = Date.UTC(2026, 9, 6);
-const H = 3_600_000;
 
-const gauss = (rand) => Math.sqrt(-2 * Math.log(Math.max(rand(), 1e-12))) * Math.cos(2 * Math.PI * rand());
 const memLock = () => { let st = null; return makeHoldoutLock({ read: () => st, write: (s) => { st = s; } }); };
-
-function tip2World({ mu = () => 0, sigma = 0.02, seed = 1, nSymbols = 30 }) {
-  const rand = mulberry32(seed);
-  const n = Math.round((END - START) / DAY);
-  return Array.from({ length: nSymbols }, (_, s) => {
-    let prev = 100; const candles = [];
-    for (let i = 0; i < n; i++) {
-      const close = prev * (1 + mu(s) + sigma * gauss(rand));
-      candles.push({ timestamp: START + i * DAY, open: prev, high: Math.max(prev, close) * 1.005, low: Math.min(prev, close) * 0.995, close, volume: 2e7 / close });
-      prev = close;
-    }
-    return buildSeries(`SYM${String(s).padStart(2, '0')}`, candles);
-  });
-}
 
 const tip2Families = () => ([
   { key: 'F1_momentum', title: 'F1', configs: [7, 14, 28].flatMap((L) => [1, 7].map((r) => ({ label: `L=${L}, ${r}g`, scoreFn: makeF1(L), rebalanceEvery: r }))) },
@@ -81,24 +62,6 @@ describe('Tip 2 hattı — güç ve yanlış-pozitif', () => {
   }, 120_000);
 });
 
-function tip1World({ planted, seed = 3, nSymbols = 12 }) {
-  const rand = mulberry32(seed);
-  return Array.from({ length: nSymbols }, (_, s) => {
-    const funding = []; const drift = new Map();
-    for (let t = START; t < END; t += 8 * H) {
-      const spike = rand() < 1 / 40; const sign = rand() < 0.5 ? 1 : -1;
-      funding.push({ timestamp: t, rate: spike ? sign * 0.0012 : 0.0001 + (rand() - 0.5) * 0.00004 });
-      if (spike && planted) for (let k = 1; k <= 24; k++) drift.set(t + k * H, -sign * 0.003); // kalabalığın TERSİNE hareket
-    }
-    let prev = 100; const candles1h = [];
-    for (let t = START; t < END; t += H) {
-      const close = prev * (1 + (drift.get(t) ?? 0) + 0.004 * gauss(rand));
-      candles1h.push({ timestamp: t, open: prev, high: Math.max(prev, close) * 1.003, low: Math.min(prev, close) * 0.997, close, volume: 1 });
-      prev = close;
-    }
-    return { symbol: `T${s}USDT`, candles1h, zScores: fundingZScores(funding, { window: 90, minPeriods: 30 }), pnlSeries: funding, rank: 5 };
-  });
-}
 const GRID = { zThresholds: [2.5], holdHours: [24], stopAtrMults: [3], minAbsRate: 0.0002 };
 
 describe('Tip 1 hattı — güç ve yanlış-pozitif', () => {

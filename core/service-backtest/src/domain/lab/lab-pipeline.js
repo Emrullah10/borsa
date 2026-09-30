@@ -8,7 +8,7 @@
 import { PERIODS } from './periods.js';
 import { blockBootstrapMeanCI, clusterBootstrapMeanCI, trimBestMean, mean, sharpeAnnualized, percentileRank } from './stats.js';
 import { RULES, judgeValidation, judgeHoldout, assessExamSanity } from './verdict.js';
-import { runBasket } from './basket-portfolio.js';
+import { runBasket, decisionDaysBetween } from './basket-portfolio.js';
 import { makeRandom, DAY } from './basket-factors.js';
 import { signalsFromZScores } from './funding-extreme.js';
 import { runFundingStrategy } from './run-funding-strategy.js';
@@ -17,12 +17,7 @@ import { randomizeDirections, randomizeTimesAndDirections } from './random-basel
 const ruleSet = (rules) => ({ ...RULES, sanityTrials: 30, ...rules });
 const skipped = (reason) => ({ passed: false, skipped: true, reason });
 
-// Karar günleri: işlem günü dönemin içinde kalacak şekilde (işlem günü = gün + 24s).
-function decisionDaysFor(p) {
-  const days = [];
-  for (let d = p.start - DAY; d + DAY < p.end; d += DAY) days.push(d);
-  return days;
-}
+const decisionDaysFor = (p) => decisionDaysBetween(p.start, p.end);
 
 function sanityFrom(randomMeans) {
   return assessExamSanity({ randomMeanCI: blockBootstrapMeanCI(randomMeans, { level: 0.95, iterations: 1000, seed: 1 }) });
@@ -37,7 +32,7 @@ function evaluateHoldout({ tip, values, blockSize, clusterKeys = null, stressMea
   if (!ci) return { verdict: skipped('Holdout döneminde işlem/gün yok.'), holdout: null };
   const randomPercentile = percentileRank(ci.mean, randomMeans);
   const trimmedMean = trimBestMean(values, R.trimFraction);
-  const verdict = judgeHoldout({ tip, ci, stressMean, randomPercentile, nTrades: values.length, trimmedMean });
+  const verdict = judgeHoldout({ tip, ci, stressMean, randomPercentile, nTrades: values.length, trimmedMean, rules: R });
   return { verdict, holdout: { mean: ci.mean, ciLow: ci.low, ciHigh: ci.high, n: values.length, stressMean, randomPercentile, trimmedMean } };
 }
 
@@ -96,25 +91,7 @@ export function runTip1Family({ symbolsData, grid, lock, openHoldout, force = fa
   const combos = grid.zThresholds.flatMap((z) => grid.holdHours.flatMap((holdHours) => grid.stopAtrMults.map((stopAtrMult) => ({ z, holdHours, stopAtrMult }))));
   const label = (c) => `z=${c.z} · tutma ${c.holdHours}s · stop ${c.stopAtrMult}×ATR`;
 
-  // randomSeed: aynı zamanlama + rastgele yön (yön kuralının EK değeri — yüzdelik testi)
-  // nullSeed:   rastgele zaman + rastgele yön (sınavın kendisi yanlı mı — sağlamlık kontrolü)
-  const trades = (combo, from, to, { costMultiplier = 1, randomSeed = null, nullSeed = null } = {}) => {
-    const out = [];
-    symbolsData.forEach((sd, i) => {
-      let sigs = signalsFromZScores(sd.zScores, { zThreshold: combo.z, minAbsRate: grid.minAbsRate })
-        .filter((s) => s.timestamp >= from && s.timestamp < to);
-      if (randomSeed != null) sigs = randomizeDirections(sigs, randomSeed * 1009 + i);
-      if (nullSeed != null) {
-        const candidates = sd.zScores.map((z) => z.timestamp).filter((t) => t >= from && t < to);
-        sigs = randomizeTimesAndDirections(sigs, candidates, nullSeed * 1009 + i);
-      }
-      out.push(...runFundingStrategy({
-        symbol: sd.symbol, signals: sigs, candles1h: sd.candles1h, fundingSeries: sd.pnlSeries,
-        holdHours: combo.holdHours, stopAtrMult: combo.stopAtrMult, rank: sd.rank, costMultiplier,
-      }));
-    });
-    return out;
-  };
+  const trades = makeTip1TradeRunner({ symbolsData, minAbsRate: grid.minAbsRate });
   const rMeans = (t) => mean(t.map((x) => x.r));
 
   // 1) train: n ≥ 100 olan kombinasyonlar arasında en yüksek ortalama R
@@ -151,3 +128,31 @@ export function runTip1Family({ symbolsData, grid, lock, openHoldout, force = fa
   const { verdict, holdout } = evaluateHoldout({ tip: 'tip1', values: hTrades.map((t) => t.r), clusterKeys: hTrades.map((t) => Math.floor(t.timestamp / WEEK_MS)), stressMean, randomMeans, R });
   return { ...result, holdout, verdict: { ...verdict, dirty: lk.dirty } };
 }
+
+/**
+ * Tip 1 işlem koşucusu (lab ve ileri-test paylaşır).
+ * trades(combo, from, to, {costMultiplier, randomSeed, nullSeed}) → işlem listesi
+ *   randomSeed: aynı zamanlama + rastgele yön (yön kuralının EK değeri — yüzdelik testi)
+ *   nullSeed:   rastgele zaman + rastgele yön (sınavın kendisi yanlı mı — sağlamlık kontrolü)
+ */
+export function makeTip1TradeRunner({ symbolsData, minAbsRate }) {
+  return (combo, from, to, { costMultiplier = 1, randomSeed = null, nullSeed = null } = {}) => {
+    const out = [];
+    symbolsData.forEach((sd, i) => {
+      let sigs = signalsFromZScores(sd.zScores, { zThreshold: combo.z, minAbsRate })
+        .filter((s) => s.timestamp >= from && s.timestamp < to);
+      if (randomSeed != null) sigs = randomizeDirections(sigs, randomSeed * 1009 + i);
+      if (nullSeed != null) {
+        const candidates = sd.zScores.map((z) => z.timestamp).filter((t) => t >= from && t < to);
+        sigs = randomizeTimesAndDirections(sigs, candidates, nullSeed * 1009 + i);
+      }
+      out.push(...runFundingStrategy({
+        symbol: sd.symbol, signals: sigs, candles1h: sd.candles1h, fundingSeries: sd.pnlSeries,
+        holdHours: combo.holdHours, stopAtrMult: combo.stopAtrMult, rank: sd.rank, costMultiplier,
+      }));
+    });
+    return out;
+  };
+}
+
+export { evaluateHoldout, WEEK_MS };
