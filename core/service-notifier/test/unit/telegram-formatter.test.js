@@ -39,6 +39,12 @@ describe('formatTelegramMessage', () => {
     expect(m5).not.toBe(m1);
   });
 
+  it('deneysel uyarısı içerir — strateji kanıtlanmış kayıpta (2026-09-30)', () => {
+    const msg = formatTelegramMessage(signal);
+    expect(msg).toMatch(/Deneysel/);
+    expect(msg).toContain("İşlem açma");
+  });
+
   it('eksik alanlarda çökmez', () => {
     expect(() => formatTelegramMessage({ symbol: 'X', direction: 'long' })).not.toThrow();
   });

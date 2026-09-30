@@ -42,5 +42,9 @@ export function formatTelegramMessage(signal) {
     `R/R: ${fmt(rrRatio)} · Güven: ${conf}`,
     ``,
     `⏱ Yaklaşık <b>${minutes} dakika</b> geçerli — bu süreden sonra fiyat kaçmış olur.`,
+    ``,
+    // 2026-09-30: canlı 30g n=402 avg_sim_r=-0.137R, CI [-0.238,-0.036] → kanıtlanmış kayıp.
+    // Strateji değişene kadar her bildirimde açık uyarı.
+    `⚠️ <b>Deneysel</b> — bu strateji son 30 günde kanıtlanmış kayıpta. İşlem açma.`,
   ].join('\n');
 }
