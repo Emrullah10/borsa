@@ -57,3 +57,11 @@ export function indexFundingByDay(series) {
 export function fundingPnlFraction(direction, rateSum) {
   return (direction === 'long' ? -1 : 1) * rateSum;
 }
+
+// PnL için funding serisi: Bitget'in kendi verisi varsa (yalnız ~90 gün) o; ondan ÖNCEKİ dönem için
+// Binance vekili (korelasyon ~0.58, SOL). Çift kayıt yok.
+export function mergeFundingSeries(bitget, binance) {
+  if (!bitget.length) return binance;
+  const cut = bitget[0].timestamp;
+  return [...binance.filter((r) => r.timestamp < cut), ...bitget];
+}
