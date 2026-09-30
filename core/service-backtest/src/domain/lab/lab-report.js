@@ -3,6 +3,7 @@ const f = (x, d = 4) => (x == null || !Number.isFinite(x) ? '—' : x.toFixed(d)
 
 export function buildReport({ generatedAt, coverage, holdoutOpened, families }) {
   const passed = families.filter((x) => x.verdict?.passed);
+  const pending = families.filter((x) => x.verdict?.pending);
   const L = [];
   L.push('# Strateji Laboratuvarı Raporu');
   L.push('');
@@ -10,7 +11,9 @@ export function buildReport({ generatedAt, coverage, holdoutOpened, families }) 
   L.push(`Holdout: ${holdoutOpened ? 'AÇILDI (aday başına tek kez)' : 'AÇILMADI'}`);
   L.push('');
   L.push('## Özet');
-  if (passed.length === 0) {
+  if (passed.length === 0 && pending.length > 0) {
+    L.push(`**Henüz karar yok:** ${pending.map((x) => x.title).join(', ')} doğrulama kapısını geçti ve holdout'u bekliyor (holdout'u açmak aday başına TEK seferlik bir karardır). Doğrulamada elenenler aşağıda.`);
+  } else if (passed.length === 0) {
     L.push('**Hiçbir aday geçmedi.** Bu geçerli ve değerli bir sonuçtur: bu fikirlerde, hiç görülmemiş veride, maliyetler düşüldükten sonra kanıtlanabilir bir avantaj yok. Sermaye korunur.');
   } else {
     L.push(`**${passed.length} aday GEÇTİ:** ${passed.map((x) => x.title).join(', ')}. (Canlıya almadan önce kâğıt üstünde ileri-test şart.)`);
@@ -25,7 +28,7 @@ export function buildReport({ generatedAt, coverage, holdoutOpened, families }) 
   L.push('## Adaylar');
   for (const fam of families) {
     const v = fam.verdict ?? {};
-    const tag = v.skipped ? 'KALDI (holdout açılmadı)' : v.passed ? 'GEÇTİ' : 'KALDI';
+    const tag = v.pending ? 'HOLDOUT BEKLİYOR (doğrulamayı geçti)' : v.skipped ? 'KALDI (holdout açılmadı)' : v.passed ? 'GEÇTİ' : 'KALDI';
     L.push(`### ${fam.title} — ${tag}`);
     L.push(`- Seçilen ayar (train'de): ${fam.config}`);
     L.push(`- Train: ortalama ${f(fam.train?.mean)} (n=${fam.train?.n ?? 0})`);

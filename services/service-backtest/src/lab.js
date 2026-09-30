@@ -22,6 +22,7 @@ import { runTip1Family, runTip2Family } from '@borsa-bot/core-backtest/src/domai
 import { makeHoldoutLock } from '@borsa-bot/core-backtest/src/domain/lab/holdout-lock.js';
 import { buildReport } from '@borsa-bot/core-backtest/src/domain/lab/lab-report.js';
 import { RULES } from '@borsa-bot/core-backtest/src/domain/lab/verdict.js';
+import { PERIODS } from '@borsa-bot/core-backtest/src/domain/lab/periods.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const RESULTS_DIR = join(__dirname, '../../../backtest-results');
@@ -153,6 +154,11 @@ async function main() {
     fundingBinancePct: Math.round((100 * withBinance) / seriesList.length),
     skippedNote: `Tip 1 evreni ${symbolsData.length} sembol; Tip 2 günlük evren filtresi: 30g ort. USD hacim ≥ $5M ve ≥60 gün geçmiş (o güne göre). Funding'i hiç bilinmeyen sembol-günler 0 varsayıldı.`,
   };
+  // Tip 1 "0 işlem" ile "veri yok"u ayır: 1h mumlar train başlangıcından sonra başlıyorsa backfill eksik.
+  const first1h = symbolsData.length ? Math.min(...symbolsData.map((s) => s.candles1h[0].timestamp)) : null;
+  if (first1h != null && first1h > PERIODS.train.start) {
+    coverage.skippedNote += ` ⚠️ 1h mumlar ${day(first1h)}'de başlıyor (train ${day(PERIODS.train.start)}'de) — Tip 1 sonucu EKSİK VERİYE dayanıyor: backfill-candles --tf 1h --days 900.`;
+  }
   const md = buildReport({ generatedAt: new Date().toISOString(), coverage, holdoutOpened: openHoldout, families: results });
   const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 16);
   const base = join(RESULTS_DIR, `lab-${quick ? 'quick-' : ''}${stamp}`);

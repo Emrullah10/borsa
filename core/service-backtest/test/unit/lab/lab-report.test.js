@@ -37,4 +37,20 @@ describe('buildReport', () => {
     expect(md).toMatch(/Binance/);
   });
   it('kapsam bilgisini yazar', () => expect(buildReport(base)).toContain('89'));
+
+  it('doğrulamayı geçip holdout\'u BEKLEYEN aday KALDI değil "HOLDOUT BEKLİYOR" etiketi alır', () => {
+    const pending = { ...base.families[1], verdict: { passed: false, skipped: true, pending: true, reason: 'Doğrulamayı geçti; holdout açılmadı.' } };
+    const md = buildReport({ ...base, holdoutOpened: false, families: [pending] });
+    expect(md).toMatch(/HOLDOUT BEKLİYOR/);
+    expect(md).not.toMatch(/F1 momentum \(Tip 2\) — KALDI/);
+  });
+  it('bekleyen aday varken özet "hiçbir aday geçmedi" DEMEZ (henüz karar yok)', () => {
+    const pending = { ...base.families[1], verdict: { passed: false, skipped: true, pending: true, reason: 'x' } };
+    const md = buildReport({ ...base, holdoutOpened: false, families: [pending] });
+    expect(md).not.toMatch(/hiçbir aday geçmedi/i);
+    expect(md).toMatch(/henüz karar yok/i);
+  });
+  it('doğrulamada elenen aday hâlâ KALDI (holdout açılmadı) yazar', () => {
+    expect(buildReport(base)).toMatch(/F1 momentum \(Tip 2\) — KALDI \(holdout açılmadı\)/);
+  });
 });

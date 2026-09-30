@@ -64,7 +64,7 @@ export function runTip2Family({ key, title, configs, seriesList, fundingForDay, 
 
   const result = { key, title, config: best.cfg.label, train, validation, holdout: null, sanity };
   if (!gate.passed) return { ...result, verdict: skipped(gate.reason) };
-  if (!openHoldout) return { ...result, verdict: skipped('Holdout açılmadı (--open-holdout verilmedi).') };
+  if (!openHoldout) return { ...result, verdict: { ...skipped('Doğrulamayı geçti; holdout henüz açılmadı (--open-holdout verilmedi). Holdout aday başına TEK kez açılır.'), pending: true } };
 
   // 4) holdout (kilitli, tek kez)
   const lk = lock.tryOpen(key, { label: best.cfg.label }, { force });
@@ -132,7 +132,7 @@ export function runTip1Family({ symbolsData, grid, lock, openHoldout, force = fa
 
   const result = { key, title, config: label(best.combo), train, validation, holdout: null, sanity };
   if (!gate.passed) return { ...result, verdict: skipped(gate.reason) };
-  if (!openHoldout) return { ...result, verdict: skipped('Holdout açılmadı (--open-holdout verilmedi).') };
+  if (!openHoldout) return { ...result, verdict: { ...skipped('Doğrulamayı geçti; holdout henüz açılmadı (--open-holdout verilmedi). Holdout aday başına TEK kez açılır.'), pending: true } };
 
   // 4) holdout (kilitli, tek kez)
   const lk = lock.tryOpen(key, best.combo, { force });
