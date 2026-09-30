@@ -12,12 +12,8 @@ import pg from 'pg';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { fetchCryptoSymbolSet } from '@borsa-bot/core-backtest/src/infrastructure/fetcher.js';
-import { makeCandleStoreRepository } from '@borsa-bot/core-backtest/src/infrastructure/persistence/repositories/candle-store-repository.js';
-import { makeFundingStoreRepository } from '@borsa-bot/core-backtest/src/infrastructure/persistence/repositories/funding-store-repository.js';
-import { buildSeries, makeF1, makeF2, makeF3, DAY } from '@borsa-bot/core-backtest/src/domain/lab/basket-factors.js';
-import { fundingZScores } from '@borsa-bot/core-backtest/src/domain/lab/funding-extreme.js';
-import { indexFundingByDay, mergeFundingSeries } from '@borsa-bot/core-backtest/src/domain/lab/cost-model.js';
+import { loadLabData } from './lab-data.js';
+import { makeF1, makeF2, makeF3 } from '@borsa-bot/core-backtest/src/domain/lab/basket-factors.js';
 import { runTip1Family, runTip2Family } from '@borsa-bot/core-backtest/src/domain/lab/lab-pipeline.js';
 import { makeHoldoutLock } from '@borsa-bot/core-backtest/src/domain/lab/holdout-lock.js';
 import { buildReport } from '@borsa-bot/core-backtest/src/domain/lab/lab-report.js';
@@ -27,7 +23,6 @@ import { PERIODS } from '@borsa-bot/core-backtest/src/domain/lab/periods.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const RESULTS_DIR = join(__dirname, '../../../backtest-results');
 const LOCK_PATH = join(RESULTS_DIR, 'lab-holdout-lock.json');
-const HOUR = 3_600_000;
 
 // Tip 1 ızgarası (spec: ön-kayıtlı) — 18 kombinasyon
 const GRID_TIP1 = { zThresholds: [2, 2.5, 3], holdHours: [8, 24, 72], stopAtrMults: [3, 6], minAbsRate: 0.0002 };
@@ -35,20 +30,6 @@ const QUICK_RULES = { randomTrials: 20, sanityTrials: 10, bootstrapIterations: 8
 
 const log = (...a) => console.log('[lab]', ...a);
 const day = (ms) => new Date(ms).toISOString().slice(0, 10);
-
-async function distinctSymbols(pool, tf) {
-  const { rows } = await pool.query('SELECT DISTINCT symbol FROM candles WHERE tf = $1', [tf]);
-  return rows.map((r) => r.symbol);
-}
-
-// Statik hacim sırası (kayma katmanı için): son 90 günün ort. USD hacmi. Yaklaşık — raporda belirtilir.
-function volumeRanks(seriesList) {
-  const avg = seriesList.map((s) => {
-    const tail = s.candles.slice(-90);
-    return { symbol: s.symbol, v: tail.reduce((a, c) => a + c.close * c.volume, 0) / Math.max(1, tail.length) };
-  }).sort((a, b) => b.v - a.v);
-  return new Map(avg.map((x, i) => [x.symbol, i + 1]));
-}
 
 async function main() {
   const args = new Set(process.argv.slice(2));
@@ -58,8 +39,6 @@ async function main() {
   if (!process.env.DATABASE_URL) { console.error('[lab] DATABASE_URL tanımlı değil. --env-file=.env ile çalıştır.'); process.exit(1); }
 
   const pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 4 });
-  const candleRepo = makeCandleStoreRepository({ db: pool });
-  const fundingRepo = makeFundingStoreRepository({ db: pool });
   const now = Date.now();
   mkdirSync(RESULTS_DIR, { recursive: true });
 
@@ -70,63 +49,7 @@ async function main() {
 
   log(`mod: ${quick ? 'HIZLI (duman testi)' : 'TAM'} · holdout: ${openHoldout ? 'AÇIK istendi' : 'kapalı'}${force ? ' · --force-reopen' : ''}`);
 
-  // --- Evren: yalnız KRİPTO (RWA hisse/ETF/emtia hariç) ---
-  const cryptoSet = await fetchCryptoSymbolSet();
-  log(`kripto sembol (RWA hariç, normal durum): ${cryptoSet.size}`);
-
-  // --- Günlük mumlar (Tip 2) ---
-  let dailySymbols = (await distinctSymbols(pool, '1d')).filter((s) => cryptoSet.has(s));
-  const seriesAll = [];
-  for (const symbol of dailySymbols) {
-    const candles = (await candleRepo.getCandles(symbol, '1d')).filter((c) => c.timestamp + DAY <= now); // yalnız tamamlanmış günler
-    if (candles.length >= 90) seriesAll.push(buildSeries(symbol, candles));
-  }
-  if (!seriesAll.length) { console.error('[lab] günlük mum yok — önce: backtest:backfill-candles --tf 1d'); process.exit(1); }
-  const ranks = volumeRanks(seriesAll);
-  const seriesList = quick ? seriesAll.filter((s) => ranks.get(s.symbol) <= 40) : seriesAll;
-  log(`Tip 2 evreni: ${seriesList.length} sembol (günlük)`);
-
-  // --- Funding (iki kaynak) ---
-  const fundingData = new Map();
-  const loadFunding = async (symbol) => {
-    if (fundingData.has(symbol)) return fundingData.get(symbol);
-    const [bitget, binance] = await Promise.all([fundingRepo.getFunding('bitget', symbol), fundingRepo.getFunding('binance', symbol)]);
-    const d = {
-      bitget, binance, bitgetByDay: indexFundingByDay(bitget), binanceByDay: indexFundingByDay(binance),
-      bitgetMinDay: bitget.length ? Math.floor(bitget[0].timestamp / DAY) * DAY : null,
-      binanceMinDay: binance.length ? Math.floor(binance[0].timestamp / DAY) * DAY : null,
-    };
-    fundingData.set(symbol, d);
-    return d;
-  };
-  for (const s of seriesList) await loadFunding(s.symbol);
-
-  // Bitget'in kendi verisi varsa o, yoksa Binance vekili, hiçbiri yoksa null (= bilinmiyor → 0 varsayılır ve sayılır)
-  const fundingForDay = (symbol, u) => {
-    const d = fundingData.get(symbol);
-    if (!d) return null;
-    if (d.bitgetMinDay != null && u >= d.bitgetMinDay) return d.bitgetByDay.get(u) ?? 0;
-    if (d.binanceMinDay != null && u >= d.binanceMinDay) return d.binanceByDay.get(u) ?? 0;
-    return null;
-  };
-
-  // --- Tip 1 verisi (1h mum + funding sinyal serisi) ---
-  let hourlySymbols = (await distinctSymbols(pool, '1h')).filter((s) => cryptoSet.has(s));
-  if (quick) hourlySymbols = hourlySymbols.filter((s) => (ranks.get(s) ?? 999) <= 20);
-  const symbolsData = [];
-  for (const symbol of hourlySymbols) {
-    const f = await loadFunding(symbol);
-    const signalSeries = f.binance.length >= 200 ? f.binance : f.bitget; // sinyal: uzun geçmişli kaynak
-    if (signalSeries.length < 200) continue;
-    const candles1h = (await candleRepo.getCandles(symbol, '1h')).filter((c) => c.timestamp + HOUR <= now);
-    if (candles1h.length < 500) continue;
-    symbolsData.push({
-      symbol, candles1h, rank: ranks.get(symbol),
-      zScores: fundingZScores(signalSeries, { window: 90, minPeriods: 30 }),
-      pnlSeries: mergeFundingSeries(f.bitget, f.binance), // PnL: Bitget varsa o, öncesi Binance
-    });
-  }
-  log(`Tip 1 evreni: ${symbolsData.length} sembol (1h + funding)`);
+  const { seriesList, fundingData, fundingForDay, symbolsData } = await loadLabData({ pool, quick, now, log });
 
   const rules = quick ? QUICK_RULES : {};
 
