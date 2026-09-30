@@ -195,14 +195,37 @@ export function interpolateFunding(timestamp, fundingHistory) {
   return closest.rate;
 }
 
-// Lab (2026-09-30): "işlem yapılabilir evren" = 24s USDT hacmi eşiğin üstündeki perp'ler.
-// bitget-ws.js resolveSymbols ile aynı kaynak (getFuturesAllTickers). Hata → fırlatır:
-// sessizce boş evrenle devam etmek backfill'i "başarılı" gösterirdi.
-export async function fetchLiquidUniverse({ minVolumeUsdt }) {
-  const res = await makeClient().getFuturesAllTickers({ productType: 'USDT-FUTURES' });
-  return (res?.data ?? [])
+// Lab (2026-09-30): "işlem yapılabilir evren" = 24s USDT hacmi eşiğin üstündeki, normal
+// durumdaki KRİPTO perp'ler. Bitget'in 804 kontratının 339'u RWA (hisse/ETF/emtia, isRwa=YES:
+// KORUUSDT bir ETF, SNDK/MSTR hisse, XAU altın) — 7/24 kripto gibi davranmazlar, kripto
+// stratejisi evrenine (ve eski sweep'in "midcap" listesine) girmemeliydi.
+// Hata → fırlatır: sessizce boş evrenle devam etmek backfill'i "başarılı" gösterirdi.
+async function fetchContractInfo() {
+  const res = await makeClient().getFuturesContractConfig({ productType: 'USDT-FUTURES' });
+  return new Map((res?.data ?? []).map((c) => [c.symbol, c]));
+}
+
+const isTradableCrypto = (c) => c != null && c.symbolStatus === 'normal' && c.isRwa !== 'YES';
+
+export async function fetchCryptoSymbolSet() {
+  const info = await fetchContractInfo();
+  return new Set([...info.values()].filter(isTradableCrypto).map((c) => c.symbol));
+}
+
+export async function fetchLiquidUniverse({ minVolumeUsdt, excludeRwa = true }) {
+  const client = makeClient();
+  const [tickers, info] = await Promise.all([
+    client.getFuturesAllTickers({ productType: 'USDT-FUTURES' }),
+    fetchContractInfo(),
+  ]);
+  return (tickers?.data ?? [])
     .map((t) => ({ symbol: t.symbol, vol: parseFloat(t.usdtVolume ?? 0) }))
     .filter((t) => t.symbol && t.vol >= minVolumeUsdt)
+    .filter((t) => {
+      const c = info.get(t.symbol);
+      if (c == null || c.symbolStatus !== 'normal') return false; // bilinmeyen/normal değil → temkinli ele
+      return !excludeRwa || c.isRwa !== 'YES';
+    })
     .sort((a, b) => b.vol - a.vol)
     .map((t) => t.symbol);
 }

@@ -3,13 +3,15 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Lab (2026-09-30): fetchFundingHistory sayfalama yapmıyordu — sadece son ~33 günü
 // çekiyordu (pageSize=100). Ayrıca Bitget funding geçmişini yalnız ~90 gün saklıyor;
 // Binance yıllarca geriye veriyor, sinyal geçmişi oradan gelecek.
-const { getFundingMock, getTickersMock } = vi.hoisted(() => ({ getFundingMock: vi.fn(), getTickersMock: vi.fn() }));
+const { getFundingMock, getTickersMock, getContractsMock } = vi.hoisted(() => ({
+  getFundingMock: vi.fn(), getTickersMock: vi.fn(), getContractsMock: vi.fn(),
+}));
 vi.mock('bitget-api', () => ({
-  RestClientV2: vi.fn().mockImplementation(() => ({ getFuturesHistoricFundingRates: getFundingMock, getFuturesAllTickers: getTickersMock })),
+  RestClientV2: vi.fn().mockImplementation(() => ({ getFuturesHistoricFundingRates: getFundingMock, getFuturesAllTickers: getTickersMock, getFuturesContractConfig: getContractsMock })),
 }));
 
 import {
-  fetchFundingHistory, fetchBinanceFundingHistory, binanceSymbolCandidates, fetchLiquidUniverse,
+  fetchFundingHistory, fetchBinanceFundingHistory, binanceSymbolCandidates, fetchLiquidUniverse, fetchCryptoSymbolSet,
 } from '../../src/infrastructure/fetcher.js';
 
 const page = (startTs, n, stepMs = 8 * 3600_000) =>
@@ -103,19 +105,58 @@ describe('binanceSymbolCandidates', () => {
   });
 });
 
+// 2026-09-30: Bitget'in 804 kontratının 339'u RWA (hisse/ETF/emtia; isRwa=YES) — ör. KORUUSDT bir ETF,
+// SNDK/MSTR hisse, XAU altın. 7/24 kripto gibi davranmazlar (hafta sonu boşluğu, farklı funding);
+// kripto stratejisi evrenine girmemeli.
 describe('fetchLiquidUniverse', () => {
-  it('24s USDT hacmi eşiğin altındakileri eler, hacme göre azalan sıralar', async () => {
-    getTickersMock.mockResolvedValueOnce({ data: [
-      { symbol: 'SMALLUSDT', usdtVolume: '900000' },
-      { symbol: 'BTCUSDT', usdtVolume: '2000000000' },
-      { symbol: 'MIDUSDT', usdtVolume: '7000000' },
-      { symbol: 'NOVOLUSDT' },
-    ] });
+  const tickers = { data: [
+    { symbol: 'SMALLUSDT', usdtVolume: '900000' },
+    { symbol: 'BTCUSDT', usdtVolume: '2000000000' },
+    { symbol: 'MIDUSDT', usdtVolume: '7000000' },
+    { symbol: 'STOCKUSDT', usdtVolume: '50000000' },
+    { symbol: 'DELISTUSDT', usdtVolume: '9000000' },
+    { symbol: 'NOVOLUSDT' },
+  ] };
+  const contracts = { data: [
+    { symbol: 'SMALLUSDT', isRwa: 'NO', symbolStatus: 'normal' },
+    { symbol: 'BTCUSDT', isRwa: 'NO', symbolStatus: 'normal' },
+    { symbol: 'MIDUSDT', isRwa: 'NO', symbolStatus: 'normal' },
+    { symbol: 'STOCKUSDT', isRwa: 'YES', symbolStatus: 'normal' },
+    { symbol: 'DELISTUSDT', isRwa: 'NO', symbolStatus: 'off' },
+    { symbol: 'NOVOLUSDT', isRwa: 'NO', symbolStatus: 'normal' },
+  ] };
+  beforeEach(() => { getTickersMock.mockReset(); getContractsMock.mockReset(); });
+
+  it('hacim eşiği altını, RWA\'yı ve normal olmayan durumu eler; hacme göre azalan sıralar', async () => {
+    getTickersMock.mockResolvedValueOnce(tickers); getContractsMock.mockResolvedValueOnce(contracts);
     expect(await fetchLiquidUniverse({ minVolumeUsdt: 5_000_000 })).toEqual(['BTCUSDT', 'MIDUSDT']);
   });
 
-  it('ticker listesi alınamazsa fırlatır (sessiz boş evren YOK)', async () => {
-    getTickersMock.mockRejectedValueOnce(new Error('network'));
+  it('excludeRwa:false ile RWA dahil edilir', async () => {
+    getTickersMock.mockResolvedValueOnce(tickers); getContractsMock.mockResolvedValueOnce(contracts);
+    expect(await fetchLiquidUniverse({ minVolumeUsdt: 5_000_000, excludeRwa: false })).toEqual(['BTCUSDT', 'STOCKUSDT', 'MIDUSDT']);
+  });
+
+  it('sözleşme bilgisi olmayan sembol (bilinmeyen) temkinli davranıp elenir', async () => {
+    getTickersMock.mockResolvedValueOnce({ data: [{ symbol: 'GHOSTUSDT', usdtVolume: '99000000' }] });
+    getContractsMock.mockResolvedValueOnce({ data: [] });
+    expect(await fetchLiquidUniverse({ minVolumeUsdt: 1 })).toEqual([]);
+  });
+
+  it('ticker ya da sözleşme listesi alınamazsa fırlatır (sessiz boş evren YOK)', async () => {
+    getTickersMock.mockRejectedValueOnce(new Error('network')); getContractsMock.mockResolvedValueOnce(contracts);
     await expect(fetchLiquidUniverse({ minVolumeUsdt: 1 })).rejects.toThrow();
+  });
+});
+
+describe('fetchCryptoSymbolSet', () => {
+  it('yalnız normal durumdaki, RWA olmayan semboller', async () => {
+    getContractsMock.mockResolvedValueOnce({ data: [
+      { symbol: 'BTCUSDT', isRwa: 'NO', symbolStatus: 'normal' },
+      { symbol: 'XAUUSDT', isRwa: 'YES', symbolStatus: 'normal' },
+      { symbol: 'OLDUSDT', isRwa: 'NO', symbolStatus: 'off' },
+    ] });
+    const set = await fetchCryptoSymbolSet();
+    expect([...set]).toEqual(['BTCUSDT']);
   });
 });
