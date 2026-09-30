@@ -19,6 +19,7 @@ export async function fetchCandles(symbol, timeframe, days) {
   const allCandles = [];
   let endTime = now;
   let attempts = 0;
+  let lastOldest = Infinity;
 
   while (endTime > startMs) {
     if (attempts > 0) await sleep(RATE_LIMIT_MS);
@@ -67,7 +68,15 @@ export async function fetchCandles(symbol, timeframe, days) {
 
     const oldest = Math.min(...data.map(c => Number(c[0])));
     if (oldest <= startMs) break;
-    endTime = oldest - 1;
+    // API endTime'ı yok sayıp aynı sayfayı dönerse ilerleme yok → sonsuz döngüye girme.
+    if (oldest >= lastOldest) break;
+    lastOldest = oldest;
+    // 2026-09-30 düzeltmesi: eskiden `oldest - 1`. Bitget endTime'ı "mumun KAPANIŞ zamanı <= endTime"
+    // diye yorumluyor: endTime=oldest-1 olunca oldest'tan bir önceki mum (kapanışı tam `oldest`)
+    // dışarıda kalıyordu → HER sayfa sınırında tam 1 mum kaybı (1d'de 90'da 1, 1h/5m'de 200'de 1;
+    // tüm zaman dilimleri, tüm backtest verisi). endTime=oldest o mumu dahil eder, `oldest`'ın
+    // kendisini (kapanışı oldest+period > endTime) dışarıda bırakır → kopya da yok.
+    endTime = oldest;
   }
 
   const unique = [...new Map(allCandles.map(c => [c.timestamp, c])).values()];
