@@ -20,10 +20,11 @@ const candleRepo = process.env.DATABASE_URL
   ? makeCandleStoreRepository({ db: new Pool({ connectionString: process.env.DATABASE_URL, max: 4 }) })
   : null;
 
-// tf: DB/enum için küçük harf ('1m','5m','4h'); Bitget REST 4h için 'granularity=4H' bekliyor
-// (bkz. bitget-ws.js'teki aynı normalizasyon) — fetchFromRest'e REST'in beklediği
-// granularity'yi, cache/DB tarafına ise normalize edilmiş tf'i ayrı ayrı geçiriyoruz.
-const TF_TO_GRANULARITY = { '1m': '1m', '5m': '5m', '15m': '15m', '4h': '4H' };
+// tf: DB/enum için küçük harf ('1m','5m','1h','4h'); Bitget REST saat-ve-üstü
+// zaman dilimleri için büyük harf 'granularity' bekliyor (bkz. bitget-ws.js'teki
+// aynı normalizasyon) — fetchFromRest'e REST'in beklediği granularity'yi,
+// cache/DB tarafına ise normalize edilmiş tf'i ayrı ayrı geçiriyoruz.
+const TF_TO_GRANULARITY = { '1m': '1m', '5m': '5m', '15m': '15m', '1h': '1H', '4h': '4H' };
 
 async function fetchCandlesForSweep(symbol, tf, days) {
   const granularity = TF_TO_GRANULARITY[tf] ?? tf;
@@ -38,26 +39,31 @@ async function fetchCandlesForSweep(symbol, tf, days) {
 // sadece migration yorumlarında özet duruyordu.
 const RESULTS_DIR = join(__dirname, '../../../backtest-results');
 
-// 2026-07-13: BTC/ETH/SOL/BNB/XRP gibi büyük-cap coinlerle test edilmişti, ama
-// canlı sistem (MARKET_DATA_SYMBOLS=TOP:50) fiilen çoğunlukla küçük-cap, yüksek
-// volatiliteli altcoinlerde sinyal üretiyor — son 7 günün en çok sinyal üreten
-// 5 sembolü (BTC son 3 günde sıfır sinyal üretti). Büyük-cap coinlerin ATR%'si
-// (~%0.04) bu coinlerinkinden (~%1.0+) çok farklı, bu yüzden eski sweep sonuçları
-// gerçek sinyal evrenini temsil etmiyordu.
-const SYMBOLS = ['EVAAUSDT', 'LABUSDT', 'VANRYUSDT', 'KORUUSDT', 'VELVETUSDT'];
+// Faz A2 (yapısal onarım, 2026-09-02): 2026-08-20 turunda SYMBOLS bilinçli olarak
+// sadece midcap'e daraltılmıştı ("canlı sistem fiilen microcap'lerde sinyal
+// üretiyor" gerekçesiyle) — ama o gözlem, MIN_STOP_PCT=%2.5 mutlak eşiğinin
+// likit coinleri yapısal olarak elemesinin SONUCUYDU, nedeni değil. Kapı artık
+// maliyet ORANINA bakıyor (setup-builder.js Faz B1) ve TF yükseltildi (Faz B2),
+// bu yüzden iki katman birlikte taranır: hangi katmanın (ve hangi TF'in) gerçekten
+// kazandırdığı varsayılmaz, walk-forward test metriğiyle ölçülür.
+const MAJOR_SYMBOLS = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'XRPUSDT', 'BNBUSDT', 'DOGEUSDT', 'ADAUSDT', 'AVAXUSDT', 'LINKUSDT', 'SUIUSDT'];
+const MIDCAP_SYMBOLS = ['EVAAUSDT', 'LABUSDT', 'VANRYUSDT', 'KORUUSDT', 'VELVETUSDT'];
+const SYMBOL_TIERS = { major: MAJOR_SYMBOLS, midcap: MIDCAP_SYMBOLS };
 // Doğrulama araştırması (2026-08-20, B2): SYMBOLS "en çok sinyal üreten" diye
 // seçilip AYNI dönemde test ediliyordu — seçim ve test aynı veriye bakınca
 // yanlılık kaçınılmaz. HOLDOUT_SYMBOLS grid'e hiç girmez; sadece kazanan combo
 // üzerinde, görülmemiş bir sembol kümesinde son bir kontrol için kullanılır.
 // Seçim kriteri farklı: SYMBOLS listesiyle örtüşmeyen, orta-likit altcoinler.
 const HOLDOUT_SYMBOLS = ['WIFUSDT', 'ORDIUSDT', 'PEOPLEUSDT'];
-const DAYS = 30;
-// Faz 2.5 (trigger TF sweep boyutu): "günde 1-3 işlem" hedefi 1m trigger ile
-// uyumsuz olabilir — artık sweep 1m VE 5m'i ayrı ayrı dener. Canlıdaki
-// COOLDOWN_BY_TF ile eşleşen cooldown her TF için ayrı kullanılır
-// (make-process-candle.js:17).
-const TF_OPTIONS = ['1m', '5m'];
-const COOLDOWN_MS_BY_TF = { '1m': 60 * 60 * 1000, '5m': 120 * 60 * 1000 };
+// Faz A2 (2026-09-02): 30→180. 30 günlük pencerede 1h/15m TF'lerde (yüksek
+// cooldown, az mum) sembol başına n=0-2 çıkıyordu — karar verilemeyecek kadar
+// küçük örneklem. 180 gün zaten backfill edilmiş durumda (candles tablosu),
+// ekstra REST maliyeti yok, sadece DB'den okunuyor.
+const DAYS = 180;
+// Faz B2 (yapısal onarım, 2026-09-02): '1m' kaldırıldı — likit coinlerde fee/risk
+// canlıdaki COOLDOWN_BY_TF ile eşleşen cooldown'la taranır (make-process-candle.js).
+const TF_OPTIONS = ['5m', '15m', '1h'];
+const COOLDOWN_MS_BY_TF = { '5m': 120 * 60 * 1000, '15m': 180 * 60 * 1000, '1h': 240 * 60 * 1000 };
 const WINDOW = 60;
 const REGIME_SYMBOL = 'BTCUSDT';
 const REGIME_LEAD_DAYS = 10;
@@ -116,11 +122,11 @@ async function fetchSymbolSet(symbols, tf) {
   return perSymbol;
 }
 
-async function fetchAllSymbolData(tf) {
-  console.log(`Veri çekiliyor: ${SYMBOLS.join(', ')} (${DAYS} gün, TF=${tf})...`);
+async function fetchAllSymbolData(tf, symbols) {
+  console.log(`Veri çekiliyor: ${symbols.join(', ')} (${DAYS} gün, TF=${tf})...`);
   const btc4h = await fetchCandlesForSweep(REGIME_SYMBOL, '4h', DAYS + REGIME_LEAD_DAYS);
   const regimeBuffer = makeAlignedBuffer(btc4h, 60);
-  const perSymbol = await fetchSymbolSet(SYMBOLS, tf);
+  const perSymbol = await fetchSymbolSet(symbols, tf);
   return { regimeBuffer, perSymbol };
 }
 
@@ -214,10 +220,11 @@ function computeFixedRange(perSymbol) {
 // Faz 2.2/2.5: bir (tf, entryMode) çifti için tam parametre grid'ini çalıştırır.
 // TF ve entryMode dış boyutlar olarak main()'de dolaşılır — her biri kendi veri
 // setini çeker (farklı TF'nin mumları farklıdır) ve kendi grid'ini raporlar.
-async function runOneSweep(tf, entryMode) {
-  const { regimeBuffer, perSymbol } = await fetchAllSymbolData(tf);
+async function runOneSweep(tf, entryMode, tier) {
+  const symbols = SYMBOL_TIERS[tier];
+  const { regimeBuffer, perSymbol } = await fetchAllSymbolData(tf, symbols);
   const range = computeFixedRange(perSymbol);
-  const cooldownMs = COOLDOWN_MS_BY_TF[tf] ?? COOLDOWN_MS_BY_TF['1m'];
+  const cooldownMs = COOLDOWN_MS_BY_TF[tf] ?? COOLDOWN_MS_BY_TF['5m'];
   const fees = { ...FEES, entryMode };
 
   const filterParams = buildFilterParams();
@@ -243,16 +250,29 @@ async function runOneSweep(tf, entryMode) {
     }
   }
 
+  // Faz A2 düzeltmesi (2026-09-02): sıralama SADECE testMetrics.avgR'ye göreydi —
+  // bu, n=1 gibi bir işlemlik şans eseri yüksek R'lerin (gürültü) n=40+ olan
+  // istikrarlı, tekrarlanan bir edge'in ÖNÜNE geçmesine yol açıyordu (180 günlük
+  // sweep'te canlı örnek: n=1 AvgR=+0.96 "en iyi" seçilirken, n=41 AvgR=+0.21
+  // train/test'te tutarlı bir combo göz ardı ediliyordu). MIN_DECISION_N altındaki
+  // satırlar hâlâ tabloda görünür (şeffaflık) ama "en iyi" seçimi ve holdout
+  // kontrolü SADECE karar kuralının zaten aradığı n eşiğini geçen satırlar
+  // arasından yapılır; hiçbiri geçmiyorsa en yüksek n'li satıra düşülür (en az
+  // yanıltıcı seçim — "hiç veri yok"tan iyi, ama verdict zaten false kalacak).
+  const MIN_DECISION_N = 10;
+  const qualifying = rows.filter((r) => r.testMetrics.totalSignals >= MIN_DECISION_N);
+  const rankPool = qualifying.length > 0 ? qualifying : rows;
+  rankPool.sort((a, b) => b.testMetrics.avgR - a.testMetrics.avgR || b.testMetrics.winRate - a.testMetrics.winRate);
   rows.sort((a, b) => b.testMetrics.avgR - a.testMetrics.avgR || b.testMetrics.winRate - a.testMetrics.winRate);
 
-  console.log(`\n=== PARAMETRE SWEEP SONUÇLARI — TF=${tf} entryMode=${entryMode} (train/test, SABİT takvim aralığı) ===`);
-  console.log(`Semboller: ${SYMBOLS.join(', ')} | Dönem: ${DAYS} gün | Test payı: son %${(TEST_FRACTION * 100).toFixed(0)}`);
-  console.log(`Cooldown: ${cooldownMs / 60000}dk (per-symbol) | MinStop: %2.5 | SrCap: ON\n`);
+  console.log(`\n=== PARAMETRE SWEEP SONUÇLARI — TF=${tf} entryMode=${entryMode} tier=${tier} (train/test, SABİT takvim aralığı) ===`);
+  console.log(`Semboller: ${symbols.join(', ')} | Dönem: ${DAYS} gün | Test payı: son %${(TEST_FRACTION * 100).toFixed(0)}`);
+  console.log(`Cooldown: ${cooldownMs / 60000}dk (per-symbol) | MaxCostRatio: %10 | SrCap: ON\n`);
   console.log(formatSweepTable(rows));
 
-  const best = rows[0];
+  const best = rankPool[0];
   const verdict = passesDecisionRule(best.testMetrics);
-  console.log(`\nEn iyi combo (TEST'e göre, TF=${tf} entryMode=${entryMode}): threshold=${best.threshold} atrStopMult=${best.atrStopMult} targetRR=${best.targetRR}`);
+  console.log(`\nEn iyi combo (TEST'e göre, TF=${tf} entryMode=${entryMode} tier=${tier}): threshold=${best.threshold} atrStopMult=${best.atrStopMult} targetRR=${best.targetRR}`);
   console.log(
     verdict
       ? '✅ Karar kuralını geçti (test AvgR>0, WR ≥ başabaş+3p, n≥10) — walk-forward doğrulandı.'
@@ -263,7 +283,7 @@ async function runOneSweep(tf, entryMode) {
     `| SHORT: N=${best.testMetricsByDirection.short.totalSignals} Win%=${(best.testMetricsByDirection.short.winRate*100).toFixed(1)}%`,
   );
 
-  console.log(`\n=== HOLDOUT SEMBOLLERİNDE KAZANAN COMBO KONTROLÜ (TF=${tf} entryMode=${entryMode}) ===`);
+  console.log(`\n=== HOLDOUT SEMBOLLERİNDE KAZANAN COMBO KONTROLÜ (TF=${tf} entryMode=${entryMode} tier=${tier}) ===`);
   console.log(`Semboller (grid'e hiç girmedi): ${HOLDOUT_SYMBOLS.join(', ')}`);
   const holdoutPerSymbol = await fetchSymbolSet(HOLDOUT_SYMBOLS, tf);
   const holdoutTrades = runCombo({
@@ -280,23 +300,25 @@ async function runOneSweep(tf, entryMode) {
       : "⚠️  Holdout'ta karar kuralını geçemedi — sembol evrenine özgü curve-fit olabilir.",
   );
 
-  return { tf, entryMode, rows, best, verdict, holdoutMetrics, holdoutVerdict, range, cooldownMs };
+  return { tf, entryMode, tier, rows, best, verdict, holdoutMetrics, holdoutVerdict, range, cooldownMs };
 }
 
 async function main() {
   const results = [];
   for (const tf of TF_OPTIONS) {
     for (const entryMode of ['taker', 'maker']) {
-      const result = await runOneSweep(tf, entryMode);
-      results.push(result);
+      for (const tier of Object.keys(SYMBOL_TIERS)) {
+        const result = await runOneSweep(tf, entryMode, tier);
+        results.push(result);
+      }
     }
   }
 
   results.sort((a, b) => b.best.testMetrics.avgR - a.best.testMetrics.avgR);
   const overallBest = results[0];
-  console.log('\n=== GENEL EN İYİ (tüm TF × entryMode kombinasyonları arasında) ===');
+  console.log('\n=== GENEL EN İYİ (tüm TF × entryMode × tier kombinasyonları arasında) ===');
   console.log(
-    `TF=${overallBest.tf} entryMode=${overallBest.entryMode} → threshold=${overallBest.best.threshold} ` +
+    `TF=${overallBest.tf} entryMode=${overallBest.entryMode} tier=${overallBest.tier} → threshold=${overallBest.best.threshold} ` +
     `atrStopMult=${overallBest.best.atrStopMult} targetRR=${overallBest.best.targetRR} ` +
     `(test AvgR=${overallBest.best.testMetrics.avgR})`,
   );
@@ -312,21 +334,21 @@ function writeSweepReport(results, overallBest) {
   const filename = `sweep-${ts}.json`;
   const payload = {
     generatedAt: now.toISOString(),
-    symbols: SYMBOLS,
+    symbolTiers: SYMBOL_TIERS,
     holdoutSymbols: HOLDOUT_SYMBOLS,
     days: DAYS,
     testFraction: TEST_FRACTION,
     grid: {
       thresholds: THRESHOLDS, atrStopMultOptions: ATR_STOP_MULT_OPTIONS, targetRROptions: TARGET_RR_OPTIONS,
-      tfOptions: TF_OPTIONS, entryModeOptions: ['taker', 'maker'],
+      tfOptions: TF_OPTIONS, entryModeOptions: ['taker', 'maker'], tierOptions: Object.keys(SYMBOL_TIERS),
     },
     results: results.map((r) => ({
-      tf: r.tf, entryMode: r.entryMode, fixedRange: r.range, cooldownMs: r.cooldownMs,
+      tf: r.tf, entryMode: r.entryMode, tier: r.tier, fixedRange: r.range, cooldownMs: r.cooldownMs,
       rows: r.rows,
       best: { threshold: r.best.threshold, atrStopMult: r.best.atrStopMult, targetRR: r.best.targetRR, verdict: r.verdict },
       holdout: { metrics: r.holdoutMetrics, verdict: r.holdoutVerdict },
     })),
-    overallBest: { tf: overallBest.tf, entryMode: overallBest.entryMode, ...overallBest.best },
+    overallBest: { tf: overallBest.tf, entryMode: overallBest.entryMode, tier: overallBest.tier, ...overallBest.best },
   };
   mkdirSync(RESULTS_DIR, { recursive: true });
   const outPath = join(RESULTS_DIR, filename);

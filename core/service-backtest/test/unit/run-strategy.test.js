@@ -97,7 +97,7 @@ describe('runStrategyOverCandles', () => {
     }
   });
 
-  it('TF/minStopPct parametresi buildSetup\'a geçirilir (varsayılan 1m fee-floor eşiği)', () => {
+  it('maxCostRatio parametresi buildSetup\'a geçirilir (Faz B1: maliyet oranı eşiği)', () => {
     const candles = makeCandles(300);
     const tradesDefault = runStrategyOverCandles({
       candles, fundingHistory: [], regimeBuffer: flatRegimeBuffer, higherTfBuffer: flatHigherTfBuffer,
@@ -105,7 +105,7 @@ describe('runStrategyOverCandles', () => {
     });
     const tradesLooseFloor = runStrategyOverCandles({
       candles, fundingHistory: [], regimeBuffer: flatRegimeBuffer, higherTfBuffer: flatHigherTfBuffer,
-      window: 60, threshold: 0.55, symbol: 'TESTUSDT', minStopPct: 0.001,
+      window: 60, threshold: 0.55, symbol: 'TESTUSDT', maxCostRatio: 10,
     });
     // Daha gevşek fee-floor eşit ya da daha fazla sinyal üretmeli (asla daha az)
     expect(tradesLooseFloor.length).toBeGreaterThanOrEqual(tradesDefault.length);

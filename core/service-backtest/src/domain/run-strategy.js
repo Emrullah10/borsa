@@ -12,9 +12,7 @@ import { simulateTrade } from './simulator.js';
 // Faz 2.5 (trigger TF sweep boyutu): artık VARSAYILAN, cooldownMs parametresiyle
 // override edilebilir — canlıda COOLDOWN_BY_TF 5m için 120dk kullanıyor
 // (make-process-candle.js), backtest önceden bunu simüle edemiyordu.
-const COOLDOWN_MS = 60 * 60 * 1000;
-// Parite: canlıdaki MIN_STOP_PCT_BY_TF['1m'] = 0.025 ile eşitlendi.
-const DEFAULT_MIN_STOP_PCT = 0.025;
+const COOLDOWN_MS = 120 * 60 * 1000;
 
 // Canlı make-process-candle.js ile birebir aynı karar zinciri (parite kritik):
 // indicators → liqPressure → regime/higherTfTrend → confluence → entry-filters
@@ -26,9 +24,13 @@ const DEFAULT_MIN_STOP_PCT = 0.025;
 // resistanceLevel/minStopPct geçirmiyordu — canlıda S/R kapağı hedefi kırpıp
 // rrRatio'yu düşürebiliyor, backtest'te bu hiç olmuyordu. Bu, sweep sonuçlarının
 // gerçek canlı davranışı yanlış simüle etmesine yol açan bir parite kopukluğuydu.
+//
+// Faz B1 (yapısal onarım, 2026-09-02): minStopPct → maxCostRatio. Canlı tarafta
+// mutlak stop yüzdesi kapısı kaldırıldı (setup-builder.js MAX_COST_RATIO_DEFAULT),
+// backtest parite için aynı ismi kullanır.
 export function runStrategyOverCandles({
   candles, fundingHistory, regimeBuffer, higherTfBuffer,
-  window, threshold, symbol, filterParams, minStopPct = DEFAULT_MIN_STOP_PCT, requireSrCap = false,
+  window, threshold, symbol, filterParams, maxCostRatio, requireSrCap = false,
   atrStopMult, targetRR, fees, cooldownMs = COOLDOWN_MS,
 }) {
   if (candles.length < window) return [];
@@ -98,7 +100,7 @@ export function runStrategyOverCandles({
       atr: indicators.atr,
       supportLevel: indicators.supportLevel,
       resistanceLevel: indicators.resistanceLevel,
-      minStopPct,
+      ...(maxCostRatio != null ? { maxCostRatio } : {}),
       requireSrCap,
       ...(atrStopMult != null ? { atrStopMult } : {}),
       ...(targetRR != null ? { targetRR } : {}),

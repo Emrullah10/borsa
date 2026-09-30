@@ -5,7 +5,7 @@
 // Kullanım:
 //   node --env-file=.env services/service-backtest/src/backfill-candles.js
 //   node --env-file=.env services/service-backtest/src/backfill-candles.js --days 90
-//   node --env-file=.env services/service-backtest/src/backfill-candles.js --symbols BTCUSDT,ETHUSDT --tf 1m,5m,4h
+//   node --env-file=.env services/service-backtest/src/backfill-candles.js --symbols BTCUSDT,ETHUSDT --tf 5m,15m,1h,4h
 //
 // ⚠️ Sunucuda DEĞİL, local'de çalıştır — REST fırtınası daha önce sunucuyu
 // termal kapanmaya sürüklemişti (bkz. plan Faz 1.5 notu).
@@ -21,12 +21,14 @@ const DEFAULT_SYMBOLS = [
   'AVAXUSDT', 'LINKUSDT', 'SUIUSDT', 'EVAAUSDT', 'LABUSDT', 'VANRYUSDT',
   'KORUUSDT', 'VELVETUSDT', 'WIFUSDT', 'ORDIUSDT', 'PEOPLEUSDT',
 ];
-const DEFAULT_TFS = ['1m', '5m', '4h'];
+// Faz B2 (yapısal onarım, 2026-09-02): 1m çıktı, 15m/1h eklendi — bkz. sweep.js
+// TF_OPTIONS notu (fee/risk oranı 1m'de likit coinlerde %30-42, taşınamaz).
+const DEFAULT_TFS = ['5m', '15m', '1h', '4h'];
 const DEFAULT_DAYS = 90;
-// Bitget REST granularity: 4h'lık mumlar için 'granularity' parametresi '4H' bekler
-// (bkz. bitget-ws.js'teki aynı normalizasyon), ama tabloda küçük harf 'timeframe'
-// enum değeri kullanılıyor — normalize burada yapılır.
-const TF_TO_GRANULARITY = { '1m': '1m', '5m': '5m', '15m': '15m', '4h': '4H' };
+// Bitget REST granularity: saat-ve-üstü zaman dilimleri için 'granularity'
+// büyük harf bekler (bkz. bitget-ws.js'teki aynı normalizasyon), tabloda ise
+// küçük harf 'timeframe' enum değeri kullanılıyor — normalize burada yapılır.
+const TF_TO_GRANULARITY = { '1m': '1m', '5m': '5m', '15m': '15m', '1h': '1H', '4h': '4H' };
 
 function parseArgs(argv) {
   const args = { symbols: DEFAULT_SYMBOLS, tfs: DEFAULT_TFS, days: DEFAULT_DAYS };
