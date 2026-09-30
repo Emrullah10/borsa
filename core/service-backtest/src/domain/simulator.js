@@ -45,14 +45,19 @@ function findMakerFill(window, direction, limitPrice) {
   return -1;
 }
 
-export function simulateTrade(setup, candles, fees = {}) {
+// Lab (2026-09-30): candleMs/timeoutMs opsiyonel — varsayılanlar eski davranış
+// (1m mum, 240 mum = 4s). Sweep 5m/15m/1h mumları verince timeout sabit 240 MUM
+// olduğu için 5-60 kat uzuyordu (1h sinyal ≈ 10 gün); artık timeout GERÇEK süreye bağlı.
+export function simulateTrade(setup, candles, fees = {}, opts = {}) {
+  const { candleMs = CANDLE_MS, timeoutMs = TIMEOUT_MS } = opts;
+  const maxCandles = Math.ceil(timeoutMs / candleMs);
   const { entryPrice, stopPrice, targetPrice, direction } = setup;
   const {
     takerFee = 0.0006, makerFee = 0.0002, slippagePct = 0.0003, exitSlippagePct = 0.0003,
     entryMode = 'taker',
   } = fees;
 
-  const window = candles.slice(0, MAX_CANDLES);
+  const window = candles.slice(0, maxCandles);
   if (window.length === 0) {
     return { outcome: 'TIMEOUT', r: 0, durationMinutes: 0 };
   }
@@ -89,8 +94,8 @@ export function simulateTrade(setup, candles, fees = {}) {
   const evalWindow = window.slice(fillOffset);
   for (let i = 0; i < evalWindow.length; i++) {
     const candle = evalWindow[i];
-    const now = (i + 1) * CANDLE_MS;
-    const result = evaluateOutcome(signal, candle, now, TIMEOUT_MS);
+    const now = (i + 1) * candleMs;
+    const result = evaluateOutcome(signal, candle, now, timeoutMs);
     if (!result) continue;
 
     const { simPnlR } = evaluateSimOutcome({
@@ -109,10 +114,10 @@ export function simulateTrade(setup, candles, fees = {}) {
     return {
       outcome,
       r: simPnlR ?? 0,
-      durationMinutes: fillOffset + i + 1,
+      durationMinutes: ((fillOffset + i + 1) * candleMs) / 60000,
       ...(result.tieBreak ? { tieBreak: true } : {}),
     };
   }
 
-  return { outcome: 'TIMEOUT', r: 0, durationMinutes: evalWindow.length };
+  return { outcome: 'TIMEOUT', r: 0, durationMinutes: (evalWindow.length * candleMs) / 60000 };
 }

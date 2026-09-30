@@ -170,3 +170,42 @@ describe('simulateTrade — canlı tracker ile parite', () => {
     expect(backtestResult.r).toBeCloseTo(liveResult.simPnlR, 6);
   });
 });
+
+// Lab (2026-09-30): simülatör 1m mum + 240 mum timeout'a SABİTTİ. Sweep 5m/15m/1h
+// mumları verince timeout 5-60 kat uzuyordu (1h sinyal ≈ 10 gün) — parite hatası.
+// candleMs/timeoutMs artık parametrik; varsayılanlar eski davranışı korur.
+describe('simulateTrade — zaman dilimi duyarlı (candleMs / timeoutMs)', () => {
+  const HOUR = 3_600_000;
+  const setup = { entryPrice: 100, stopPrice: 95, targetPrice: 110, direction: 'long' };
+  const flat = (close) => ({ timestamp: 0, open: 100, high: 102, low: 98, close, volume: 1 });
+
+  it('1h mumlarda 24h timeout 24. mumda gerçek mark-to-market R ile TIMEOUT döner', () => {
+    const candles = Array(100).fill(flat(104));
+    const r = simulateTrade(setup, candles, { takerFee: 0.0006, slippagePct: 0.0003 },
+      { candleMs: HOUR, timeoutMs: 24 * HOUR });
+    expect(r.outcome).toBe('TIMEOUT');
+    expect(r.durationMinutes).toBe(24 * 60); // 24 saat = 1440 dk (240 mum DEĞİL)
+    expect(r.r).not.toBe(0);                 // bedava r:0 değil
+  });
+
+  it('timeout penceresinden sonraki mumlardaki TP/SL sayılmaz', () => {
+    const candles = [...Array(24).fill(flat(100)), { timestamp: 0, open: 100, high: 120, low: 99, close: 118, volume: 1 }];
+    const r = simulateTrade(setup, candles, { takerFee: 0.0006, slippagePct: 0.0003 },
+      { candleMs: HOUR, timeoutMs: 24 * HOUR });
+    expect(r.outcome).toBe('TIMEOUT'); // 25. mumdaki TP görülmemeli
+  });
+
+  it('opsiyon verilmezse eski davranış: 240 x 1m mum, durationMinutes = 240', () => {
+    const r = simulateTrade(setup, Array(300).fill(flat(100)), { takerFee: 0.0006, slippagePct: 0.0003 });
+    expect(r.outcome).toBe('TIMEOUT');
+    expect(r.durationMinutes).toBe(240);
+  });
+
+  it('1h mumda TP gelirse durationMinutes saat cinsinden dakikaya çevrilir', () => {
+    const candles = [flat(100), { timestamp: 0, open: 100, high: 111, low: 99, close: 110, volume: 1 }];
+    const r = simulateTrade(setup, candles, { takerFee: 0.0006, slippagePct: 0.0003 },
+      { candleMs: HOUR, timeoutMs: 24 * HOUR });
+    expect(r.outcome).toBe('WIN');
+    expect(r.durationMinutes).toBe(120); // 2. mum = 2 saat = 120 dk
+  });
+});
