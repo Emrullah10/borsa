@@ -1,0 +1,146 @@
+{
+  "generatedAt": "2026-09-30T09:58:49.284Z",
+  "quick": false,
+  "openHoldout": false,
+  "force": false,
+  "rules": {
+    "families": [
+      "funding_extreme",
+      "F1_momentum",
+      "F2_reversal",
+      "F3_smallcap"
+    ],
+    "alpha": 0.05,
+    "ciLevel": 0.9875,
+    "costStressMultiplier": 2,
+    "minTradesTip1": 100,
+    "randomTrials": 200,
+    "randomPercentileMin": 0.95,
+    "bootstrapIterations": 4000,
+    "basketBlockDays": 5
+  },
+  "grid": {
+    "zThresholds": [
+      2,
+      2.5,
+      3
+    ],
+    "holdHours": [
+      8,
+      24,
+      72
+    ],
+    "stopAtrMults": [
+      3,
+      6
+    ],
+    "minAbsRate": 0.0002
+  },
+  "coverage": {
+    "cryptoSymbols": 134,
+    "dailyRange": "2023-07-18 → 2026-09-29",
+    "fundingBinancePct": 96,
+    "skippedNote": "Tip 1 evreni 60 sembol; Tip 2 günlük evren filtresi: 30g ort. USD hacim ≥ $5M ve ≥60 gün geçmiş (o güne göre). Funding'i hiç bilinmeyen sembol-günler 0 varsayıldı."
+  },
+  "results": [
+    {
+      "key": "funding_extreme",
+      "title": "Funding uçları (Tip 1)",
+      "config": "z=2.5 · tutma 72s · stop 3×ATR",
+      "train": {
+        "mean": 0.0535008629266548,
+        "n": 972
+      },
+      "validation": {
+        "mean": 0.22696964197714106,
+        "n": 418
+      },
+      "holdout": null,
+      "sanity": {
+        "sane": true,
+        "detail": "Sınav sağlam: rastgele strateji kâr etmiyor (ortalama -0.0160)."
+      },
+      "verdict": {
+        "passed": false,
+        "skipped": true,
+        "reason": "Doğrulamayı geçti; holdout henüz açılmadı (--open-holdout verilmedi). Holdout aday başına TEK kez açılır.",
+        "pending": true
+      }
+    },
+    {
+      "key": "F1_momentum",
+      "title": "F1 momentum (Tip 2)",
+      "config": "L=28g · haftalık dengeleme",
+      "train": {
+        "mean": 0.0013866271471542652,
+        "n": 426,
+        "sharpe": 1.2553556611276298
+      },
+      "validation": {
+        "mean": 0.0027185560184198212,
+        "n": 184
+      },
+      "holdout": null,
+      "sanity": {
+        "sane": true,
+        "detail": "Sınav sağlam: rastgele strateji kâr etmiyor (ortalama -0.0002)."
+      },
+      "verdict": {
+        "passed": false,
+        "skipped": true,
+        "reason": "Doğrulamayı geçti; holdout henüz açılmadı (--open-holdout verilmedi). Holdout aday başına TEK kez açılır.",
+        "pending": true
+      }
+    },
+    {
+      "key": "F2_reversal",
+      "title": "F2 dönüş (Tip 2)",
+      "config": "dünün getirisinin tersi · günlük",
+      "train": {
+        "mean": -0.002432909169193969,
+        "n": 426,
+        "sharpe": -2.494205479310553
+      },
+      "validation": {
+        "mean": -0.00430873639121248,
+        "n": 184
+      },
+      "holdout": null,
+      "sanity": {
+        "sane": true,
+        "detail": "Sınav sağlam: rastgele strateji kâr etmiyor (ortalama -0.0020)."
+      },
+      "verdict": {
+        "passed": false,
+        "skipped": true,
+        "reason": "Doğrulama döneminde ortalama -0.0043 (n=184) ≤ 0 — holdout AÇILMADI."
+      }
+    },
+    {
+      "key": "F3_smallcap",
+      "title": "F3 küçük/geniş-aralık/trend (Tip 2)",
+      "config": "kompozit sıra · günlük",
+      "train": {
+        "mean": -0.00045644736627391985,
+        "n": 426,
+        "sharpe": -0.4843580035196313
+      },
+      "validation": {
+        "mean": 0.0007359179621524497,
+        "n": 184
+      },
+      "holdout": null,
+      "sanity": {
+        "sane": true,
+        "detail": "Sınav sağlam: rastgele strateji kâr etmiyor (ortalama -0.0020)."
+      },
+      "verdict": {
+        "passed": false,
+        "skipped": true,
+        "reason": "Doğrulamayı geçti; holdout henüz açılmadı (--open-holdout verilmedi). Holdout aday başına TEK kez açılır.",
+        "pending": true
+      }
+    }
+  ],
+  "lock": {}
+}
