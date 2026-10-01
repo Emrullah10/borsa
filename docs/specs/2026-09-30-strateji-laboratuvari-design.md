@@ -31,8 +31,17 @@ Evren: 24s hacmi ≥ $5M olan perp'ler (bugün ~89). Üç aday kural:
   **2026-01 → 2026-09 nihai sınav** (sadece seçilen aday, TEK kez açılır)
 - **Geçme şartı (nihai sınav):** fee + kayma + funding sonrası ort. R'nin %95 CI alt sınırı > 0;
   maliyetler 2× iken de > 0; Tip 1 için n ≥ 100.
-- **Sahte-pozitif kontrolü:** aynı sınav rastgele yön sinyalleriyle koşulur; bunun kaybetmesi gerekir.
-  Kazanıyorsa sınav bozuktur, sonuçlar geçersiz.
+- **Dayanıklılık kuralı (holdout'a BAKMADAN eklendi — 2026-09-30):** ilk tam koşuda (yalnız train+doğrulama) Tip 1'in
+  doğrulama kârı tek bir +49.95R işlemdi (toplam R'nin %48'i, medyan −0.61R), F3'ünki en iyi 5 günündeydi. Ortalama > 0 bunu
+  yakalamıyor. Kural: **en iyi %2.5 gözlem çıkarılınca ortalama hâlâ > 0** — hem doğrulama kapısında (holdout'un tek bakışı
+  piyangoya harcanmasın) hem holdout kararında. Yalnız daha muhafazakâr yönde bir ekleme; sonuç görülmeden önce yapıldı.
+  Ayrıca Tip 1 güven aralığı işlemleri bağımsız saymak yerine **haftalık küme bootstrap** ile hesaplanır (işlemler zamanda kümelenir).
+- **Sahte-pozitif kontrolü (iki ayrı taban çizgisi — uygulama sırasında sentetik testle ayrıştırıldı):**
+  1. *Sınav sağlamlığı:* rastgele **zaman + yön** sinyalleri (Tip 2: rastgele sepet). Bunun kaybetmesi gerekir;
+     kazanıyorsa sınav bozuktur, sonuçlar geçersiz.
+  2. *Yön kuralının ek değeri:* **aynı zamanlama + rastgele yön**, 200 deneme; gerçek strateji bunların ≥ %95'ini geçmeli.
+     (Bu taban zamanlamadaki bilgiyi de içerir: olay anlarında volatilite artıyorsa stop'lu yapının içbükeyliği
+     yüzünden rastgele yön bile kâr edebilir — bu yüzden sağlamlık için kullanılmaz.)
 - Çoklu deneme: denenen aday sayısı raporlanır; en iyiyi seçmek için düzeltme uygulanır (aday sayısı kadar karşılaştırma).
 
 ## Veri
@@ -48,6 +57,11 @@ Notlar:
   Funding sinyali Binance'ten üretilir, **maliyet/PnL Bitget** tarafında modellenir; korelasyon raporlanır.
 - Mevcut `fetchFundingHistory` yalnızca son ~33 günü çekiyor (`pageSize=100`, sayfalama yok) → **bug**, düzeltilir ve DB'ye yazılır.
 - Bugünden itibaren funding günlük kaydedilir (kaydedilmeyen veri kalıcı kaybolur).
+- **RWA kontratları dışlanır:** Bitget'in 804 kontratının 339'u RWA (hisse/ETF/emtia; `isRwa=YES` — ör. KORUUSDT bir ETF,
+  SNDK/MSTR hisse, XAU altın). Evren yalnız `isRwa=NO` ve `symbolStatus=normal` kripto perp'lerdir.
+- Dönemler: train başlangıcı 2024-05-01 (günlük veri 2024-04-04'ten; ~1 ay faktör ısınması).
+- Bitget funding yalnız ~90 gün saklar: `backfill-funding.js --source bitget` en geç ~60 günde bir çalıştırılmalı;
+  günlük canlı toplama Alt-proje 3'e bırakıldı.
 - Hayatta-kalma yanlılığı: delist edilmiş coinler evrende yok → raporda açıkça belirtilir, mümkünse
   o günkü hacim filtresi kullanılır (bugünün değil).
 

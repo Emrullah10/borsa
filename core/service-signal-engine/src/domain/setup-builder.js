@@ -8,8 +8,14 @@ const MIN_TARGET_PCT = 0.01; // Hedef girişten en az %1 uzakta olmalı
 // gidiş-dönüş maliyet ~0.0018. Yani bu kapı muhasebeden ~2× GEVŞEKTİ.
 // boot.js artık bot_config'ten hesaplayıp feeRoundtrip parametresiyle geçiyor.
 const FEE_ROUNDTRIP = 0.0008;
-// Eski: %1.2 — piyasa gürültüsünden dar. %2.5 ile fee/R oranı düşer, WR artar.
-const MIN_STOP_PCT_DEFAULT = 0.025;
+// Faz B1 (yapısal onarım, 2026-09-02): eski MIN_STOP_PCT_DEFAULT=0.025 mutlak
+// bir yüzde eşiğiydi — "stop en az fiyatın %2.5'i olsun" diyordu. Bu, likit
+// coinleri (BTC 5m ATR%~0.11) yapısal olarak eleyip botu sadece ATR%>~1 olan
+// Doğru soru "stop büyük mü" değil "fee, riskin makul bir payını mı yiyor" —
+// bu yüzden mutlak yüzde yerine MALİYET ORANI kapısı kullanılır: feeR (fee'nin
+// stop mesafesine oranı) belli bir tavanı aşmasın. Aynı mantık her fiyat
+// seviyesinde ve her zaman diliminde (5m/15m/1h) tutarlı çalışır.
+const MAX_COST_RATIO_DEFAULT = 0.10;
 
 // Eski: 1.8 — yüksek hedef ama nadiren ulaşılıyor (%42 WR).
 // 1.2 RR ile hedefler daha sık tutturulur → WR %55+ hedefi.
@@ -47,7 +53,7 @@ export function buildSetup({
   atr,
   supportLevel,
   resistanceLevel,
-  minStopPct = MIN_STOP_PCT_DEFAULT,
+  maxCostRatio = MAX_COST_RATIO_DEFAULT,
   requireSrCap = false,
   atrStopMult = ATR_STOP_MULT_DEFAULT,
   targetRR = TARGET_RR_DEFAULT,
@@ -83,10 +89,13 @@ export function buildSetup({
   const meetsMinTarget = targetPct >= MIN_TARGET_PCT;
   const meetsMinRR = rrRatio >= 1.0; // S/R cap sonrası R/R < 1 ise sinyal iptal
 
-  // Fee-aware filtre: stop dar olunca fee R'nin büyük kısmını yer
+  // Fee-aware filtre (maliyet oranı): stop dar olunca fee R'nin büyük kısmını yer.
+  // Mutlak yüzde eşiği yerine feeR (fee'nin stop mesafesine oranı) tavanı kullanılır —
+  // böylece BTC 1h (ATR%~0.5) geçebilirken BTC 5m (ATR%~0.11) elenir, coin fiyat
+  // seviyesinden bağımsız olarak tutarlı çalışır.
   const stopPct = risk / currentPrice;
   const feeR = stopPct > 0 ? feeRoundtrip / stopPct : Infinity;
-  const meetsFeeFloor = stopPct >= minStopPct && (rrRatio - feeR) >= 1.0;
+  const meetsFeeFloor = feeR <= maxCostRatio;
 
   // S/R kapaksız ("açık sahada") sinyaller canlı veride sistematik olarak kötü
   // performans gösteriyor (kapaklı ~%46 WR vs kapaksız ~%33 WR — 2026-07-13).

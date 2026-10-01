@@ -11,20 +11,21 @@ import { calcMlFeatures } from '../../domain/ml-features.js';
 const CANDLE_BUFFER_SIZE = 60;
 // commitCandle'a boşluk (gap) tespiti için timeframe süresi — bağlantı koptuğunda
 // oluşan delikli seriyi tespit etmek için gerekli (bkz. candle-buffer.js).
-const TF_MS = { '1m': 60_000, '5m': 300_000, '15m': 900_000, '4h': 14_400_000 };
-// TF bazlı cooldown: 1m → 60dk, 5m → 120dk
+const TF_MS = { '1m': 60_000, '5m': 300_000, '15m': 900_000, '1h': 3_600_000, '4h': 14_400_000 };
+// TF bazlı cooldown: 5m → 120dk, 15m → 180dk, 1h → 240dk
 // Eski değerler (10dk/30dk) günde ~666 sinyal üretiyordu — fee yükü edge'den büyüktü.
-// Yeni değerler günde ~5-15 sinyal hedefliyor (kalite > miktar).
-const COOLDOWN_BY_TF = { '1m': 60 * 60 * 1000, '5m': 120 * 60 * 1000 };
-const SIGNAL_COOLDOWN_MS = 60 * 60 * 1000; // fallback
+// Faz B2 (yapısal onarım, 2026-09-02): 1m kaldırıldı — fee/risk oranı likit
+// 15m/1h açıldı — aynı likit coinlerde oran %7-22'ye düşüyor.
+const COOLDOWN_BY_TF = { '5m': 120 * 60 * 1000, '15m': 180 * 60 * 1000, '1h': 240 * 60 * 1000 };
+const SIGNAL_COOLDOWN_MS = 120 * 60 * 1000; // fallback
 // Faz 2.1 (B9 düzeltmesi): OI farkını anlamlı kılmak için 1 saatlik pencere.
 const OI_WINDOW_MS = 60 * 60 * 1000;
 // Faz 3.1: funding z-score için tutulan geçmiş kaydı sayısı (~8 saatlik funding
 // periyodunda ~makul bir örneklem; sabit boyut, bellek sınırlı kalsın diye).
 const FUNDING_HISTORY_MAX = 50;
-// Min stop %2.5: eski %1.2-1.4 stop normal piyasa gürültüsünde 2dk'da vuruluyordu.
-// Daha geniş stop = daha az noise-triggered kayıp = daha yüksek WR.
-const MIN_STOP_PCT_BY_TF = { '1m': 0.025, '5m': 0.025 };
+// Faz B1 (yapısal onarım, 2026-09-02): mutlak MIN_STOP_PCT_BY_TF kaldırıldı —
+// setup-builder.js artık maliyet ORANI kapısı kullanıyor (maxCostRatio), TF'e
+// göre ayrı bir mutlak yüzde eşiğine gerek yok. Bkz. setup-builder.js MAX_COST_RATIO_DEFAULT.
 
 export function makeProcessCandle({
   signalRepo, publish, log, confluenceThreshold, filterParams,
@@ -139,8 +140,10 @@ export function makeProcessCandle({
     if (type !== 'candle') return;
 
     const tf = msg.tf;
-    // 15m ve 4h sadece teyit/rejim için kullanılır, sinyal üretmez
-    if (tf === '15m' || tf === '4h') { updateBufferOnly(symbol, tf, data); return; }
+    // 4h sadece rejim (BTC) için kullanılır, sinyal üretmez.
+    // Faz B2 (2026-09-02): 15m artık sinyal üretir (bkz. yorum COOLDOWN_BY_TF üstünde);
+    // 1h'nin üstünde bir teyit TF'i yok, o da doğrudan işlenir.
+    if (tf === '4h') { updateBufferOnly(symbol, tf, data); return; }
     const bufKey = `${symbol}.${tf}`;
     // Bitget WS mum henüz kapanmadan da (her tick'te) güncelleme gönderir —
     // gösterge/sinyal zincirini SADECE mum gerçekten kapandığında çalıştır.
@@ -217,8 +220,12 @@ export function makeProcessCandle({
     const regime = calcRegime(btc4hBuf);
     _currentRegime = regime;
 
-    // 1m sinyalleri için 5m trend teyidi al; diğer TF'ler için null (gate atlanır)
-    const higherTfTrend = tf === '1m' ? getHigherTfTrend(symbol, '5m') : null;
+    // Multi-TF teyit: bir üst zaman diliminin trendini kontrol et (gate).
+    // Faz B2 (2026-09-02): eskiden sadece 1m→5m vardı; 1m kaldırıldığı için
+    // artık 5m→15m ve 15m→1h. 1h'nin üstünde ayrı bir teyit serisi yok (4h
+    // sadece rejim için tutuluyor), o yüzden 1h için gate atlanır (null).
+    const HIGHER_TF = { '5m': '15m', '15m': '1h' };
+    const higherTfTrend = HIGHER_TF[tf] ? getHigherTfTrend(symbol, HIGHER_TF[tf]) : null;
     const confluence = calcConfluence(indicators, liqPressure, confluenceThreshold, higherTfTrend, regime);
     if (!confluence.isCandidate) return;
 
@@ -244,7 +251,6 @@ export function makeProcessCandle({
       atr: indicators.atr,
       supportLevel: indicators.supportLevel,
       resistanceLevel: indicators.resistanceLevel,
-      minStopPct: MIN_STOP_PCT_BY_TF[tf] ?? 0.012,
       requireSrCap,
       ...(atrStopMult != null ? { atrStopMult } : {}),
       ...(targetRR != null ? { targetRR } : {}),

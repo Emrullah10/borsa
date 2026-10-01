@@ -5,12 +5,13 @@
 // Kullanım:
 //   node --env-file=.env services/service-backtest/src/backfill-candles.js
 //   node --env-file=.env services/service-backtest/src/backfill-candles.js --days 90
-//   node --env-file=.env services/service-backtest/src/backfill-candles.js --symbols BTCUSDT,ETHUSDT --tf 1m,5m,4h
+//   node --env-file=.env services/service-backtest/src/backfill-candles.js --symbols BTCUSDT,ETHUSDT --tf 5m,15m,1h,4h
+//   node --env-file=.env services/service-backtest/src/backfill-candles.js --tf 1d --days 900 --universe-min-volume 1000000
 //
 // ⚠️ Sunucuda DEĞİL, local'de çalıştır — REST fırtınası daha önce sunucuyu
 // termal kapanmaya sürüklemişti (bkz. plan Faz 1.5 notu).
 import pg from 'pg';
-import { fetchCandles } from '@borsa-bot/core-backtest/src/infrastructure/fetcher.js';
+import { fetchCandles, fetchLiquidUniverse } from '@borsa-bot/core-backtest/src/infrastructure/fetcher.js';
 import { makeCandleStoreRepository } from '@borsa-bot/core-backtest/src/infrastructure/persistence/repositories/candle-store-repository.js';
 
 const { Pool } = pg;
@@ -21,12 +22,16 @@ const DEFAULT_SYMBOLS = [
   'AVAXUSDT', 'LINKUSDT', 'SUIUSDT', 'EVAAUSDT', 'LABUSDT', 'VANRYUSDT',
   'KORUUSDT', 'VELVETUSDT', 'WIFUSDT', 'ORDIUSDT', 'PEOPLEUSDT',
 ];
-const DEFAULT_TFS = ['1m', '5m', '4h'];
+// Faz B2 (yapısal onarım, 2026-09-02): 1m çıktı, 15m/1h eklendi — bkz. sweep.js
+// TF_OPTIONS notu (fee/risk oranı 1m'de likit coinlerde %30-42, taşınamaz).
+const DEFAULT_TFS = ['5m', '15m', '1h', '4h'];
 const DEFAULT_DAYS = 90;
-// Bitget REST granularity: 4h'lık mumlar için 'granularity' parametresi '4H' bekler
-// (bkz. bitget-ws.js'teki aynı normalizasyon), ama tabloda küçük harf 'timeframe'
-// enum değeri kullanılıyor — normalize burada yapılır.
-const TF_TO_GRANULARITY = { '1m': '1m', '5m': '5m', '15m': '15m', '4h': '4H' };
+// Bitget REST granularity: saat-ve-üstü zaman dilimleri için 'granularity'
+// büyük harf bekler (bkz. bitget-ws.js'teki aynı normalizasyon), tabloda ise
+// küçük harf 'timeframe' enum değeri kullanılıyor — normalize burada yapılır.
+// Lab (2026-09-30): '1d' → '1Dutc' (00:00 UTC kapanış — funding ödemeleriyle hizalı).
+// Bitget'in düz '1D' mumu 16:00 UTC'de kapanır ve funding/gün sınırlarıyla kaymış olur.
+const TF_TO_GRANULARITY = { '1m': '1m', '5m': '5m', '15m': '15m', '1h': '1H', '4h': '4H', '1d': '1Dutc' };
 
 function parseArgs(argv) {
   const args = { symbols: DEFAULT_SYMBOLS, tfs: DEFAULT_TFS, days: DEFAULT_DAYS };
@@ -40,6 +45,10 @@ function parseArgs(argv) {
     } else if (argv[i] === '--days' && argv[i + 1]) {
       args.days = parseInt(argv[i + 1], 10);
       i++;
+    } else if (argv[i] === '--universe-min-volume' && argv[i + 1]) {
+      // Lab: sabit liste yerine canlı tickers'tan 24s USDT hacmi >= eşik olan tüm perp'ler.
+      args.minVolume = parseFloat(argv[i + 1]);
+      i++;
     }
   }
   return args;
@@ -50,7 +59,11 @@ function sleep(ms) {
 }
 
 async function main() {
-  const { symbols, tfs, days } = parseArgs(process.argv.slice(2));
+  const parsed = parseArgs(process.argv.slice(2));
+  const { tfs, days } = parsed;
+  const symbols = parsed.minVolume != null
+    ? await fetchLiquidUniverse({ minVolumeUsdt: parsed.minVolume })
+    : parsed.symbols;
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
     console.error('[backfill-candles] DATABASE_URL tanımlı değil. --env-file=.env ile çalıştır.');
