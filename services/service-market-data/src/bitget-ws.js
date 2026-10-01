@@ -5,14 +5,13 @@ const DEFAULT_SYMBOLS = [
   'DOGEUSDT', 'ADAUSDT', 'AVAXUSDT', 'LINKUSDT', 'SUIUSDT',
 ];
 
-// Faz B2 (yapısal onarım, 2026-09-02): '1m' kaldırıldı — likit coinlerde
-// (BTC/ETH/SOL) taker fee/risk oranı 1m'de %30-42, matematiksel olarak
-// "kullanılmıyor" diye kaldırılmıştı — artık make-process-candle.js sinyal
-// üretiyor) ve '1h' eklendi; ikisinde de fee oranı %7-22'ye düşüyor.
-// Bitget WS kanal adları saat-ve-üstü zaman dilimlerinde büyük 'H' kullanır
-// (candle15m ama candle1H) — CHANNEL_BY_TF bu farkı normalize eder.
-const TIMEFRAMES = ['5m', '15m', '1h'];
-const CHANNEL_BY_TF = { '5m': 'candle5m', '15m': 'candle15m', '1h': 'candle1H' };
+// Faz 2.3 (B16 düzeltmesi): '15m' ve '4H' TÜM semboller için abone ediliyordu
+// ama sinyal-motoru tarafında sadece BTCUSDT.4h okunuyor (rejim), 15m ise HİÇ
+// okunmuyor — ~99/250 topic (%40) ölüydü, WS abonelik limitine (code 30006)
+// boşuna baskı yapıyordu ve muhtemelen kopmaların bir sebebiydi. '4H' artık
+// sadece REGIME_SYMBOL (BTCUSDT) için ayrıca abone ediliyor (aşağıda), '15m'
+// tamamen kaldırıldı — kullanılmıyor.
+const TIMEFRAMES = ['1m', '5m'];
 const REGIME_SYMBOL = 'BTCUSDT';
 
 // Bitget public WS hız/topic limiti nedeniyle (code 30006 "request too many")
@@ -230,7 +229,7 @@ async function subscribeAll(ws, symbols) {
   const topics = [];
   for (const symbol of symbols) {
     for (const tf of TIMEFRAMES) {
-      topics.push({ channel: CHANNEL_BY_TF[tf], instId: symbol });
+      topics.push({ channel: `candle${tf}`, instId: symbol });
     }
     // Bitget V2 public WS: funding-rate/open-interest ayrı kanal YOK (code 30016).
     // 'ticker' kanalı fundingRate, nextFundingTime ve holdingAmount (OI) taşır.

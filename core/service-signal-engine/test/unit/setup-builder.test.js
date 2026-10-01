@@ -103,27 +103,17 @@ describe('buildSetup', () => {
     expect(setup.meetsMinTarget).toBe(false);
   });
 
-  it('fee floor (maliyet oranı): dar stop (%0.5) → feeR yüksek → meetsFeeFloor=false', () => {
-    // currentPrice=1000, atr=2 → stopDist=5, stopPct=0.5% → feeR=0.0008/0.005=0.16 > 0.10
+  it('fee floor: dar stop (%0.5) → meetsFeeFloor=false', () => {
+    // currentPrice=1000, atr=2 → stopDist=5, stopPct=0.5% < 2.5%
     const setup = buildSetup({ direction: 'long', currentPrice: 1000, atr: 2 });
     expect(setup.stopPct).toBeLessThan(0.025);
-    expect(setup.feeR).toBeGreaterThan(0.10);
     expect(setup.meetsFeeFloor).toBe(false);
   });
 
-  it('fee floor (maliyet oranı): geniş stop (%5) → feeR düşük → meetsFeeFloor=true', () => {
-    // currentPrice=100, atr=2 → stopDist=5, stopPct=5% → feeR=0.0008/0.05=0.016 <= 0.10
+  it('fee floor: geniş stop (%5) → meetsFeeFloor=true', () => {
+    // currentPrice=100, atr=2 → stopDist=5, stopPct=5% > 2.5%
     const setup = buildSetup({ direction: 'long', currentPrice: 100, atr: 2 });
     expect(setup.stopPct).toBeGreaterThanOrEqual(0.025);
-    expect(setup.feeR).toBeLessThanOrEqual(0.10);
-    expect(setup.meetsFeeFloor).toBe(true);
-  });
-
-  it('fee floor (maliyet oranı): BTC 1h benzeri dar-ama-yeterli stop (%1.3) → geçer', () => {
-    // ATR%~0.5 civarı bir 1h stop simülasyonu — mutlak %2.5 eşiğinde ELENİRDİ,
-    // maliyet oranı kapısında feeR=0.0008/0.013=0.062 <= 0.10 → geçer.
-    const setup = buildSetup({ direction: 'long', currentPrice: 1000, atr: 5.2 });
-    expect(setup.stopPct).toBeCloseTo(0.013, 3);
     expect(setup.meetsFeeFloor).toBe(true);
   });
 
@@ -145,10 +135,8 @@ describe('buildSetup', () => {
     });
 
     it('gerçekçi fee ile kapı daha SIKI: sınırdaki setup elenir', () => {
-      // maxCostRatio=0.10 eşiğinde: yüksek fee feeR'yi büyütür → kapı kapanır.
-      // atr=5 → stopDist=12.5, stopPct=1.25% → feeR(0.0008)=0.064<=0.10 (geçer),
-      // feeR(0.0018)=0.144>0.10 (elenir).
-      const args = { direction: 'long', currentPrice: 1000, atr: 5, targetRR: 1.05 };
+      // rrRatio - feeR >= 1.0 eşiğinde: yüksek fee feeR'yi büyütür → kapı kapanır
+      const args = { direction: 'long', currentPrice: 1000, atr: 10, targetRR: 1.05 };
       const gevsek = buildSetup({ ...args, feeRoundtrip: 0.0008 });
       const gercek = buildSetup({ ...args, feeRoundtrip: 0.0018 });
       expect(gevsek.meetsFeeFloor).toBe(true);
@@ -161,12 +149,12 @@ describe('buildSetup', () => {
     });
   });
 
-  it('maxCostRatio override: daha sıkı eşik verilirse aynı setup elenebilir', () => {
-    // currentPrice=100, atr=2 → stopDist=5, stopPct=5% → feeR=0.0008/0.05=0.016
-    const gevsek = buildSetup({ direction: 'long', currentPrice: 100, atr: 2, maxCostRatio: 0.10 });
-    const siki = buildSetup({ direction: 'long', currentPrice: 100, atr: 2, maxCostRatio: 0.01 });
-    expect(gevsek.meetsFeeFloor).toBe(true);
-    expect(siki.meetsFeeFloor).toBe(false);
+  it('minStopPct override: 1m daha sıkı eşik', () => {
+    const setup5m = buildSetup({ direction: 'long', currentPrice: 100, atr: 2, minStopPct: 0.012 });
+    const setup1m = buildSetup({ direction: 'long', currentPrice: 100, atr: 2, minStopPct: 0.014 });
+    // stopPct=%3 → her iki eşiği de geçmeli (atr=2 yeterince büyük)
+    expect(setup5m.meetsFeeFloor).toBe(true);
+    expect(setup1m.meetsFeeFloor).toBe(true);
   });
 
   it('stopPct ve feeR return objesinde dönüyor', () => {
