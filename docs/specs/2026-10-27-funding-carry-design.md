@@ -1,6 +1,6 @@
 # Funding Taşıma (Delta-Nötr Funding Carry) — Tasarım ve Yol Haritası
 
-Tarih: 2026-10-27 · Durum: Faz 1 (kâğıt üstü ileri test) kodu hazır, sunucuya alınmadı.
+Tarih: 2026-10-27 (güncelleme 2026-10-28) · Durum: Faz 1 (kâğıt üstü) sunucuda çalışıyor; giriş eşiği %10'a indirildi, Faz 1 süresi 7 güne kısaldı (§3a, §9).
 
 ---
 
@@ -44,12 +44,32 @@ Bu, Ethena gibi milyar dolarlık ürünlerin de iş modeli. "Kesine yakın" ifad
 |---|---|---|
 | Evren | Bitget'te kripto (hisse/altın RWA değil) + **aynı coinin USDT spot çifti var** + spot hacim ≥ $1M/gün + perp hacim ≥ $5M/gün | Spotu olmayan coinde strateji uygulanamaz (funding verisi olan 161 coinin 44'ünün Bitget spotu yok) |
 | Sinyal | Son **14 tam günün** ortalama funding'i, yıllığa çevrilmiş | Kısa pencere (3 gün) gürültüye işlem açtırıyor: maliyet ×2'de eksiye düşüyor |
-| Aç | Yıllık **≥ %15** | ~15-20 günde gidiş-dönüş maliyetini (%0,44-0,64) çıkarır |
+| Aç | Yıllık **≥ %10** (2026-10-28'e kadar %15) | Üç ayrı dönemde %15'ten iyi ya da eşit (§3a); %10'da gidiş-dönüş maliyeti (%0,32-0,64) ~12-24 günde çıkar |
 | Kapat | Yıllık **< %5**, ya da sıralamada ilk 10'dan düştü, ya da borsa duyurusu (delist) | Giriş/çıkış arası boşluk (histerezis) gereksiz al-sat'ı önler |
 | Boyut | En fazla **5 coin**, her biri özsermayenin %18'i (%10 tampon) | Tek coin riskini sınırlar |
 | Karar zamanı | Günde bir, 00:00 UTC ödemesinden sonra, 08:00'den önce | Backtest'in kazanç penceresiyle birebir aynı |
 
 Kurallardan biri değişirse bu **yeni hipotez** demektir ve ileri test sayacı sıfırlanır.
+
+### 3a. 2026-10-28 değişikliği: giriş eşiği %15 → %10
+
+Sebep: %15'te bugün hiçbir coin geçmiyordu (en yüksek %14,3), kâğıt test veri üretmeden bekleyecekti. Eşikler
+**üç ayrı dönemde** karşılaştırıldı (bugünün 23 coinlik evreni, aynı saf fonksiyonlar, çıkış %5):
+
+| Giriş | Binance 2022-23 | Binance 2024→ | Bitget kendi (07-17→10-28) | Bitget, maliyet ×2 | Bitget ort. açık coin |
+|---|---|---|---|---|---|
+| %8 | %1,9 | %13,5 | %10,9 | %6,6 | 5,0 |
+| **%10** | **%2,0** | **%13,6** | **%13,0** | **%10,3** | 4,6 |
+| %12 | %2,2 | %13,6 | %13,5 | %11,2 | 4,4 |
+| %15 (eski) | %1,9 | %13,6 | %9,3 | %7,0 | 3,7 |
+| %20 | %0,8 | %13,1 | %8,9 | %7,0 | 3,4 |
+
+%10 hiçbir dönemde %15'ten kötü değil; Bitget'in kendi verisinde ve maliyet stresinde belirgin iyi (daha çok slot dolu → boşta
+bekleyen para az). %8'in altı maliyet ×2'de zayıflıyor. %12 de aynı kalitede ama bugün yalnız 1 coin geçiyor; %10'da 5 coin.
+Uyarı: bu seçim tüm veriye bakılarak yapıldı (temiz holdout yok); gerekçe tek dönemde değil üç dönemde birden ≥ olması.
+
+**Gerçek spread kontrolü (2026-10-28 anlık):** tek yön yarım spread (spot+perp) medyanı %0,034; 23 coinin 21'inde modelden
+(%0,06 likit / %0,16 ince) ucuz. Modelden pahalı 2 coin: EVAA %0,22, IRYS %0,21 (ince, $1,6-2,5M spot hacim).
 
 ## 4. Kanıt (backtest — `npm run carry:backtest`)
 
@@ -76,7 +96,7 @@ Backtest canlı servisle **aynı fonksiyonları** çağırıyor (selectCarryBook
 | Bitget'in kendi funding'i (gerçekte bize ödenecek) | **%8,4** |
 | Aynı dönem, Binance funding'i | %26,2 |
 
-Yüksek funding ödeyen coinlerin çoğunun Bitget'te likit spot piyasası yok. **Bitget-tek-borsa beklentimiz: normal piyasada yılda ~%5-10, sıcak piyasada %15-20+, ayı piyasasında ~%0 (nakitte bekler).** Bugün (27 Ekim) eşiği geçen coin yok — bot başlasa nakitte bekleyecek; bu doğru davranış.
+Yüksek funding ödeyen coinlerin çoğunun Bitget'te likit spot piyasası yok. **Bitget-tek-borsa beklentimiz: normal piyasada yılda ~%5-10, sıcak piyasada %15-20+, ayı piyasasında ~%0 (nakitte bekler).** 27 Ekim'de %15 eşiğini geçen coin yoktu; %10 eşiğiyle 28 Ekim'de 5 coin geçiyor (EVAA, JCT, HUMA, APR, NIL).
 
 **Backtest'in modellemediği şeyler** (kâğıt ileri test bunları ölçecek): bugünün likiditesiyle seçilmiş evren (hayatta kalma yanlılığı), spot-perp fiyat farkının (baz) değişimi, delist zorunlu kapanışları, gerçek spread.
 
@@ -153,13 +173,16 @@ Eski scalp sinyal botu (market-data, signal-engine, tracker, notifier, backtest/
 
 ## 9. Yol haritası ve karar kapıları
 
-**Faz 1 — Kâğıt üstü ileri test (şimdi, para riski yok)**
+**Faz 1 — Kâğıt üstü çalıştırma (7 gün, ~2026-11-04; para riski yok)**
 Servis sunucuda 7/24 çalışır, gerçek fiyatlarla sanal $1000 yönetir, Telegram'a her açılış/kapanış ve günlük rapor gelir.
-Kapı (hepsi): ≥ 30 gün çalıştı · karar günlerinin ≥ %90'ında karar alındı · en az 3 pozisyon açılıp kapandı · net sonuç > 0 · gerçek spread/komisyon modelden kötü değil.
-⚠️ Eşiği geçen coin çıkmazsa kâğıt defter boş kalır; bu "başarısız" değil "henüz veri yok" demektir.
+Amaç kârlılığı kanıtlamak DEĞİL (7 günlük getiri istatistiksel olarak anlamsız; kârlılık kanıtı funding geçmişi + Faz 2'nin
+gerçek dolumları), kodun gerçek hayatta doğru çalıştığını görmek. 30 gün → 7 gün kısaltıldı (2026-10-28): taşımada geçmiş
+funding = gerçekleşmiş ödeme kaydı, yön stratejilerindeki gibi simüle edilmiş sinyal değil; açık risk maliyet ve işleyiş.
+Kapı (hepsi): her gün karar alındı · pozisyonlar açıldı · funding defteri Bitget'in gerçek ödemeleriyle tutarlı ·
+Telegram mesajları ve panel doğru · beklenmeyen hata yok.
 
 **Faz 2 — Küçük gerçek para, elle uygulama ($100-300)**
-Bitget'te UTA + Delta Neutral Mode aç. Bot Telegram'dan ne yapacağını söyler, sen 2 emri (spot al + short) elle girersin. Gerçek dolumlar kaydedilir. Kapı: 30 gün, gerçek net > 0, kâğıtla tutarlı.
+Bitget'te UTA + Delta Neutral Mode aç. Bot Telegram'dan ne yapacağını söyler, sen 2 emri (spot al + short) elle girersin. Gerçek dolumlar kaydedilir. En kötü gerçekçi kayıp: komisyonlar + baz kayması (birkaç dolar). Kapı (Faz 3'e geçiş): 30 gün, gerçek net > 0, gerçek dolum maliyeti modelden kötü değil.
 
 **Faz 3 — Otomatik emir**
 Bitget API anahtarı (**yalnız işlem izni, çekim izni YOK, IP kısıtlı**). İki bacak aynı anda, kill-switch, günlük kayıp limiti, aynı coinde tek pozisyon. Kod Faz 2 kapısı geçmeden yazılmaz.

@@ -6,7 +6,7 @@
 export const CARRY_RULES = Object.freeze({
   lookbackDays: 14,        // L: son 14 tam taşıma gününün ortalama funding'i
   slots: 5,                // N: aynı anda en fazla 5 coin, her biri sermayenin 1/5'i
-  entryApr: 0.15,          // yıllık %15 ve üstü → aç
+  entryApr: 0.10,          // yıllık %10 ve üstü → aç (2026-10-28'e kadar %15; 3 dönemde de ≥ %15 sonucu, spec)
   exitApr: 0.05,           // yıllık %5 altı → kapat
   rankBufferMult: 2,       // eligible sıralamada 2N'in dışına düşen → kapat (yer aç)
   minSpotVolumeUsdt: 1_000_000,

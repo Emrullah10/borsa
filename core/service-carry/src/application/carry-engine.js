@@ -159,7 +159,7 @@ export function makeCarryEngine({
     await notify(formatDailyReport({
       equityUsd: summary.equityUsd, startEquityUsd: capitalUsd, fundingTodayUsd: fundingYesterday,
       positions: summary.open.map((p) => ({ symbol: p.symbol, pnl: p.pnl, daysOpen: p.daysOpen })),
-    }, { paper }));
+    }, { paper, entryApr: rules.entryApr }));
     log.info(`[carry] karar ${new Date(day).toISOString().slice(0, 10)}: evren ${universe.size}, aday ${usable.length}, kapat ${closed.length}, aç ${opened.length}`);
     return { ...result, opened, closed };
   }

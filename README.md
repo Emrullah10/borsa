@@ -9,7 +9,7 @@ tarafının short tarafına ödediği funding'den gelir.
 
 ## Kurallar (dondurulmuş)
 
-- Son 14 günün funding'i yıllık **%15 üstü** → aç, **%5 altı** → kapat, en fazla **5 coin**.
+- Son 14 günün funding'i yıllık **%10 üstü** → aç, **%5 altı** → kapat, en fazla **5 coin**.
 - Yalnız Bitget'te USDT spot çifti olan, spot hacmi ≥ $1M ve futures hacmi ≥ $5M olan coinler.
 - Bitget delist / token takası / askı duyurusu → pozisyon kapanır ya da yeni açılmaz.
 

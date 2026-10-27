@@ -1,4 +1,5 @@
 import { baseCoin } from './announcement-rules.js';
+import { CARRY_RULES } from './carry-config.js';
 
 // Telegram mesajları (HTML parse_mode). Kullanıcı tercihi: soyut değil SOMUT — ne alınacak, ne
 // satılacak, kaç adet, ne bekleniyor.
@@ -49,13 +50,13 @@ export function formatRiskMessage(assessment, ann) {
 }
 
 // book: { equityUsd, startEquityUsd, positions: [{ symbol, pnl, daysOpen }], fundingTodayUsd }
-export function formatDailyReport(book, { paper = true } = {}) {
+export function formatDailyReport(book, { paper = true, entryApr = CARRY_RULES.entryApr } = {}) {
   const lines = [
     `📊 <b>${paper ? '[KÂĞIT] ' : ''}Günlük taşıma raporu</b>`,
     `Özsermaye: ${usd(book.equityUsd)} (başlangıç ${usd(book.startEquityUsd)}, ${pct(book.equityUsd / book.startEquityUsd - 1, 2)})`,
     `Dün alınan funding: ${usd(book.fundingTodayUsd)}`,
   ];
-  if (!book.positions.length) lines.push('Açık pozisyon yok — eşiği (yıllık %15) geçen likit coin yok, para bekliyor.');
+  if (!book.positions.length) lines.push(`Açık pozisyon yok — eşiği (yıllık ${pct(entryApr, 0)}) geçen likit coin yok, para bekliyor.`);
   for (const p of book.positions) {
     lines.push(`• ${p.symbol}: ${p.daysOpen.toFixed(1)} gün · funding ${usd(p.pnl.fundingUsd)} · net ${usd(p.pnl.netUsd)}`);
   }
