@@ -1,0 +1,21 @@
+{
+  "name": "@borsa-bot/service-carry",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@borsa-bot/config": "*",
+    "@borsa-bot/core-backtest": "*",
+    "@borsa-bot/core-carry": "*",
+    "@borsa-bot/core-notifier": "*",
+    "@borsa-bot/datasource": "*",
+    "@borsa-bot/helper": "*",
+    "@borsa-bot/service-discovery": "*",
+    "express": "^4.18.0",
+    "pg": "^8.11.0"
+  }
+}

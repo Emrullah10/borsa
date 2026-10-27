@@ -13,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import HomeIcon from '@mui/icons-material/Home';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import SettingsIcon from '@mui/icons-material/Settings';
+import SavingsIcon from '@mui/icons-material/Savings';
 import { useStore } from '@store/useStore.js';
 
 export default function AppDrawer() {
@@ -58,6 +59,25 @@ export default function AppDrawer() {
 
         {/* Navigation List */}
         <List sx={{ px: 0 }}>
+          <ListItem
+            button
+            selected={activePage === 'carry'}
+            onClick={() => setActivePage('carry')}
+            sx={{
+              cursor: 'pointer',
+              '&.Mui-selected': { bgcolor: '#21262d' },
+              '&.Mui-selected:hover': { bgcolor: '#21262d' },
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <SavingsIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText
+              primary="Funding Taşıma"
+              primaryTypographyProps={{ variant: 'body2' }}
+            />
+          </ListItem>
+
           <ListItem
             button
             selected={activePage === 'signals'}

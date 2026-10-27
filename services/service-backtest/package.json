@@ -13,6 +13,7 @@
     "@borsa-bot/core-backtest": "*",
     "@borsa-bot/core-signal-engine": "*",
     "@borsa-bot/helper": "*",
-    "pg": "^8.11.0"
+    "pg": "^8.11.0",
+    "@borsa-bot/core-carry": "*"
   }
 }

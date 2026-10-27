@@ -7,7 +7,7 @@ export const useStore = create((set) => ({
   services: { signalEngine: false, marketData: false },
   drawerOpen: false,
   regime: null, // 'bull' | 'bear' | 'neutral' | null
-  activePage: 'signals', // 'signals' | 'stats'
+  activePage: 'carry', // 'carry' | 'signals' | 'stats'
   missedIds: new Set(), // "giriş kaçtı" olan sinyal id'leri
 
   setSignals: (signals) => set({ signals }),

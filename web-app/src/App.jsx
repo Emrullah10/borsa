@@ -3,6 +3,7 @@ import TopBar from '@layouts/TopBar.jsx';
 import AppDrawer from '@layouts/AppDrawer.jsx';
 import SignalGrid from '@features/signals/components/SignalGrid.jsx';
 import StatsPage from '@pages/StatsPage.jsx';
+import CarryPage from '@pages/CarryPage.jsx';
 import { useStore } from './store/useStore.js';
 
 export default function App() {
@@ -12,7 +13,9 @@ export default function App() {
       <TopBar />
       <AppDrawer />
       <Box sx={{ flexGrow: 1, overflow: 'hidden' }}>
-        {activePage === 'stats' ? <StatsPage /> : <SignalGrid />}
+        {activePage === 'carry' && <CarryPage />}
+        {activePage === 'stats' && <StatsPage />}
+        {activePage === 'signals' && <SignalGrid />}
       </Box>
     </Box>
   );
