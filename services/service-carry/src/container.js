@@ -4,8 +4,8 @@ import { makeLlmClient, DEFAULT_ALLOWED_MODELS } from '@borsa-bot/core-carry/src
 import { makeAiSentinel } from '@borsa-bot/core-carry/src/infrastructure/ai-sentinel.js';
 import { makeCarryRepository } from '@borsa-bot/core-carry/src/infrastructure/repositories/carry-repository.js';
 import { makeCarryEngine } from '@borsa-bot/core-carry/src/application/carry-engine.js';
-import { makeFundingStoreRepository } from '@borsa-bot/core-backtest/src/infrastructure/persistence/repositories/funding-store-repository.js';
-import { makeTelegramSender } from '@borsa-bot/core-notifier/src/infrastructure/telegram-sender.js';
+import { makeFundingStoreRepository } from '@borsa-bot/core-carry/src/infrastructure/repositories/funding-store-repository.js';
+import { makeTelegramSender } from '@borsa-bot/core-carry/src/infrastructure/telegram-sender.js';
 
 export function buildContainer({ config, db }) {
   const log = helper.log;

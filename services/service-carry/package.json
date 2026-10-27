@@ -9,9 +9,7 @@
   },
   "dependencies": {
     "@borsa-bot/config": "*",
-    "@borsa-bot/core-backtest": "*",
     "@borsa-bot/core-carry": "*",
-    "@borsa-bot/core-notifier": "*",
     "@borsa-bot/datasource": "*",
     "@borsa-bot/helper": "*",
     "@borsa-bot/service-discovery": "*",

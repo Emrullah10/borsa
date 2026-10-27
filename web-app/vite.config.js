@@ -19,11 +19,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@api': path.resolve(__dirname, 'src/api'),
-      '@features': path.resolve(__dirname, 'src/features'),
-      '@layouts': path.resolve(__dirname, 'src/layouts'),
       '@pages': path.resolve(__dirname, 'src/pages'),
-      '@shared': path.resolve(__dirname, 'src/shared'),
-      '@store': path.resolve(__dirname, 'src/store'),
       '@styles': path.resolve(__dirname, 'src/styles'),
     },
   },

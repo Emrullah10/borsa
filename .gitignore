@@ -11,7 +11,3 @@ coverage/
 __pycache__/
 *.pyc
 .logs/
-.codegraph/*.db*
-.codegraph/*.sock
-.codegraph/*.pid
-.codegraph/daemon.log

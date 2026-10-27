@@ -1,6 +1,6 @@
 // Funding Carry (2026-10-27) — DONDURULMUŞ kurallar.
 // Strateji: aynı coinden spot AL + perp SHORT (eşit adet) → fiyat yönü sıfırlanır, pozitif
-// funding'de short tarafı ödeme alır. Backtest (npm run backtest:carry) ve canlı kâğıt servis
+// funding'de short tarafı ödeme alır. Backtest (npm run carry:backtest) ve canlı kâğıt servis
 // (service-carry) bu sabitleri ve aynı saf fonksiyonları kullanır. Bir değeri değiştirmek =
 // yeni hipotez = ileri test sayacı sıfırlanır (bkz. spec 2026-10-27-funding-carry-design.md).
 export const CARRY_RULES = Object.freeze({

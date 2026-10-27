@@ -13,7 +13,7 @@ Tarih: 2026-10-27 · Durum: Faz 1 (kâğıt üstü ileri test) kodu hazır, sunu
 | Canlı scalp botu (confluence: EMA/RSI/MACD/BB/VWAP) | **Kaybediyor** | 30 gün, 402 işlem, işlem başı −0,137R, güven aralığı tamamen eksi |
 | Aynı motorun 12 ayar kombinasyonu (5m/15m/1h × maker/taker × büyük/orta coin) | 12/12 başarısız | 180 gün, görülmemiş dönemde hepsi çöktü |
 | Lab: 4 yeni fikir (funding uçları, momentum, dönüş, dağınıklık) | 0/4 | Holdout'ta hiçbiri geçmedi |
-| İleri test (2026-10-01'den beri taze veri): funding uçları | **KALDI** | 113 işlem, ortalama −0,078R (rapor: backtest-results/forward-2026-10-27.md) |
+| İleri test (2026-10-01'den beri taze veri): funding uçları | **KALDI** | 113 işlem, ortalama −0,078R (rapor git geçmişinde: backtest-results/forward-2026-10-27.md, eski kod 2026-10-28 silindi) |
 | İleri test: F1 momentum | Bekliyor | 26/90 gün, karar için erken |
 
 Sonuç: sorun ayar değil, **soru yanlış**. Kripto'da kısa vadeli yönü komisyon sonrası kârlı tahmin etmek perakende bir bot için kanıtlanmış şekilde mümkün olmadı. LLM'ler de bunu çözmüyor (Alpha Arena S1: gerçek parayla 6 öncü modelin 4'ü %31-63 kaybetti).
@@ -51,7 +51,7 @@ Bu, Ethena gibi milyar dolarlık ürünlerin de iş modeli. "Kesine yakın" ifad
 
 Kurallardan biri değişirse bu **yeni hipotez** demektir ve ileri test sayacı sıfırlanır.
 
-## 4. Kanıt (backtest — `npm run backtest:carry`)
+## 4. Kanıt (backtest — `npm run carry:backtest`)
 
 Backtest canlı servisle **aynı fonksiyonları** çağırıyor (selectCarryBook, trailingApr, carryDayOf, maliyet). Maliyet: Bitget VIP0 spot %0,1 + futures taker %0,06 + bacak başına %0,03-0,08 kayma, açılışta ve kapanışta.
 
@@ -138,15 +138,18 @@ Hepsi anahtarsız public uçlar; Faz 1 için Bitget API anahtarı gerekmez.
 core/service-carry/src/
   domain/          carry-config · funding-buckets · selector · paper-book · eligibility
                    announcement-rules · backtest-carry · carry-format      (saf, test edilir)
-  infrastructure/  bitget-public · llm-client · ai-sentinel · repositories/carry-repository
+  infrastructure/  bitget-public · binance-funding · telegram-sender · llm-client · ai-sentinel
+                   repositories/carry-repository · repositories/funding-store-repository
   application/     carry-engine  (funding tahsilatı, günlük karar, risk bekçisi, özet)
 services/service-carry/   boot (HTTP :3104 + 5 dk'lık zamanlayıcı) · scan.js (kuru çalıştırma)
-services/service-backtest/src/carry.js   backtest CLI
-db-schemas/migrations/2026-10-27-01-carry.sql
-web-app/src/pages/CarryPage.jsx           panelde "Funding Taşıma" (açılış sayfası)
+                          backtest.js · backfill-funding.js
+db-schemas/04-funding-rates.sql · db-schemas/migrations/2026-10-27-01-carry.sql
+web-app/src/pages/CarryPage.jsx           panelin tek sayfası
 ```
 
-Komutlar: `npm run dev:carry` (servis) · `npm run carry:scan` (şu an karar verilse ne olurdu) · `npm run backtest:carry [-- --cost 2]`.
+Komutlar: `npm run dev:carry` (servis) · `npm run carry:scan` (şu an karar verilse ne olurdu) · `npm run carry:backtest [-- --cost 2]` · `npm run carry:backfill-funding` (backtest verisi).
+
+Eski scalp sinyal botu (market-data, signal-engine, tracker, notifier, backtest/lab, service-ai, eski panel sayfaları) 2026-10-28'de silindi; git geçmişinde duruyor.
 
 ## 9. Yol haritası ve karar kapıları
 
