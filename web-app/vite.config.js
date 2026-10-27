@@ -5,12 +5,16 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// service-carry ayrı bir Cloudflare route'u istemesin diye panel origin'i üzerinden proxy'lenir.
+const carryProxy = { '/carry': 'http://localhost:3104' };
+
 export default defineConfig({
   plugins: [react()],
-  server: { port: 5180 },
+  server: { port: 5180, proxy: carryProxy },
   preview: {
     port: 5180,
     allowedHosts: ['borsa.emrullahbozkurt.com'],
+    proxy: carryProxy,
   },
   resolve: {
     alias: {

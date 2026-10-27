@@ -1,4 +1,5 @@
-const BASE = import.meta.env.VITE_CARRY_URL ?? 'http://localhost:3104';
+// Varsayılan: aynı origin, vite server/preview '/carry'yi service-carry'ye (:3104) proxy'ler.
+const BASE = import.meta.env.VITE_CARRY_URL ?? '';
 
 async function getJson(path) {
   try {
